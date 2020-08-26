@@ -7,7 +7,7 @@
 
 <h1>Items</h1>
 
-<p>This is a list of items in the game. Specific details about items can be added when they are granted to users (e.g. reason for grant). By default, items are merely collectibles and any additional functionality must be manually processed, or custom coded in for the specific item.</p>
+<p>This is a list of items in the game. Specific details about items can be added when they are granted to users (e.g. reason for grant). By default, items are merely collectibles and any additional functionality must be manually processed, or custom coded in for the specific item.</p> 
 
 <div class="text-right mb-3"><a class="btn btn-primary" href="{{ url('admin/data/items/create') }}"><i class="fas fa-plus"></i> Create New Item</a></div>
 
@@ -27,9 +27,8 @@
 
 @if(!count($items))
     <p>No items found.</p>
-@else
+@else 
     {!! $items->render() !!}
-<<<<<<< HEAD
     <table class="table table-sm category-table">
         <thead>
             <tr>
@@ -41,7 +40,9 @@
         <tbody>
             @foreach($items as $item)
                 <tr class="sort-item" data-id="{{ $item->id }}">
-                    <td><a href="{{ $item->idUrl }}">{{ $item->name }}</a></td>
+                    <td>
+                        {{ $item->name }}
+                    </td>
                     <td>{{ $item->category ? $item->category->name : '' }}</td>
                     <td class="text-right">
                         <a href="{{ url('admin/data/items/edit/'.$item->id) }}" class="btn btn-primary">Edit</a>
@@ -50,25 +51,6 @@
             @endforeach
         </tbody>
     </table>
-=======
-
-        <div class="row ml-md-2 mb-4">
-          <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
-            <div class="col-5 col-md-6 font-weight-bold">Name</div>
-            <div class="col-5 col-md-5 font-weight-bold">Category</div>
-          </div>
-          @foreach($items as $item)
-          <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
-            <div class="col-5 col-md-6"> {{ $item->name }} </div>
-            <div class="col-4 col-md-5"> {{ $item->category ? $item->category->name : '' }} </div>
-            <div class="col-3 col-md-1 text-right">
-              <a href="{{ url('admin/data/items/edit/'.$item->id) }}"  class="btn btn-primary py-0 px-2">Edit</a>
-            </div>
-          </div>
-          @endforeach
-        </div>
-
->>>>>>> 2e864992bbc39b27ce74a07c98dffe20ed5279dd
     {!! $items->render() !!}
 @endif
 
