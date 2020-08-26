@@ -36,11 +36,16 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
 
 Route::group(['prefix' => 'inventory', 'namespace' => 'Users'], function() {
     Route::get('/', 'InventoryController@getIndex');
-    Route::post('transfer/{id}', 'InventoryController@postTransfer');
-    Route::post('delete/{id}', 'InventoryController@postDelete');
-    Route::post('act/{id}/{tag}', 'InventoryController@postAct');
+    Route::post('edit', 'InventoryController@postEdit');
 
     Route::get('selector', 'InventoryController@getSelector');
+});
+
+Route::group(['prefix' => 'awardcase', 'namespace' => 'Users'], function() {
+    Route::get('/', 'AwardCaseController@getIndex');
+    Route::post('edit', 'AwardCaseController@postEdit');
+
+    Route::get('selector', 'AwardCaseController@getSelector');
 });
 
 Route::group(['prefix' => 'characters', 'namespace' => 'Users'], function() {
@@ -82,6 +87,7 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/profile/edit', 'CharacterController@postEditCharacterProfile');
     
     Route::post('{slug}/bank/transfer', 'CharacterController@postCurrencyTransfer');
+    Route::post('{slug}/inventory/edit', 'CharacterController@postInventoryEdit');
     
     Route::get('{slug}/transfer', 'CharacterController@getTransfer');
     Route::post('{slug}/transfer', 'CharacterController@postTransfer');
