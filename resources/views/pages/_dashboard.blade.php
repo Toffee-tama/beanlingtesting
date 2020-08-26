@@ -22,7 +22,7 @@
         <div class="card mb-4">
             <div class="card-body text-center">
                 <img src="{{ asset('images/characters.png') }}" />
-                <h5 class="card-title">Shrine</h5>
+                <h5 class="card-title">Characters</h5>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item"><a href="{{ url('characters') }}">My Characters</a></li>
