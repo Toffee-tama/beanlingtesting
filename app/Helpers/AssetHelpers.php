@@ -210,7 +210,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
         }
         elseif($key == 'awards' && count($contents))
         {
-            $service = new \App\Services\awardcaseManager;
+            $service = new \App\Services\AwardCaseManager;
             foreach($contents as $asset)
                 if(!$service->creditAward($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) return false;
         }
