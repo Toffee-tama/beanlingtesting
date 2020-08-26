@@ -9,6 +9,7 @@ use Auth;
 use App\Models\Prompt\PromptCategory;
 use App\Models\Prompt\Prompt;
 use App\Models\Item\Item;
+use App\Models\Award\Award;
 use App\Models\Currency\Currency;
 use App\Models\Loot\LootTable;
 
@@ -38,7 +39,7 @@ class PromptController extends Controller
             'categories' => PromptCategory::orderBy('sort', 'DESC')->get()
         ]);
     }
-    
+
     /**
      * Shows the create prompt category page.
      *
@@ -50,7 +51,7 @@ class PromptController extends Controller
             'category' => new PromptCategory
         ]);
     }
-    
+
     /**
      * Shows the edit prompt category page.
      *
@@ -92,7 +93,7 @@ class PromptController extends Controller
         }
         return redirect()->back();
     }
-    
+
     /**
      * Gets the prompt category deletion modal.
      *
@@ -146,7 +147,7 @@ class PromptController extends Controller
 
 
     /**********************************************************************************************
-    
+
         PROMPTS
 
     **********************************************************************************************/
@@ -159,18 +160,55 @@ class PromptController extends Controller
      */
     public function getPromptIndex(Request $request)
     {
+
         $query = Prompt::query();
+
         $data = $request->only(['prompt_category_id', 'name']);
-        if(isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none') 
+
+        if(isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none')
             $query->where('prompt_category_id', $data['prompt_category_id']);
-        if(isset($data['name'])) 
+        if(isset($data['name']))
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
+
         return view('admin.prompts.prompts', [
             'prompts' => $query->paginate(20)->appends($request->query()),
-            'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
+            'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+
+            'promptCategories' => PromptCategory::orderBy('sort', 'DESC')->get()->prepend([ "id" => 0 ]),
+            'pickPrompts' => $query->get()->groupBy('prompt_category_id'),
+            'count' => Prompt::all()
         ]);
     }
-    
+
+
+
+        /**
+         * Shows the prompt category index using the original code.
+         *
+         * @param  \Illuminate\Http\Request  $request
+         * @return \Illuminate\Contracts\Support\Renderable
+         */
+        public function getPromptIndexOld(Request $request)
+        {
+
+            $query = Prompt::query();
+
+            $data = $request->only(['prompt_category_id', 'name']);
+
+            if(isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none')
+                $query->where('prompt_category_id', $data['prompt_category_id']);
+            if(isset($data['name']))
+                $query->where('name', 'LIKE', '%'.$data['name'].'%');
+
+            return view('admin.prompts.prompts_old', [
+                'prompts' => $query->paginate(20)->appends($request->query()),
+                'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
+            ]);
+        }
+
+
+
+
     /**
      * Shows the create prompt page.
      *
@@ -182,11 +220,12 @@ class PromptController extends Controller
             'prompt' => new Prompt,
             'categories' => ['none' => 'No category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'items' => Item::orderBy('name')->pluck('name', 'id'),
+            'awards' => Award::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id')
         ]);
     }
-    
+
     /**
      * Shows the edit prompt page.
      *
@@ -201,6 +240,7 @@ class PromptController extends Controller
             'prompt' => $prompt,
             'categories' => ['none' => 'No category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'items' => Item::orderBy('name')->pluck('name', 'id'),
+            'awards' => Award::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id')
         ]);
@@ -232,7 +272,7 @@ class PromptController extends Controller
         }
         return redirect()->back();
     }
-    
+
     /**
      * Gets the prompt deletion modal.
      *
