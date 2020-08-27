@@ -78,7 +78,7 @@
                 @endif
                 
 
-                <li class="list-group-award">
+                <li class="list-group-item">
                     <a class="card-title h5 collapse-title" data-toggle="collapse" href="#deleteForm">@if($stack->first()->user_id != $user->id) [ADMIN] @endif Delete Award</a>
                     <div id="deleteForm" class="collapse">
                         <p>This action is not reversible. Are you sure you want to delete this award?</p>
