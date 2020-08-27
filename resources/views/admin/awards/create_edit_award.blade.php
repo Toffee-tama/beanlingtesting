@@ -98,7 +98,14 @@
 
 {!! Form::close() !!}
 
+    //Thank you Juni for this preview code!
 @if($award->id)
+    <h3>Preview</h3>
+    <div class="card mb-3">
+        <div class="card-body">
+            @include('world._award_entry', ['imageUrl' => $award->imageUrl, 'name' => $award->displayName, 'description' => $award->parsed_description, 'searchUrl' => $award->searchUrl])
+        </div>
+    </div>
    
 @endif
 
