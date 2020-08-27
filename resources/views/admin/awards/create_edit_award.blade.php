@@ -98,7 +98,7 @@
 
 {!! Form::close() !!}
 
-    //Thank you Juni for this preview code!
+
 @if($award->id)
     <h3>Preview</h3>
     <div class="card mb-3">
