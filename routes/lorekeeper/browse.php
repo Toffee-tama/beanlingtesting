@@ -93,7 +93,7 @@ Route::group(['prefix' => 'world'], function() {
     Route::get('items/{id}', 'WorldController@getItem');
     Route::get('award-categories', 'WorldController@getAwardCategories');
     Route::get('awards', 'WorldController@getAwards');
-    Route::get('awards/{id}', 'WorldController@getAwards');
+    Route::get('awards/{id}', 'WorldController@getAward');
     Route::get('trait-categories', 'WorldController@getFeatureCategories');
     Route::get('traits', 'WorldController@getFeatures');
     Route::get('character-categories', 'WorldController@getCharacterCategories');

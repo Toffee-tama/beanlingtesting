@@ -77,8 +77,8 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('Source (Optional)') !!} {!! add_help('Where or How this award was earned.') !!}
-    {!! Form::text('uses', $award && $award->uses ? $award->uses : '', ['class' => 'form-control']) !!}
+    {!! Form::label('release', 'Source (Optional)') !!} {!! add_help('Where or How this award was earned.') !!}
+    {!! Form::text('release', $award && $award->source ? $award->source : '', ['class' => 'form-control']) !!}
 </div>
 
 <h3>Availability Information</h3>
