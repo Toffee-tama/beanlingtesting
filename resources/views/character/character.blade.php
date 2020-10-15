@@ -2,6 +2,8 @@
 
 @section('profile-title') {{ $character->fullName }} @endsection
 
+@section('meta-img') {{ $character->image->thumbnailUrl }} @endsection
+
 @section('profile-content')
 <div class="row no-gutters">
     <div class="col-md-8 my-auto">
