@@ -163,6 +163,10 @@ return [
                 'name' => 'Items',
                 'url' => 'admin/data/items'
             ],
+            [
+                'name' => 'Scavenger Hunts',
+                'url' => 'admin/data/hunts'
+            ],
         ]
     ],
     'Raffles' => [
