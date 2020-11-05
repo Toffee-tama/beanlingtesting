@@ -77,7 +77,7 @@
                         <a class="dropdown-item" href="{{ url('raffles') }}">
                             Raffles
                         </a>
-                                            <div class="dropdown-divider"></div>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url('Sales') }}">
                             Sales
                         </a>
@@ -122,10 +122,10 @@
 					   <a class="dropdown-item" href="{{ url('world') }}">
                             World Glossary
                         </a>
-						                        <a class="dropdown-item" href="{{ url('info/lore') }}">
+						<a class="dropdown-item" href="{{ url('info/lore') }}">
                             Lore Directory
                         </a>
-						                        <a class="dropdown-item" href="{{ url('info/stats') }}">
+						<a class="dropdown-item" href="{{ url('info/stats') }}">
                             About Stats
                         </a>
                         <a class="dropdown-item" href="{{ url('info/NPCs') }}">
@@ -134,7 +134,7 @@
                         <a class="dropdown-item" href="{{ url('info/discord') }}">
                             Discord
                         </a>
-						                        <a class="dropdown-item" href="{{ url('info/FAQ') }}">
+						<a class="dropdown-item" href="{{ url('info/FAQ') }}">
                             FAQ
                         </a>
                     </div>
@@ -157,10 +157,10 @@
                         <a class="dropdown-item" href="{{ url('info/questing') }}">
                             Questing
                         </a>
-                                                <a class="dropdown-item" href="{{ url('prompts/prompts') }}">
+                        <a class="dropdown-item" href="{{ url('prompts/prompts') }}">
                             Prompts
                         </a>
-						                        <a class="dropdown-item" href="{{ url('info/growingyourbean') }}">
+						<a class="dropdown-item" href="{{ url('info/growingyourbean') }}">
                             Growing your Beanling
                         </a>
                     </div>
