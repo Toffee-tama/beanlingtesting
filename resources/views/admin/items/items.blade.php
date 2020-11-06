@@ -7,7 +7,7 @@
 
 <h1>Items</h1>
 
-<p>This is a list of items in the game. Specific details about items can be added when they are granted to users (e.g. reason for grant). By default, items are merely collectibles and any additional functionality must be manually processed, or custom coded in for the specific item.</p> 
+<p>This is a list of items in the game. Specific details about items can be added when they are granted to users (e.g. reason for grant). By default, items are merely collectibles and any additional functionality must be manually processed, or custom coded in for the specific item.</p>
 
 <div class="text-right mb-3">
     <a class="btn btn-primary" href="{{ url('admin/data/item-categories') }}"><i class="fas fa-folder"></i> Item Categories</a>
@@ -30,7 +30,7 @@
 
 @if(!count($items))
     <p>No items found.</p>
-@else 
+@else
     {!! $items->render() !!}
     <table class="table table-sm category-table">
         <thead>
@@ -43,9 +43,7 @@
         <tbody>
             @foreach($items as $item)
                 <tr class="sort-item" data-id="{{ $item->id }}">
-                    <td>
-                        {{ $item->name }}
-                    </td>
+                    <td><a href="{{ $item->idUrl }}">{{ $item->name }}</a></td>
                     <td>{{ $item->category ? $item->category->name : '' }}</td>
                     <td class="text-right">
                         <a href="{{ url('admin/data/items/edit/'.$item->id) }}" class="btn btn-primary">Edit</a>

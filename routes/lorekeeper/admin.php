@@ -75,6 +75,16 @@ Route::group(['prefix' => 'images', 'middleware' => 'power:edit_site_settings'],
 # DATA
 Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:edit_data'], function() {
 
+    # GALLERIES
+    Route::get('galleries', 'GalleryController@getIndex');
+    Route::get('galleries/create', 'GalleryController@getCreateGallery');
+    Route::get('galleries/edit/{id}', 'GalleryController@getEditGallery');
+    Route::get('galleries/delete/{id}', 'GalleryController@getDeleteGallery');
+    Route::post('galleries/create', 'GalleryController@postCreateEditGallery');
+    Route::post('galleries/edit/{id?}', 'GalleryController@postCreateEditGallery');
+    Route::post('galleries/delete/{id}', 'GalleryController@postDeleteGallery');
+    Route::post('galleries/sort', 'GalleryController@postSortGallery');
+    
     # CURRENCIES
     Route::get('currencies', 'CurrencyController@getIndex');
     Route::get('currencies/sort', 'CurrencyController@getSort');
@@ -205,6 +215,22 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('prompts/create', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
+
+    # SCAVENGER HUNTS
+    Route::get('hunts', 'HuntController@getHuntIndex');
+    Route::get('hunts/create', 'HuntController@getCreateHunt');
+    Route::get('hunts/edit/{id}', 'HuntController@getEditHunt');
+    Route::get('hunts/delete/{id}', 'HuntController@getDeleteHunt');
+    Route::post('hunts/create', 'HuntController@postCreateEditHunt');
+    Route::post('hunts/edit/{id?}', 'HuntController@postCreateEditHunt');
+    Route::post('hunts/delete/{id}', 'HuntController@postDeleteHunt');
+
+    Route::get('hunts/targets/create/{id}', 'HuntController@getCreateHuntTarget');
+    Route::post('hunts/targets/create', 'HuntController@postCreateEditHuntTarget');
+    Route::get('hunts/targets/edit/{id}', 'HuntController@getEditHuntTarget');
+    Route::post('hunts/targets/edit/{id}', 'HuntController@postCreateEditHuntTarget');
+    Route::get('hunts/targets/delete/{id}', 'HuntController@getDeleteHuntTarget');
+    Route::post('hunts/targets/delete/{id}', 'HuntController@postDeleteHuntTarget');
 });
 
 
@@ -231,6 +257,18 @@ Route::group(['prefix' => 'news', 'middleware' => 'power:edit_pages'], function(
     Route::post('create', 'NewsController@postCreateEditNews');
     Route::post('edit/{id?}', 'NewsController@postCreateEditNews');
     Route::post('delete/{id}', 'NewsController@postDeleteNews');
+});
+
+# SALES
+Route::group(['prefix' => 'sales', 'middleware' => 'power:edit_pages'], function() {
+
+    Route::get('/', 'SalesController@getIndex');
+    Route::get('create', 'SalesController@getCreateSales');
+    Route::get('edit/{id}', 'SalesController@getEditSales');
+    Route::get('delete/{id}', 'SalesController@getDeleteSales');
+    Route::post('create', 'SalesController@postCreateEditSales');
+    Route::post('edit/{id?}', 'SalesController@postCreateEditSales');
+    Route::post('delete/{id}', 'SalesController@postDeleteSales');
 });
 
 # SITE SETTINGS
@@ -272,6 +310,7 @@ Route::group(['prefix' => 'masterlist', 'namespace' => 'Characters', 'middleware
 });
 Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:edit_inventories'], function() {
     Route::post('{slug}/grant', 'GrantController@postCharacterCurrency');
+    Route::post('{slug}/grant-items', 'GrantController@postCharacterItems');
 });
 Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:manage_characters'], function() {
 
@@ -372,6 +411,15 @@ Route::group(['prefix' => 'claims', 'middleware' => 'power:manage_submissions'],
     Route::get('/{status}', 'SubmissionController@getClaimIndex')->where('status', 'pending|approved|rejected');
     Route::get('edit/{id}', 'SubmissionController@getClaim');
     Route::post('edit/{id}/{action}', 'SubmissionController@postSubmission')->where('action', 'approve|reject');
+});
+
+# SUBMISSIONS
+Route::group(['prefix' => 'gallery', 'middleware' => 'power:manage_submissions'], function() {
+    Route::get('/submissions', 'GalleryController@getSubmissionIndex');
+    Route::get('/submissions/{status}', 'GalleryController@getSubmissionIndex')->where('status', 'pending|accepted|rejected');
+    Route::get('/currency', 'GalleryController@getCurrencyIndex');
+    Route::get('/currency/{status}', 'GalleryController@getCurrencyIndex')->where('status', 'pending|valued');
+    Route::post('edit/{id}/{action}', 'GalleryController@postEditSubmission')->where('action', 'accept|reject|comment|move|value');
 });
 
 # DESIGN APPROVALS

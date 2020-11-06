@@ -17,6 +17,7 @@ Route::group(['prefix' => 'notifications', 'namespace' => 'Users'], function() {
     Route::get('/', 'AccountController@getNotifications');
     Route::get('delete/{id}', 'AccountController@getDeleteNotification');
     Route::post('clear', 'AccountController@postClearNotifications');
+    Route::post('clear/{type}', 'AccountController@postClearNotifications');
 });
 
 Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
@@ -24,6 +25,7 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
     Route::post('profile', 'AccountController@postProfile');
     Route::post('password', 'AccountController@postPassword');
     Route::post('email', 'AccountController@postEmail');
+    Route::post('avatar', 'AccountController@postAvatar');
 
     Route::get('bookmarks', 'BookmarkController@getBookmarks');
     Route::get('bookmarks/create', 'BookmarkController@getCreateBookmark');
@@ -36,9 +38,7 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
 
 Route::group(['prefix' => 'inventory', 'namespace' => 'Users'], function() {
     Route::get('/', 'InventoryController@getIndex');
-    Route::post('transfer/{id}', 'InventoryController@postTransfer');
-    Route::post('delete/{id}', 'InventoryController@postDelete');
-    Route::post('act/{id}/{tag}', 'InventoryController@postAct');
+    Route::post('edit', 'InventoryController@postEdit');
 
     Route::get('selector', 'InventoryController@getSelector');
 });
@@ -82,7 +82,6 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/profile/edit', 'CharacterController@postEditCharacterProfile');
 
     Route::post('{slug}/bank/transfer', 'CharacterController@postCurrencyTransfer');
-
     Route::get('{slug}/transfer', 'CharacterController@getTransfer');
     Route::post('{slug}/transfer', 'CharacterController@postTransfer');
     Route::post('{slug}/transfer/{id}/cancel', 'CharacterController@postCancelTransfer');
@@ -105,6 +104,24 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
 /**************************************************************************************************
     Submissions
 **************************************************************************************************/
+
+Route::group(['prefix' => 'gallery'], function() {
+    Route::get('submissions/{type}', 'GalleryController@getUserSubmissions')->where('type', 'pending|accepted|rejected');
+
+    Route::post('favorite/{id}', 'GalleryController@postFavoriteSubmission');
+
+    Route::get('submit/{id}', 'GalleryController@getNewGallerySubmission');
+    Route::get('submit/character/{slug}', 'GalleryController@getCharacterInfo');
+    Route::get('edit/{id}', 'GalleryController@getEditGallerySubmission');
+    Route::get('queue/{id}', 'GalleryController@getSubmissionLog');
+    Route::post('submit', 'GalleryController@postCreateEditGallerySubmission');
+    Route::post('edit/{id}', 'GalleryController@postCreateEditGallerySubmission');
+
+    Route::post('collaborator/{id}', 'GalleryController@postEditCollaborator');
+    
+    Route::get('archive/{id}', 'GalleryController@getArchiveSubmission');
+    Route::post('archive/{id}', 'GalleryController@postArchiveSubmission');
+});
 
 Route::group(['prefix' => 'submissions', 'namespace' => 'Users'], function() {
     Route::get('/', 'SubmissionController@getIndex');
@@ -151,4 +168,25 @@ Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function() {
 Route::group(['prefix' => 'shops'], function() {
     Route::post('buy', 'ShopController@postBuy');
     Route::get('history', 'ShopController@getPurchaseHistory');
+});
+
+/**************************************************************************************************
+    Scavenger Hunts
+**************************************************************************************************/
+
+Route::group(['prefix' => 'hunts'], function() {
+    Route::get('{id}', 'HuntController@getHunt');
+    Route::get('targets/{pageId}', 'HuntController@getTarget');
+    Route::post('targets/claim', 'HuntController@postClaimTarget');
+});
+
+/**************************************************************************************************
+    Comments
+**************************************************************************************************/
+Route::group(['prefix' => 'comments', 'namespace' => 'Comments'], function() {
+    Route::post('/', 'CommentController@store')->name('comments.store');
+    Route::delete('/{comment}', 'CommentController@destroy')->name('comments.destroy');
+    Route::put('/{comment}', 'CommentController@update')->name('comments.update');
+    Route::post('/{comment}', 'CommentController@reply')->name('comments.reply');
+    Route::post('/{id}/feature', 'CommentController@feature')->name('comments.feature');
 });
