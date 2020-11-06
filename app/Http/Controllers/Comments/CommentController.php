@@ -17,6 +17,7 @@ use App\Models\Comment;
 use App\Models\Sales;
 use App\Models\User\User;
 use App\Models\News;
+use App\Models\Gallery\GallerySubmission;
 use App\Models\Report\Report;
 use App\Models\SitePage;
 
@@ -78,6 +79,7 @@ class CommentController extends Controller implements CommentControllerInterface
         $comment->commentable()->associate($model);
         $comment->comment = $request->message;
         $comment->approved = !Config::get('comments.approval_required');
+        $comment->type = isset($request['type']) && $request['type'] ? $request['type'] : "User-User";
         $comment->save();
 
         $recipient = null;
@@ -85,6 +87,7 @@ class CommentController extends Controller implements CommentControllerInterface
         $model_type = $comment->commentable_type;
         //getting user who commented
         $sender = User::find($comment->commenter_id);
+        $type = $comment->type;
 
         switch($model_type) {
             case 'App\Models\User\UserProfile':
@@ -103,6 +106,14 @@ class CommentController extends Controller implements CommentControllerInterface
                 $recipient = $news->user; // User that has been commented on (or owner of sale post)
                 $post = 'your news post'; // Simple message to show if it's profile/sales/news
                 $link = $news->url . '/#comment-' . $comment->getKey();
+                break; 
+            case 'App\Models\Gallery\GallerySubmission':
+                $submission = GallerySubmission::find($comment->commentable_id);
+                if($type == "Staff-Staff") $recipient = User::find(Settings::get('admin_user')); 
+                else $recipient = $submission->user;
+                $post = ($type != null) ? 'your gallery submission\'s staff comments' : 'your gallery submission';
+                $link = ($type != null) ? $submission->queueUrl . '/#comment-' . $comment->getKey() : $submission->url . '/#comment-' . $comment->getKey();
+                break;  
                 break;    
             case 'App\Models\Report\Report':
                 $report = Report::find($comment->commentable_id);
