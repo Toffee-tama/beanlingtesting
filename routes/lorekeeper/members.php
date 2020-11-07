@@ -105,24 +105,6 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
     Submissions
 **************************************************************************************************/
 
-Route::group(['prefix' => 'gallery'], function() {
-    Route::get('submissions/{type}', 'GalleryController@getUserSubmissions')->where('type', 'pending|accepted|rejected');
-
-    Route::post('favorite/{id}', 'GalleryController@postFavoriteSubmission');
-
-    Route::get('submit/{id}', 'GalleryController@getNewGallerySubmission');
-    Route::get('submit/character/{slug}', 'GalleryController@getCharacterInfo');
-    Route::get('edit/{id}', 'GalleryController@getEditGallerySubmission');
-    Route::get('queue/{id}', 'GalleryController@getSubmissionLog');
-    Route::post('submit', 'GalleryController@postCreateEditGallerySubmission');
-    Route::post('edit/{id}', 'GalleryController@postCreateEditGallerySubmission');
-
-    Route::post('collaborator/{id}', 'GalleryController@postEditCollaborator');
-    
-    Route::get('archive/{id}', 'GalleryController@getArchiveSubmission');
-    Route::post('archive/{id}', 'GalleryController@postArchiveSubmission');
-});
-
 Route::group(['prefix' => 'submissions', 'namespace' => 'Users'], function() {
     Route::get('/', 'SubmissionController@getIndex');
     Route::get('new', 'SubmissionController@getNewSubmission');
@@ -135,6 +117,13 @@ Route::group(['prefix' => 'claims', 'namespace' => 'Users'], function() {
     Route::get('/', 'SubmissionController@getClaimsIndex');
     Route::get('new', 'SubmissionController@getNewClaim');
     Route::post('new', 'SubmissionController@postNewClaim');
+});
+
+Route::group(['prefix' => 'reports', 'namespace' => 'Users'], function() {
+    Route::get('/', 'ReportController@getReportsIndex');
+    Route::get('new', 'ReportController@getNewReport');
+    Route::post('new', 'ReportController@postNewReport');
+    Route::get('view/{id}', 'ReportController@getReport');
 });
 
 Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function() {
@@ -170,9 +159,9 @@ Route::group(['prefix' => 'shops'], function() {
     Route::get('history', 'ShopController@getPurchaseHistory');
 });
 
-/**************************************************************************************************
+/**************************************************************************************************	
     Comments
-**************************************************************************************************/
+**************************************************************************************************/	
 Route::group(['prefix' => 'comments', 'namespace' => 'Comments'], function() {
     Route::post('/', 'CommentController@store')->name('comments.store');
     Route::delete('/{comment}', 'CommentController@destroy')->name('comments.destroy');
