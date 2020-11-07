@@ -398,12 +398,9 @@ class CharacterManager extends Service
     private function cropThumbnail($points, $characterImage, $isMyo = false)
     {
         $image = Image::make($characterImage->imagePath . '/' . $characterImage->imageFileName);
-<<<<<<< HEAD
-=======
 
         // Crop according to the selected area
         $image->crop($cropWidth, $cropHeight, $points['x0'], $points['y0']);
->>>>>>> ddd85fa8f7620536d8e5654542a05b7d66be6c6c
 
         if(Config::get('lorekeeper.settings.masterlist_image_format') != 'png' && Config::get('lorekeeper.settings.masterlist_image_format') != null && Config::get('lorekeeper.settings.masterlist_image_background') != null) {
             $canvas = Image::canvas($image->width(), $image->height(), Config::get('lorekeeper.settings.masterlist_image_background'));
