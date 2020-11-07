@@ -215,22 +215,6 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('prompts/create', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
-
-    # SCAVENGER HUNTS
-    Route::get('hunts', 'HuntController@getHuntIndex');
-    Route::get('hunts/create', 'HuntController@getCreateHunt');
-    Route::get('hunts/edit/{id}', 'HuntController@getEditHunt');
-    Route::get('hunts/delete/{id}', 'HuntController@getDeleteHunt');
-    Route::post('hunts/create', 'HuntController@postCreateEditHunt');
-    Route::post('hunts/edit/{id?}', 'HuntController@postCreateEditHunt');
-    Route::post('hunts/delete/{id}', 'HuntController@postDeleteHunt');
-
-    Route::get('hunts/targets/create/{id}', 'HuntController@getCreateHuntTarget');
-    Route::post('hunts/targets/create', 'HuntController@postCreateEditHuntTarget');
-    Route::get('hunts/targets/edit/{id}', 'HuntController@getEditHuntTarget');
-    Route::post('hunts/targets/edit/{id}', 'HuntController@postCreateEditHuntTarget');
-    Route::get('hunts/targets/delete/{id}', 'HuntController@getDeleteHuntTarget');
-    Route::post('hunts/targets/delete/{id}', 'HuntController@postDeleteHuntTarget');
 });
 
 
@@ -421,13 +405,6 @@ Route::group(['prefix' => 'gallery', 'middleware' => 'power:manage_submissions']
     Route::get('/currency/{status}', 'GalleryController@getCurrencyIndex')->where('status', 'pending|valued');
     Route::post('edit/{id}/{action}', 'GalleryController@postEditSubmission')->where('action', 'accept|reject|comment|move|value');
 });
-# REPORTS
-Route::group(['prefix' => 'reports', 'middleware' => 'power:manage_reports'], function() {
-    Route::get('/', 'ReportController@getReportIndex');
-    Route::get('/{status}', 'ReportController@getReportIndex')->where('status', 'pending|assigned|closed');
-    Route::get('edit/{id}', 'ReportController@getReport');
-    Route::post('edit/{id}/{action}', 'ReportController@postReport')->where('action', 'assign|close');
-});
 
 # DESIGN APPROVALS
 Route::group(['prefix' => 'designs', 'middleware' => 'power:manage_characters'], function() {
@@ -435,4 +412,3 @@ Route::group(['prefix' => 'designs', 'middleware' => 'power:manage_characters'],
     Route::post('edit/{id}/{action}', 'DesignController@postDesign')->where('action', 'cancel|approve|reject');
 });
 Route::get('{type}/{status}', 'DesignController@getDesignIndex')->where('type', 'myo-approvals|design-approvals')->where('status', 'pending|approved|rejected');
-});
