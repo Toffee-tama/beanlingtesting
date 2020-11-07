@@ -48,7 +48,7 @@ class DesignController extends Controller
             'request' => $r
         ] + ($action == 'approve' ? [
             'categories' => CharacterCategory::orderBy('sort')->get(),
-        ]);
+        ] : []));
     }
 
     public function postDesign($id, $action, Request $request, CharacterManager $service)
