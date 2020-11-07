@@ -94,7 +94,7 @@ main > .row {
 
 .site-header-image {
     /*background-color: #eee;*/
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     min-height: 200px;
 }
 
@@ -180,6 +180,11 @@ main > .row {
 @media (max-width: 767px) {
 	.site-mobile-header {
 		top: 54px !important;
+    }
+    
+    .timestamp {
+		margin-left: 1rem!important;
+		margin-right: 1rem!important;
 	}
 }
 
@@ -257,11 +262,6 @@ main > .row {
 
 	.site-footer .navbar .navbar-nav {
 		flex-wrap: wrap; justify-content: center;
-	}
-	
-	.timestamp {
-		margin-left: 1rem!important;
-		margin-right: 1rem!important;
 	}
 }
 
@@ -620,10 +620,7 @@ tr.accountbound {
         padding-left: 3rem;
         border-left-width: 2px!important;
     }
-<<<<<<< HEAD
-=======
     
->>>>>>> 76cc919b6399f893848d4a65aa49aa2548f20649
 @media only screen and (max-width: 600px) {
     .comment_replies { padding-left:1rem;}
 }
