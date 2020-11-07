@@ -45,10 +45,6 @@ Route::get('/blacklist', 'BrowseController@getBlacklist');
 
 # PROFILES
 Route::group(['prefix' => 'user', 'namespace' => 'Users'], function() {
-    Route::get('{name}/gallery', 'UserController@getUserGallery');
-    Route::get('{name}/favorites', 'UserController@getUserFavorites');
-    Route::get('{name}/favorites/own-characters', 'UserController@getUserOwnCharacterFavorites');
-
     Route::get('{name}', 'UserController@getUser');
     Route::get('{name}/characters', 'UserController@getUserCharacters');
     Route::get('{name}/myos', 'UserController@getUserMyoSlots');
@@ -78,8 +74,6 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::get('{slug}/ownership', 'CharacterController@getCharacterOwnershipLogs');
     Route::get('{slug}/change-log', 'CharacterController@getCharacterLogs');
     Route::get('{slug}/submissions', 'CharacterController@getCharacterSubmissions');
-
-    Route::get('{slug}/gallery', 'CharacterController@getCharacterGallery');
 });
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
     Route::get('{id}', 'MyoController@getCharacter');
@@ -149,17 +143,10 @@ Route::group(['prefix' => 'claims', 'namespace' => 'Users'], function() {
 Route::get('comment/{id}', 'PermalinkController@getComment');
 
 /**************************************************************************************************
-    Galleries
-**************************************************************************************************/
-Route::group(['prefix' => 'gallery'], function() {
-    Route::get('/', 'GalleryController@getGalleryIndex');
-    Route::get('{id}', 'GalleryController@getGallery');
-    Route::get('view/{id}', 'GalleryController@getSubmission');
-    Route::get('view/favorites/{id}', 'GalleryController@getSubmissionFavorites');
-});
-/**************************************************************************************************
     Reports
 **************************************************************************************************/
 Route::group(['prefix' => 'reports', 'namespace' => 'Users'], function() {
     Route::get('/bug-reports', 'ReportController@getBugIndex');
 });
+
+
