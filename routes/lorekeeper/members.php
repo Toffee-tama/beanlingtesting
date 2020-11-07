@@ -137,6 +137,13 @@ Route::group(['prefix' => 'claims', 'namespace' => 'Users'], function() {
     Route::post('new', 'SubmissionController@postNewClaim');
 });
 
+Route::group(['prefix' => 'reports', 'namespace' => 'Users'], function() {
+    Route::get('/', 'ReportController@getReportsIndex');
+    Route::get('new', 'ReportController@getNewReport');
+    Route::post('new', 'ReportController@postNewReport');
+    Route::get('view/{id}', 'ReportController@getReport');
+});
+
 Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function() {
     Route::get('{type?}', 'DesignController@getDesignUpdateIndex')->where('type', 'pending|approved|rejected');
     Route::get('{id}', 'DesignController@getDesignUpdate');
@@ -171,8 +178,18 @@ Route::group(['prefix' => 'shops'], function() {
 });
 
 /**************************************************************************************************
-    Comments
+    Scavenger Hunts
 **************************************************************************************************/
+
+Route::group(['prefix' => 'hunts'], function() {
+    Route::get('{id}', 'HuntController@getHunt');
+    Route::get('targets/{pageId}', 'HuntController@getTarget');
+    Route::post('targets/claim', 'HuntController@postClaimTarget');
+});
+
+/**************************************************************************************************
+    Comments
+**************************************************************************************************/	
 Route::group(['prefix' => 'comments', 'namespace' => 'Comments'], function() {
     Route::post('/', 'CommentController@store')->name('comments.store');
     Route::delete('/{comment}', 'CommentController@destroy')->name('comments.destroy');
