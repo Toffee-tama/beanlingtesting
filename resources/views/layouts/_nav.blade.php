@@ -81,7 +81,7 @@
                             Raffles
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ url('Sales') }}">
+                        <a class="dropdown-item" href="{{ url('sales') }}">
                             Sales
                         </a>
                     </div>
