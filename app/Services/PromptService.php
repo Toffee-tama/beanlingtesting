@@ -202,7 +202,8 @@ class PromptService extends Service
             }
             else $data['has_image'] = 0;
 
-            $prompt = Prompt::create(array_only($data, ['prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image']));
+            $prompt = Prompt::create(array_only($data, ['prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix',
+            'limit', 'limit_period', 'limit_character']));
 
             if ($image) $this->handleImage($image, $prompt->imagePath, $prompt->imageFileName);
 
@@ -233,6 +234,7 @@ class PromptService extends Service
             // More specific validation
             if(Prompt::where('name', $data['name'])->where('id', '!=', $prompt->id)->exists()) throw new \Exception("The name has already been taken.");
             if((isset($data['prompt_category_id']) && $data['prompt_category_id']) && !PromptCategory::where('id', $data['prompt_category_id'])->exists()) throw new \Exception("The selected prompt category is invalid.");
+            if(isset($data['prefix']) && Prompt::where('prefix', $data['prefix'])->where('id', '!=', $prompt->id)->exists()) throw new \Exception("That prefix has already been taken.");
 
             $data = $this->populateData($data, $prompt);
 
@@ -243,7 +245,8 @@ class PromptService extends Service
                 unset($data['image']);
             }
 
-            $prompt->update(array_only($data, ['prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image']));
+            $prompt->update(array_only($data, ['prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix',
+            'limit', 'limit_period', 'limit_character']));
 
             if ($prompt) $this->handleImage($image, $prompt->imagePath, $prompt->imageFileName);
 
@@ -270,6 +273,8 @@ class PromptService extends Service
         if(!isset($data['hide_before_start'])) $data['hide_before_start'] = 0;
         if(!isset($data['hide_after_end'])) $data['hide_after_end'] = 0;
         if(!isset($data['is_active'])) $data['is_active'] = 0;
+
+        if(!isset($data['limit_character'])) $data['limit_character'] = null;
 
         if(isset($data['remove_image']))
         {

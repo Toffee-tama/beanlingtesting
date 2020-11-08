@@ -66,6 +66,14 @@ return [
         'power' => 'manage_submissions',
         'links' => [
             [
+                'name' => 'Gallery Submissions',
+                'url' => 'admin/gallery/submissions'
+            ],
+            [
+                'name' => 'Gallery Currency Awards',
+                'url' => 'admin/gallery/currency'
+            ],
+            [
                 'name' => 'Prompt Submissions',
                 'url' => 'admin/submissions'
             ],
@@ -121,6 +129,10 @@ return [
         'power' => 'edit_data',
         'links' => [
             [
+                'name' => 'Galleries',
+                'url' => 'admin/data/galleries'
+            ],
+            [
                 'name' => 'Character Categories',
                 'url' => 'admin/data/character-categories'
             ],
@@ -159,6 +171,10 @@ return [
             [
                 'name' => 'Items',
                 'url' => 'admin/data/items'
+            ],
+            [
+                'name' => 'Scavenger Hunts',
+                'url' => 'admin/data/hunts'
             ],
         ]
     ],
