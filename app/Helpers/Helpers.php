@@ -193,7 +193,7 @@ function parseGalleryThumbs($text, &$submissions) {
             $submission = \App\Models\Gallery\GallerySubmission::where('id', $match)->first();
             if($submission) {
                 $submissions[] = $submission;
-                $text = preg_replace('/\[thumb='.$match.'\]/', '<a href="'.$submission->url.'" data-toggle="tooltip" title="'.$submission->displayTitle.' by '.nl2br(htmlentities($submission->credits)).'">'.$submission->thumbnail.'</a>', $text);
+                $text = preg_replace('/\[thumb='.$match.'\]/', '<a href="'.$submission->url.'" data-toggle="tooltip" title="'.$submission->displayTitle.' by '.nl2br(htmlentities($submission->creditsPlain)).(isset($submission->content_warning) ? '<br/><strong>Content Warning:</strong> '.nl2br(htmlentities($submission->content_warning)) : '').'">'.view('widgets._gallery_thumb', ['submission' => $submission]).'</a>', $text);
             }
         }
     }
@@ -213,4 +213,71 @@ function randomString($characters)
     $code = '';
     for ($i = 0; $i < $characters; $i++) $code .= $src[mt_rand(0, strlen($src) - 1)];
     return $code;
+}
+
+/**
+ * Check that a url is from a site used for authentication,
+ * and if it belongs to a user.
+ *
+ * @param  string                  $url
+ * @param  bool                    $failOnError
+ * @return \App\Models\User\User|string
+ */
+function checkAlias($url, $failOnError = true)
+{
+    $recipient = null;
+    $matches = [];
+    // Check to see if url is 1. from a site used for auth
+    foreach(Config::get('lorekeeper.sites') as $key=>$site) if(isset($site['auth']) && $site['auth']) {
+        preg_match_all($site['regex'], $url, $matches);
+        if($matches != []) {$urlSite = $key; break;}
+    }
+    if($matches[0] == [] && $failOnError) throw new \Exception('This URL is from an invalid site. Please provide a URL for a user profile from a site used for authentication.');
+
+    // and 2. if it contains an alias associated with a user on-site.
+    if($matches[1] != [] && isset($matches[1][0])) {
+        $alias = App\Models\User\UserAlias::where('site', $urlSite)->where('alias', $matches[1][0])->first();
+        if($alias) $recipient = $alias->user;
+        else $recipient = $url;
+    }
+
+    return $recipient;
+}
+
+/**
+ * Prettifies links to user profiles on various sites in a "user@site" format.
+ *
+ * @param  string  $url
+ * @return string
+ */
+function prettyProfileLink($url)
+{
+    $matches = [];
+    // Check different sites and return site if a match is made, plus username (retreived from the URL)
+    foreach(Config::get('lorekeeper.sites') as $siteName=>$siteInfo) {
+        if(preg_match_all($siteInfo['regex'], $url, $matches)) {$site = $siteName; $name = $matches[1][0]; $link = $matches[0][0]; break;}
+    }
+
+    // Return formatted link if possible; failing that, an unformatted link
+    if(isset($name) && isset($site) && isset($link)) return '<a href="https://'.$link.'">'.$name.'@'.$site.'</a>';
+    else return '<a href="'.$url.'">'.$url.'</a>';
+}
+
+/**
+ * Prettifies user profile names for use in various functions.
+ *
+ * @param  string  $url
+ * @return string
+ */
+function prettyProfileName($url)
+{
+    $matches = [];
+    // Check different sites and return site if a match is made, plus username (retreived from the URL)
+    foreach(Config::get('lorekeeper.sites') as $siteName=>$siteInfo) {
+        if(preg_match_all($siteInfo['regex'], $url, $matches)) {$site = $siteName; $name = $matches[1][0]; break;}
+    }
+
+    // Return formatted name if possible; failing that, an unformatted url
+    if(isset($name) && isset($site)) return $name.'@'.$site;
+    else return $url;
 }

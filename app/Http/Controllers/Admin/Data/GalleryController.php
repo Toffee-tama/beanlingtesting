@@ -33,7 +33,7 @@ class GalleryController extends Controller
             'galleries' => Gallery::sort()->whereNull('parent_id')->paginate(10)
         ]);
     }
-    
+
     /**
      * Shows the create gallery page.
      *
@@ -46,7 +46,7 @@ class GalleryController extends Controller
             'galleries' => Gallery::sort()->pluck('name','id')
         ]);
     }
-    
+
     /**
      * Shows the edit gallery page.
      *
@@ -75,7 +75,7 @@ class GalleryController extends Controller
     {
         $id ? $request->validate(Gallery::$updateRules) : $request->validate(Gallery::$createRules);
         $data = $request->only([
-            'name', 'sort', 'parent_id', 'description', 'submissions_open', 'currency_enabled', 'votes_required'
+            'name', 'sort', 'parent_id', 'description', 'submissions_open', 'currency_enabled', 'votes_required', 'start_at', 'end_at', 'hide_before_start'
         ]);
         if($id && $service->updateGallery(Gallery::find($id), $data, Auth::user())) {
             flash('Gallery updated successfully.')->success();
@@ -89,7 +89,7 @@ class GalleryController extends Controller
         }
         return redirect()->back();
     }
-    
+
     /**
      * Gets the gallery deletion modal.
      *
@@ -121,23 +121,5 @@ class GalleryController extends Controller
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->to('admin/data/galleries');
-    }
-
-    /**
-     * Sorts rarities.
-     *
-     * @param  \Illuminate\Http\Request    $request
-     * @param  App\Services\GalleryService $service
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postSortGallery(Request $request, GalleryService $service)
-    {
-        if($service->sortGallery($request->get('sort'))) {
-            flash('Gallery order updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->back();
     }
 }

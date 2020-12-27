@@ -19,7 +19,7 @@ Route::group(['prefix' => 'users', 'namespace' => 'Users'], function() {
 
         Route::get('{name}/edit', 'UserController@getUser');
         Route::post('{name}/basic', 'UserController@postUserBasicInfo');
-        Route::post('{name}/alias', 'UserController@postUserAlias');
+        Route::post('{name}/alias/{id}', 'UserController@postUserAlias');
         Route::post('{name}/account', 'UserController@postUserAccount');
         Route::get('{name}/updates', 'UserController@getUserUpdates');
         Route::get('{name}/ban', 'UserController@getBan');
@@ -187,6 +187,16 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('character-categories/edit/{id?}', 'CharacterCategoryController@postCreateEditCharacterCategory');
     Route::post('character-categories/delete/{id}', 'CharacterCategoryController@postDeleteCharacterCategory');
     Route::post('character-categories/sort', 'CharacterCategoryController@postSortCharacterCategory');
+
+    # SUB MASTERLISTS
+    Route::get('sublists', 'SublistController@getIndex');
+    Route::get('sublists/create', 'SublistController@getCreateSublist');
+    Route::get('sublists/edit/{id}', 'SublistController@getEditSublist');
+    Route::get('sublists/delete/{id}', 'SublistController@getDeleteSublist');
+    Route::post('sublists/create', 'SublistController@postCreateEditSublist');
+    Route::post('sublists/edit/{id?}', 'SublistController@postCreateEditSublist');
+    Route::post('sublists/delete/{id}', 'SublistController@postDeleteSublist');
+    Route::post('sublists/sort', 'SublistController@postSortSublist');
 
     # LOOT TABLES
     Route::get('loot-tables', 'LootTableController@getIndex');
@@ -426,7 +436,7 @@ Route::group(['prefix' => 'gallery', 'middleware' => 'power:manage_submissions']
 # REPORTS
 Route::group(['prefix' => 'reports', 'middleware' => 'power:manage_reports'], function() {
     Route::get('/', 'ReportController@getReportIndex');
-    Route::get('/{status}', 'ReportController@getReportIndex')->where('status', 'pending|assigned|closed');
+    Route::get('/{status}', 'ReportController@getReportIndex')->where('status', 'pending|assigned|assigned-to-me|closed');
     Route::get('edit/{id}', 'ReportController@getReport');
     Route::post('edit/{id}/{action}', 'ReportController@postReport')->where('action', 'assign|close');
 });

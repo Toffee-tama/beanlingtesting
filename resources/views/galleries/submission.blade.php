@@ -11,22 +11,22 @@
     @if(!$submission->isVisible) <i class="fas fa-eye-slash"></i> @endif {{ $submission->displayTitle }}
     <div class="float-right">
         @if(Auth::check())
-            {!! Form::open(['url' => '/gallery/favorite/'.$submission->id]) !!} 
+            {!! Form::open(['url' => '/gallery/favorite/'.$submission->id]) !!}
                 @if($submission->user->id != Auth::user()->id && $submission->collaborators->where('user_id', Auth::user()->id)->first() == null && $submission->isVisible)
                     {!! Form::button('<i class="fas fa-star"></i> ', ['class' => 'btn '. ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'btn-outline-primary' : 'btn-primary'), 'data-toggle' => 'tooltip', 'title' => ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from').' your Favorites', 'type' => 'submit']) !!}
-                @endif     
+                @endif
                 @if($submission->user->id == Auth::user()->id || Auth::user()->hasPower('manage_submissions'))
-                    <a class="btn btn-outline-primary" href="/gallery/queue/{{ $submission->id }}" data-toggle="tooltip" title="View Log Details"><i class="fas fa-clipboard-list"></i></a>    
+                    <a class="btn btn-outline-primary" href="/gallery/queue/{{ $submission->id }}" data-toggle="tooltip" title="View Log Details"><i class="fas fa-clipboard-list"></i></a>
                     <a class="btn btn-outline-primary" href="/gallery/edit/{{ $submission->id }}"><i class="fas fa-edit"></i> Edit</a>
                 @endif
             {!! Form::close() !!}
         @endif
     </div>
 </h1>
-<div class="mb-3 mb-sm-4"> 
+<div class="mb-3 mb-sm-4">
     <div class="row">
         <div class="col-md">
-            In {!! $submission->gallery->displayName !!} ・ 
+            In {!! $submission->gallery->displayName !!} ・
             By {!! $submission->credits !!}
         </div>
         <div class="col-md text-right">
@@ -59,10 +59,11 @@
             <div class="col-md ml-md-2">
                 <div class="card">
                     <div class="card-header">
-                        <h5>{{ $submission->displayTitle }}</h5>
+                        <h5>{{ $submission->displayTitle }}
+                        <a class="float-right" href="{{ url('reports/new?url=') . $submission->url }}"><i class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Click here to report this submission." style="opacity: 50%;"></i></a></h5>
                         <div class="float-right">
                             @if(Auth::check() && ($submission->user->id != Auth::user()->id && $submission->collaborators->where('user_id', Auth::user()->id)->first() == null) && $submission->isVisible)
-                                {!! Form::open(['url' => '/gallery/favorite/'.$submission->id]) !!} 
+                                {!! Form::open(['url' => '/gallery/favorite/'.$submission->id]) !!}
                                     {{ $submission->favorites->count() }} {!! Form::button('<i class="fas fa-star"></i> ', ['style' => 'border:0; border-radius:.5em;', 'class' => ($submission->favorites->where('user_id', Auth::user()->id)->first() != null ? 'btn-success' : ''), 'data-toggle' => 'tooltip', 'title' => ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from').' your Favorites', 'type' => 'submit']) !!} ・ {{ $commentCount }} <i class="fas fa-comment"></i>
                                 {!! Form::close() !!}
                             @else
@@ -80,14 +81,11 @@
                         <hr/>
                         <p>
                             <strong>Submitted By</strong> {!! $submission->user->displayName !!}
-                            @if($submission->prompt_id)
-                                <strong>for</strong> {!! $submission->prompt->displayName !!}
-                            @endif
                             @if($submission->favorites->count())
                                  ・ <a class="view-favorites" href="#">View Favorites</a>
                             @endif
                             <br/>
-                            <strong>Submitted:</strong> {!! pretty_date($submission->created_at) !!} ・ 
+                            <strong>Submitted:</strong> {!! pretty_date($submission->created_at) !!} ・
                             <strong>Last Updated:</strong> {!! pretty_date($submission->updated_at) !!}
                         </p>
                     </div>
@@ -103,20 +101,18 @@
                 </div>
                 <div class="card-body">
                     @if($submission->status == 'Pending' && Auth::check() && $submission->collaborators->where('user_id', Auth::user()->id)->first() != null)
-                        <p>Check that your role in the collaboration is correct as listed, and if not, make any changes. You can also remove yourself from the collaborator list if necessary. When you are done, press "submit" to make any changes as well as approve the submission/the record of your contribution to it. You will be able to edit this until the submission is approved.</p>
+                        <p>Check that your role in the collaboration is correct as listed, and if not, make any changes. You can also remove yourself from the collaborator list if necessary. When you are done, or if the record is already accurate, press "submit" to make any changes and mark yourself as having approved. You will be able to edit this until the submission is approved.</p>
                         {!! Form::open(['url' => '/gallery/collaborator/'.$submission->id]) !!}
                             @foreach($submission->collaborators as $collaborator)
                                 @if($collaborator->user_id == Auth::user()->id)
                                 <div class="mb-2">
                                     <div class="d-flex">{!! $collaborator->has_approved ? '<div class="mb-2 mr-2 text-success" data-toggle="tooltip" title="Has Approved"><i class="fas fa-check"></i></div>' : '' !!}{!! $collaborator->user->displayName !!}:
-                                        <div class="float-right">
-                                            {!! Form::label('remove_user', 'Remove Me', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If toggled on, this will remove the record of your collaboration from this submission.') !!}
-                                        </div>
                                     </div>
                                     <div class="d-flex">
                                         {!! Form::text('collaborator_data[]', $collaborator->data, ['class' => 'form-control mr-2', 'placeholder' => 'Role (Sketch, Lines, etc.)']) !!}
-                                        {!! Form::checkbox('remove_user', 1, false, ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'data-onstyle' => 'danger']) !!}
                                     </div>
+                                    {!! Form::label('remove_user', 'Remove Me', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If toggled on, this will remove the record of your collaboration from this submission.') !!}
+                                    {!! Form::checkbox('remove_user', 1, false, ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'data-onstyle' => 'danger']) !!}
                                 </div>
                                 @else
                                     <div class="d-flex">
@@ -170,6 +166,18 @@
                 </div>
             </div>
         @endif
+        @if($submission->promptSubmissions->count())
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Prompt Submissions</h5>
+                </div>
+                <div class="card-body">
+                    @foreach($submission->promptSubmissions as $promptSubmission)
+                        <strong><a href="{{ $promptSubmission->viewUrl }}">#{{ $promptSubmission->id }} for {!! $promptSubmission->prompt->name !!}</a></strong> by {!! $promptSubmission->user->displayName !!}<br/>
+                    @endforeach
+                </div>
+            </div>
+        @endif
         <div class="card mb-4">
             <div class="card-header">
                 <h5>Mention This</h5>
@@ -181,10 +189,10 @@
                 </div>
                 In a comment:
                 <div class="alert alert-secondary">
-                    @if(isset($submission->hash))
-                        [![Image]({{ $submission->thumbnailUrl }})]({{ $submission->url }})
+                    @if(isset($submission->hash) && !isset($submission->content_warning))
+                        [![Image]($submission->thumbnailUrl }})]({{ $submission->url }})
                     @else
-                        [{{ $submission->displayTitle }} by {{ $submission->creditsPlain }} (Literature)]({{ $submission->url }})
+                        [{{ $submission->displayTitle }} by {{ $submission->creditsPlain }} {{ isset($submission->hash) ? '(Art)' : '(Literature)' }}{{ isset($submission->content_warning) ? ' ・ **Content Warning:** '.nl2br(htmlentities($submission->content_warning)) : '' }}]({{ $submission->url }})
                     @endif
                 </div>
             </div>
@@ -201,13 +209,10 @@
     </div>
 @endif
 
-<?php $galleryPage = true; 
-$sideGallery = $submission->gallery ?>
-
 @endsection
 
 @section('scripts')
-@parent 
+@parent
 <script>
     $(document).ready(function() {
         $('.view-favorites').on('click', function(e) {
