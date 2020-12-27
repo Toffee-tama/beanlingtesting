@@ -52,7 +52,6 @@
             "App\\": "app/"
         },
         "classmap": [
-            "database/seeds",
             "database/factories"
         ],
         "files": [
