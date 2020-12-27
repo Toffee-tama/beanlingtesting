@@ -3,7 +3,8 @@
 use Settings;
 use Config;
 use Auth;
-use Illuminate\Http\Request; 
+use View;
+use Illuminate\Http\Request;
 use App\Models\Gallery\Gallery;
 use App\Models\Gallery\GallerySubmission;
 
@@ -14,8 +15,6 @@ use App\Models\Currency\Currency;
 use App\Models\Comment;
 
 use App\Services\GalleryManager;
-
-use Kris\LaravelFormBuilder\FormBuilder;
 
 class GalleryController extends Controller
 {
@@ -29,6 +28,17 @@ class GalleryController extends Controller
     */
 
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        View::share('sidebarGalleries', Gallery::whereNull('parent_id')->active()->sort()->get());
+    }
+
+    /**
      * Shows the gallery index.
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -36,7 +46,9 @@ class GalleryController extends Controller
     public function getGalleryIndex()
     {
         return view('galleries.index', [
-            'galleries' => Gallery::sort()->whereNull('parent_id')->paginate(10),
+            'galleries' => Gallery::sort()->active()->whereNull('parent_id')->paginate(10),
+            'galleryPage' => false,
+            'sideGallery' => null
         ]);
     }
 
@@ -60,7 +72,7 @@ class GalleryController extends Controller
         });
         if($request->get('prompt_id')) $query->where('prompt_id', $request->get('prompt_id'));
 
-        if(isset($sort['sort'])) 
+        if(isset($sort['sort']))
         {
             switch($sort['sort']) {
                 case 'alpha':
@@ -82,13 +94,16 @@ class GalleryController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
-        } 
+        }
         else $query->orderBy('created_at', 'DESC');
 
         return view('galleries.gallery', [
             'gallery' => $gallery,
             'submissions' => $query->paginate(20)->appends($request->query()),
             'prompts' => [0 => 'Any Prompt'] + Prompt::whereIn('id', GallerySubmission::where('gallery_id', $gallery->id)->visible(Auth::check() ? Auth::user() : null)->accepted()->whereNotNull('prompt_id')->pluck('prompt_id')->toArray())->orderBy('name')->pluck('name', 'id')->toArray(),
+            'childSubmissions' => GallerySubmission::whereIn('gallery_id', $gallery->children->pluck('id')->toArray())->where('is_visible', 1)->where('status', 'Accepted'),
+            'galleryPage' => true,
+            'sideGallery' => $gallery
         ]);
     }
 
@@ -114,7 +129,8 @@ class GalleryController extends Controller
         return view('galleries.submission', [
             'submission' => $submission,
             'commentCount' => Comment::where('commentable_type', 'App\Models\Gallery\GallerySubmission')->where('commentable_id', $submission->id)->where('type', 'User-User')->count(),
-            'currency' => Currency::find(Settings::get('group_currency')),
+            'galleryPage' => true,
+            'sideGallery' => $submission->gallery
         ]);
     }
 
@@ -152,6 +168,8 @@ class GalleryController extends Controller
         return view('galleries.submission_log', [
             'submission' => $submission,
             'currency' => Currency::find(Settings::get('group_currency')),
+            'galleryPage' => true,
+            'sideGallery' => $submission->gallery
         ]);
     }
 
@@ -165,12 +183,14 @@ class GalleryController extends Controller
     {
         $submissions = GallerySubmission::userSubmissions(Auth::user());
         if(!$type) $type = 'Pending';
-        
+
         $submissions = $submissions->where('status', ucfirst($type));
 
         return view('galleries.submissions', [
             'submissions' => $submissions->orderBy('id', 'DESC')->paginate(10),
             'galleries' => Gallery::sort()->whereNull('parent_id')->paginate(10),
+            'galleryPage' => false,
+            'sideGallery' => null
         ]);
     }
 
@@ -180,7 +200,7 @@ class GalleryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getNewGallerySubmission(Request $request, $id, FormBuilder $formBuilder)
+    public function getNewGallerySubmission(Request $request, $id)
     {
         if(!Auth::check()) abort(404);
         $gallery = Gallery::find($id);
@@ -192,8 +212,9 @@ class GalleryController extends Controller
             'submission' => new GallerySubmission,
             'prompts' => Prompt::active()->sortAlphabetical()->pluck('name', 'id')->toArray(),
             'users' => User::visible()->orderBy('name')->pluck('name', 'id')->toArray(),
-            'form' => $formBuilder->create('App\Forms\GroupCurrencyForm'),
             'currency' => Currency::find(Settings::get('group_currency')),
+            'galleryPage' => true,
+            'sideGallery' => $gallery
         ]));
     }
 
@@ -218,11 +239,13 @@ class GalleryController extends Controller
         return view('galleries.create_edit_submission', [
             'closed' => false,
             'gallery' => $submission->gallery,
-            'galleries' => Gallery::orderBy('name')->pluck('name', 'id')->toArray(),
+            'galleryOptions' => Gallery::orderBy('name')->pluck('name', 'id')->toArray(),
             'prompts' => $prompts->sortAlphabetical()->pluck('name', 'id')->toArray(),
             'submission' => $submission,
             'users' => User::visible()->orderBy('name')->pluck('name', 'id')->toArray(),
             'currency' => Currency::find(Settings::get('group_currency')),
+            'galleryPage' => true,
+            'sideGallery' => $submission->gallery
         ]);
     }
 
@@ -269,7 +292,7 @@ class GalleryController extends Controller
 
         if(!$id && Settings::get('gallery_submissions_reward_currency')) $currencyFormData = $request->only(collect(Config::get('lorekeeper.group_currency_form'))->keys()->toArray());
         else $currencyFormData = null;
-        
+
         if($id && $service->updateSubmission(GallerySubmission::find($id), $data, Auth::user())) {
             flash('Submission updated successfully.')->success();
         }

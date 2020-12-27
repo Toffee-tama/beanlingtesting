@@ -5,7 +5,11 @@
 @section('meta-img') {{ $character->image->thumbnailUrl }} @endsection
 
 @section('profile-content')
-{!! breadcrumbs([($character->is_myo_slot ? 'MYO Slot Masterlist' : 'Character Masterlist') => ($character->is_myo_slot ? 'myos' : 'masterlist'), $character->fullName => $character->url, 'Transfer' => $character->url . '/transfer']) !!}
+@if($character->is_myo_slot)
+{!! breadcrumbs(['MYO Slot Masterlist' => 'myos', $character->fullName => $character->url, 'Transfer' => $character->url . '/transfer']) !!}
+@else
+{!! breadcrumbs([($character->category->masterlist_sub_id ? $character->category->sublist->name.' Masterlist' : 'Character masterlist') => ($character->category->masterlist_sub_id ? 'sublist/'.$character->category->sublist->key : 'masterlist' ), $character->fullName => $character->url, 'Transfer' => $character->url . '/transfer']) !!}
+@endif
 
 @include('character._header', ['character' => $character])
 
@@ -48,10 +52,9 @@
             {!! Form::select('recipient_id', $userOptions, old('recipient_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select User']) !!}
         </div>
         <div class="form-group">
-            {!! Form::label('user_reason', 'Reason for Transfer') !!}
+            {!! Form::label('user_reason', 'Reason for Transfer (Required)') !!}
             {!! Form::text('user_reason', '', ['class' => 'form-control']) !!}
         </div>
-
         <div class="text-right">
             {!! Form::submit('Send Transfer', ['class' => 'btn btn-primary']) !!}
         </div>
@@ -72,8 +75,8 @@
         {!! Form::select('recipient_id', $userOptions, old('recipient_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select User']) !!}
     </div>
     <div class="form-group">
-        {!! Form::label('recipient_alias', 'Recipient Alias') !!}
-        {!! Form::text('recipient_alias', old('recipient_alias'), ['class' => 'form-control']) !!}
+        {!! Form::label('recipient_url', 'Recipient Url') !!} {!! add_help('Characters can only be transferred to offsite user URLs from site(s) used for authentication.') !!}
+        {!! Form::text('recipient_url', old('recipient_url'), ['class' => 'form-control']) !!}
     </div>
     <div class="form-group">
         {!! Form::label('cooldown', 'Transfer Cooldown (days)') !!}

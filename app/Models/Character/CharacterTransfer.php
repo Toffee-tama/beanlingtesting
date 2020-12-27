@@ -14,7 +14,7 @@ class CharacterTransfer extends Model
      * @var array
      */
     protected $fillable = [
-        'character_id', 'sender_id', 'recipient_id', 'user_reason',
+        'character_id', 'sender_id', 'user_reason', 'recipient_id',
         'status', 'is_approved', 'reason', 'data'
     ];
 

@@ -172,8 +172,8 @@ class CharacterController extends Controller
     {
         $categories = ItemCategory::where('is_character_owned', '1')->orderBy('sort', 'DESC')->get();
         $itemOptions = Item::whereIn('item_category_id', $categories->pluck('id'));
-        
-        $items = count($categories) ? 
+
+        $items = count($categories) ?
             $this->character->items()
                 ->where('count', '>', 0)
                 ->orderByRaw('FIELD(item_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
@@ -367,7 +367,7 @@ class CharacterController extends Controller
             'logs' => $this->character->getItemLogs(0)
         ]);
     }
-    
+
     /**
      * Shows a character's ownership logs.
      *

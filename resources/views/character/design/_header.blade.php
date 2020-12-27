@@ -12,7 +12,7 @@
     @endif
 @endif
 
-@if($request->status != 'Draft' && Auth::user()->hasPower('manage_characters'))
+@if($request->status != 'Draft' && Auth::user()->hasPower('manage_characters') && Config::get('lorekeeper.extensions.design_update_voting'))
     <?php
         $rejectSum = 0;
         $approveSum = 0;
