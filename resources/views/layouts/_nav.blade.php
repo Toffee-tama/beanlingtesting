@@ -17,6 +17,13 @@
                         <a class="nav-link" href="{{ url('news') }}">News</a>
                     @endif
                 </li>
+                <li class="nav-item">
+                    @if(Auth::check() && Auth::user()->is_sales_unread && Config::get('lorekeeper.extensions.navbar_news_notif'))
+                        <a class="nav-link d-flex text-warning" href="{{ url('sales') }}"><strong>Sales</strong><i class="fas fa-bell"></i></a>
+                    @else
+                        <a class="nav-link" href="{{ url('sales') }}">Sales</a>
+                    @endif
+                </li>
                 @if(Auth::check())
                     <li class="nav-item dropdown">
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -171,9 +178,6 @@
                             Growing your Beanling
                         </a>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('sales') }}">Sales</a>
                 </li>
 				                <li class="nav-item">
                     <a class="nav-link" href="{{ url('gallery') }}">Gallery</a>
