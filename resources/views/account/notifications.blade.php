@@ -63,7 +63,6 @@
 @parent
 <script>
     $( document ).ready(function(){
-
         $('.clear-notification').on('click', function(e) {
             e.preventDefault();
             var $row = $(this).parent().parent();
@@ -73,6 +72,5 @@
             });
         });
     });
-
 </script>
 @endsection
