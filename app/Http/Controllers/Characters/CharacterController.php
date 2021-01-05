@@ -139,7 +139,6 @@ class CharacterController extends Controller
 
     /**
      * Shows a character's gallery.
-     * Shows a character's links page.
      *
      * @param  string  $slug
      * @return \Illuminate\Contracts\Support\Renderable
@@ -149,7 +148,16 @@ class CharacterController extends Controller
         return view('character.gallery', [
             'character' => $this->character,
             'submissions' => GallerySubmission::whereIn('id', $this->character->gallerySubmissions->pluck('gallery_submission_id')->toArray())->visible()->accepted()->paginate(20),
-    public function getCharacterLinks($slug)
+        }
+            
+        /**
+ *  Shows a character's links page.
+ *      *
+ * @param  string  $slug
+ * @return \Illuminate\Contracts\Support\Renderable
+ */ 
+
+public function getCharacterLinks($slug)
     {
         $types = [
             '???',
@@ -178,7 +186,6 @@ class CharacterController extends Controller
             'types' => $types,
         ]);
     }
-}
 
     /**
      * Shows a character's edit links page
