@@ -11,6 +11,7 @@ use App\Models\Species\Subtype;
 use App\Models\Character\CharacterDropData;
 use App\Models\Item\Item;
 use App\Models\Character\Sublist;
+use App\Models\Character\CharacterLineageBlacklist;
 
 use App\Services\SpeciesService;
 use App\Services\CharacterDropService;
@@ -48,6 +49,7 @@ class SpeciesController extends Controller
     public function getCreateSpecies()
     {
         return view('admin.specieses.create_edit_species', [
+            'lineageBlacklist' => null,
             'species' => new Species,
             'sublists' => [0 => 'No Sublist'] + Sublist::orderBy('name', 'DESC')->pluck('name', 'id')->toArray()
         ]);
@@ -64,6 +66,7 @@ class SpeciesController extends Controller
         $species = Species::find($id);
         if(!$species) abort(404);
         return view('admin.specieses.create_edit_species', [
+            'lineageBlacklist' => CharacterLineageBlacklist::where('type', 'species')->where('type_id', $species->id)->get()->first(),
             'species' => $species,
             'sublists' => [0 => 'No Sublist'] + Sublist::orderBy('name', 'DESC')->pluck('name', 'id')->toArray()
         ]);
@@ -81,6 +84,7 @@ class SpeciesController extends Controller
     {
         $id ? $request->validate(Species::$updateRules) : $request->validate(Species::$createRules);
         $data = $request->only([
+            'lineage-blacklist',
             'name', 'description', 'image', 'remove_image', 'masterlist_sub_id'
         ]);
         if($id && $service->updateSpecies(Species::find($id), $data, Auth::user())) {
@@ -167,6 +171,7 @@ class SpeciesController extends Controller
     public function getCreateSubtype()
     {
         return view('admin.specieses.create_edit_subtype', [
+            'lineageBlacklist' => null,
             'subtype' => new Subtype,
             'specieses' => Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
         ]);
@@ -183,6 +188,7 @@ class SpeciesController extends Controller
         $subtype = Subtype::find($id);
         if(!$subtype) abort(404);
         return view('admin.specieses.create_edit_subtype', [
+            'lineageBlacklist' => CharacterLineageBlacklist::where('type', 'subtype')->where('type_id', $id)->get()->first(),
             'subtype' => $subtype,
             'specieses' => Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
         ]);
@@ -200,6 +206,7 @@ class SpeciesController extends Controller
     {
         $id ? $request->validate(Subtype::$updateRules) : $request->validate(Subtype::$createRules);
         $data = $request->only([
+            'lineage-blacklist',
             'species_id', 'name', 'description', 'image', 'remove_image'
         ]);
         if($id && $service->updateSubtype(Subtype::find($id), $data, Auth::user())) {

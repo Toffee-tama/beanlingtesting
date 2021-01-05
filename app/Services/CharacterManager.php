@@ -27,6 +27,7 @@ use App\Models\Character\CharacterTransfer;
 use App\Models\Character\CharacterDrop;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterBookmark;
+use App\Models\Character\CharacterLineage;
 use App\Models\User\UserCharacterLog;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
@@ -93,6 +94,7 @@ class CharacterManager extends Service
             if(!$isMyo && Character::where('slug', $data['slug'])->exists()) throw new \Exception("Please enter a unique character code.");
 
             if(!(isset($data['user_id']) && $data['user_id']) && !(isset($data['owner_url']) && $data['owner_url']))
+            if(!(isset($data['user_id']) && $data['user_id']) && !(isset($data['owner_alias']) && $data['owner_alias']))
                 throw new \Exception("Please select an owner.");
             if(!$isMyo)
             {
@@ -124,6 +126,9 @@ class CharacterManager extends Service
             // Create character
             $character = $this->handleCharacter($data, $isMyo);
             if(!$character) throw new \Exception("Error happened while trying to create character.");
+
+            // Create character lineage
+            $lineage = $this->handleCharacterLineage($data, $character, $isMyo);
 
             // Create character image
             $data['is_valid'] = true; // New image of new characters are always valid
@@ -252,7 +257,7 @@ class CharacterManager extends Service
                     unset($data['use_cropper']);
                 }
             }
-            $imageData = Arr::only($data, [
+            $imageData = array_only($data, [
                 'species_id', 'subtype_id', 'rarity_id', 'use_cropper',
                 'x0', 'x1', 'y0', 'y1',
             ]);
@@ -337,6 +342,138 @@ class CharacterManager extends Service
             }
 
             return $image;
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return false;
+
+    }
+
+    /**
+     * Handles character lineage data.
+     *
+     * @param  array                            $data
+     * @return \App\Models\Character\Character  $character
+     * @param  bool                             $isMyo
+     * @return \App\Models\Character\CharacterLineage|bool
+     */
+    private function handleCharacterLineage($data, $character, $isMyo = false)
+    {
+        try {
+            // TODO take values from $data
+            $lineageData = [
+                'character_id'          => $character->id,
+                'sire_id'               => null,
+                'sire_name'             => null,
+                'sire_sire_id'          => null,
+                'sire_sire_name'        => null,
+                'sire_sire_sire_id'     => null,
+                'sire_sire_sire_name'   => null,
+                'sire_sire_dam_id'      => null,
+                'sire_sire_dam_name'    => null,
+                'sire_dam_id'           => null,
+                'sire_dam_name'         => null,
+                'sire_dam_sire_id'      => null,
+                'sire_dam_sire_name'    => null,
+                'sire_dam_dam_id'       => null,
+                'sire_dam_dam_name'     => null,
+                'dam_id'                => null,
+                'dam_name'              => null,
+                'dam_sire_id'           => null,
+                'dam_sire_name'         => null,
+                'dam_sire_sire_id'      => null,
+                'dam_sire_sire_name'    => null,
+                'dam_sire_dam_id'       => null,
+                'dam_sire_dam_name'     => null,
+                'dam_dam_id'            => null,
+                'dam_dam_name'          => null,
+                'dam_dam_sire_id'       => null,
+                'dam_dam_sire_name'     => null,
+                'dam_dam_dam_id'        => null,
+                'dam_dam_dam_name'      => null,
+            ];
+            $roots = [
+                'sire',
+                'sire_sire',
+                'sire_sire_sire',
+                'sire_sire_dam',
+                'sire_dam',
+                'sire_dam_sire',
+                'sire_dam_dam',
+                'dam',
+                'dam_sire',
+                'dam_sire_sire',
+                'dam_sire_dam',
+                'dam_dam',
+                'dam_dam_sire',
+                'dam_dam_dam'
+            ];
+            // you don't need to look for great-great-grandparents
+            $shortlist = [
+                'sire',
+                'sire_sire',
+                'sire_dam',
+                'dam',
+                'dam_sire',
+                'dam_dam',
+            ];
+
+            // check if lineage is empty ...
+            $isEmpty = true;
+
+            // Checking inputs ?
+            for ($i=0; $i < 14; $i++) {
+                // if isset Data key_id, set Lineage key_id and check if that character exists?
+                // else if isset Data key_name, set Lineage key_name to that.
+                if (isset($data[$roots[$i].'_id'])) {
+                    $id = $data[$roots[$i].'_id'];
+                    $lineageData[$roots[$i].'_id'] = $id;
+                    $char = Character::find($id);
+
+                    // TODO Set name to be the slug of the character.
+                    $lineageData[$roots[$i].'_name'] = $char->slug;
+                    $isEmpty = false;
+                }
+                else if (isset($data[$roots[$i].'_name'])) {
+                    $lineageData[$roots[$i].'_name'] = $data[$roots[$i].'_name'];
+                    $isEmpty = $data[$roots[$i].'_name'] == "" ? $isEmpty : false;
+                }
+            }
+
+            //TODO: Fill from ancestor(s) IF ancestor fill is checked.
+            if (isset($data['generate_ancestors']) && !$isEmpty)
+            {
+                for ($j=0; $j < 6; $j++) {
+                    $key = $shortlist[$j];
+                    $id = $data[$key.'_id'];
+
+                    // check if this is a character id and not null
+                    if ($id !== null)
+                    {
+                        // check if this exists and has lineage
+                        $char = Character::find($id);
+                        if($char->exists() && $char->lineage !== null)
+                        {
+                            // go through their parents and gparents
+                            for ($k=0; $k < 6; $k++)
+                            {
+                                // checks that this is a valid lineage index
+                                // eg. sire_sire_sire and not sire_sire_sire_sire
+                                $key2 = $key."_".$shortlist[$k];
+                                if (in_array($key2, $roots, true))
+                                {
+                                    $lineageData[$key2."_id"] = $char->lineage[$shortlist[$k]."_id"];
+                                    $lineageData[$key2."_name"] = $char->lineage[$shortlist[$k]."_name"];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // throw new \Exception('Everything went right, we hope.');
+
+            $lineage = $isEmpty ? null : CharacterLineage::create($lineageData);
+            return $lineage;
         } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
@@ -645,7 +782,7 @@ class CharacterManager extends Service
 
             // Add a log for the character
             // This logs all the updates made to the character
-            $this->createLog($user->id, null, $character->user_id, ($character->user_id ? null : $character->owner_url), $character->id, 'Character Image Uploaded', '[#'.$image->id.']', 'character');
+            $this->createLog($user->id, null, $character->user_id, $character->user_id ? $character->user->alias : $character->owner_alias, $character->id, 'Character Image Uploaded', '[#'.$image->id.']', 'character');
 
             // If the recipient has an account, send them a notification
             if($character->user && $user->id != $character->user_id && $character->is_visible) {
@@ -1108,7 +1245,7 @@ class CharacterManager extends Service
         try {
             if(!$character->is_myo_slot && Character::where('slug', $data['slug'])->where('id', '!=', $character->id)->exists()) throw new \Exception("Character code must be unique.");
 
-            $characterData = Arr::only($data, [
+            $characterData = array_only($data, [
                 'character_category_id',
                 'number', 'slug',
             ]);
@@ -1319,6 +1456,7 @@ class CharacterManager extends Service
 
     /**
      * Updates a character's profile.
+     * Updates a character's lineage.
      *
      * @param  array                            $data
      * @param  \App\Models\Character\Character  $character
@@ -1327,6 +1465,7 @@ class CharacterManager extends Service
      * @return  bool
      */
     public function updateCharacterLinks($data, $character, $user, $isAdmin)
+    public function updateCharacterLineage($data, $character, $user, $isAdmin = false)
     {
         DB::beginTransaction();
 
@@ -1377,6 +1516,131 @@ class CharacterManager extends Service
 
             return $this->commitReturn(true);
         } catch(\Exception $e) { 
+            if(!$user->hasPower('manage_characters')) throw new \Exception('You do not have the required permissions to do this.');
+            $roots = [
+                'sire',
+                'sire_sire', 'sire_sire_sire', 'sire_sire_dam',
+                'sire_dam',  'sire_dam_sire',  'sire_dam_dam',
+                'dam',
+                'dam_sire',  'dam_sire_sire',  'dam_sire_dam',
+                'dam_dam',   'dam_dam_sire',   'dam_dam_dam'
+            ];
+            // you don't need to look for great-great-grandparents
+            $shortlist = [
+                'sire', 'sire_sire', 'sire_dam',
+                'dam', 'dam_sire', 'dam_dam',
+            ];
+            $line = null;
+            $skipFlag = false;
+
+            // Check if we need to create a lineage bc this character doesn't have one.
+            if(!$character->lineage) {
+                $line = $this->handleCharacterLineage($data, $character, $character->is_myo_slot);
+                // tells us we don't need to calculate ancestors as handleCharacterLineage already does
+                $skipFlag = true;
+            }
+            else {
+                // Grab the character's existing lineage
+                $line = $character->lineage;
+            }
+
+            // If we have a lineage already, and didn't just create one, then update it.
+            if(!$skipFlag){
+                // Checking inputs ?
+                for ($i=0; $i < 14; $i++) {
+                    // if isset Data key_id, set Lineage key_id and check if that character exists?
+                    // else if isset Data key_name, set Lineage key_name to that.
+                    if (isset($data[$roots[$i].'_id'])) {
+                        $id = $data[$roots[$i].'_id'];
+                        $line[$roots[$i].'_id'] = $id;
+                        $char = Character::find($id);
+
+                        // TODO Set name to be the slug of the character.
+                        $line[$roots[$i].'_name'] = $char->slug;
+                    }
+                    else if (isset($data[$roots[$i].'_name'])) {
+                        $line[$roots[$i].'_name'] = $data[$roots[$i].'_name'];
+                    }
+                    else {
+                        // EG. someone deleted it, so we erase it.
+                        $line[$roots[$i].'_id'] = null;
+                        $line[$roots[$i].'_name'] = null;
+                    }
+                }
+            }
+
+            // If generate_ancestors is set and we didn't just create a new lineage ...
+            if (!$skipFlag && isset($data['generate_ancestors'])) {
+                // for each of this character's shortlist of ancestors...
+                for ($j=0; $j < 6; $j++) {
+                    $key = $shortlist[$j];
+                    $id = isset($data[$key.'_id']) ? $data[$key.'_id'] : null;
+
+                    // check if this is a character id and not null
+                    if ($id !== null) {
+                        // check if this exists and has lineage
+                        $char = Character::find($id);
+                        if($char->exists() && $char->lineage !== null) {
+                            // go through their parents and gparents
+                            for ($k=0; $k < 6; $k++) {
+                                // checks that this is a valid lineage index
+                                // eg. sire_sire_sire and not sire_sire_sire_sire
+                                $key2 = $key."_".$shortlist[$k];
+                                if (in_array($key2, $roots, true)) {
+                                    $line[$key2."_id"] = $char->lineage[$shortlist[$k]."_id"];
+                                    $line[$key2."_name"] = $char->lineage[$shortlist[$k]."_name"];
+                                }
+                            }
+                        }
+                        else {
+                            for ($k=0; $k < 6; $k++) {
+                                $key2 = $key."_".$shortlist[$k];
+                                if (in_array($key2, $roots, true)) {
+                                    $line[$key2."_id"] = null;
+                                    $line[$key2."_name"] = null;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // if this request wants to update descendants
+            if (isset($data['update_descendants'])) {
+                // TODO: See if there's a better way to query this, because it is HELL on the database.
+
+                // find the descendants of this character
+                $children = CharacterLineage::query()
+                    ->where  ('sire_id',        $character->id)
+                    ->orWhere('sire_sire_id',   $character->id)
+                    ->orWhere('sire_dam_id',    $character->id)
+                    ->orWhere('dam_id',         $character->id)
+                    ->orWhere('dam_dam_id',     $character->id)
+                    ->orWhere('dam_sire_id',    $character->id)
+                    ->get();
+
+                // go through each descendant
+                foreach ($children as $child) {
+                    // search the lineage to find which ancestor this character is
+                    for ($k=0; $k < 6; $k++) {
+                        if ($child[$shortlist[$k]."_id"] == $character-> id) {
+                            for ($j=0; $j < 6; $j++) {
+                                $key = $shortlist[$k]."_".$shortlist[$j];
+                                if (in_array($key, $roots, true)) {
+                                    $child[$key."_id"] = $line[$shortlist[$j].'_id'];
+                                    $child[$key."_name"] = $line[$shortlist[$j].'_name'];
+                                }
+                            }
+                        }
+                    }
+                // save the changes
+                $child->save();
+                }
+            }
+            // and we're done!
+            if(!$skipFlag) $character->lineage->save();
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -1793,6 +2057,10 @@ class CharacterManager extends Service
             is_object($sender) ? null : $sender,
             $recipient && is_object($recipient) ? $recipient->id : null,
             $recipient && is_object($recipient) ? $recipient->url : ($recipient ? : null),
+            $sender ? $sender->id : null,
+            $sender ? null : $character->owner_alias,
+            $recipient && is_object($recipient) ? $recipient->id : null,
+            $recipient && is_object($recipient) ? $recipient->alias : ($recipient ? : null),
             $character->id, $logType ? $logType : ($character->is_myo_slot ? 'MYO Slot Transferred' : 'Character Transferred'), $data, 'user');
     }
 
@@ -1904,7 +2172,7 @@ class CharacterManager extends Service
             if(!$isAdmin || ($isAdmin && isset($data['modify_thumbnail']))) {
                 $imageData = [];
                 if(isset($data['use_cropper'])) {
-                    $imageData = Arr::only($data, [
+                    $imageData = array_only($data, [
                         'use_cropper',
                         'x0', 'x1', 'y0', 'y1',
                     ]);
@@ -1962,7 +2230,7 @@ class CharacterManager extends Service
             // Save thumbnail
             if(!$isAdmin || ($isAdmin && isset($data['modify_thumbnail']))) {
                 if(isset($data['use_cropper']))
-                    $this->cropThumbnail(Arr::only($data, ['x0','x1','y0','y1']), $request);
+                    $this->cropThumbnail(array_only($data, ['x0','x1','y0','y1']), $request);
                 else if(isset($data['thumbnail']))
                     $this->handleImage($data['thumbnail'], $request->imageDirectory, $request->thumbnailFileName);
             }
@@ -2313,6 +2581,8 @@ class CharacterManager extends Service
             // Add a log for the character and user
             $this->createLog($user->id, null, $request->character->user_id, $request->character->user->url, $request->character->id, $request->update_type == 'MYO' ? 'MYO Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'character');
             $this->createLog($user->id, null, $request->character->user_id, $request->character->user->url, $request->character->id, $request->update_type == 'MYO' ? 'MYO Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'user');
+            $this->createLog($user->id, null, $request->character->user_id, $request->character->user->alias, $request->character->id, $request->update_type == 'MYO' ? 'MYO Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'character');
+            $this->createLog($user->id, null, $request->character->user_id, $request->character->user->alias, $request->character->id, $request->update_type == 'MYO' ? 'MYO Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'user');
 
             // If this is for a MYO, set user's FTO status and the MYO status of the slot
             // and clear the character's name
