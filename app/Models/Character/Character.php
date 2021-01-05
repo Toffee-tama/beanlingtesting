@@ -220,7 +220,8 @@ class Character extends Model
             $drop->createDrop($this->id);
         }
         return $this->hasOne('App\Models\Character\CharacterDrop', 'character_id');
-    /*
+    }
+    /**
     * Get the links for this character
     */
     public function links()
