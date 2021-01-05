@@ -22,7 +22,7 @@
 
 <div class="form-group">
     {!! Form::label('Display Name') !!} {!! add_help('This is the name that will be shown to users, for example when displaying the rewards for doing a prompt. This is for display purposes and can be something more vague than the above, e.g. "A Random Rare Item"') !!}
-    {!! Form::text('display_name', $table->getOriginal('display_name'), ['class' => 'form-control']) !!}
+    {!! Form::text('display_name', $table->getRawOriginal('display_name'), ['class' => 'form-control']) !!}
 </div>
 
 <h3>Loot</h3>
@@ -116,7 +116,7 @@
 @section('scripts')
 @parent
 <script>
-$( document ).ready(function() {    
+$( document ).ready(function() {
     var $lootTable  = $('#lootTableBody');
     var $lootRow = $('#lootRow').find('.loot-row');
     var $itemSelect = $('#lootRowData').find('.item-select');
@@ -205,13 +205,13 @@ $( document ).ready(function() {
             weights.push(current);
         });
 
-        
+
         $('#lootTableBody .loot-row-chance').each(function( index ) {
             var current = (weights[index] / total) * 100;
             $(this).html(current.toString() + '%');
         });
     }
 });
-    
+
 </script>
 @endsection
