@@ -234,7 +234,9 @@ class Character extends Model
     public function links()
     {
        return $this->hasMany('App\Models\Character\CharacterRelation', 'chara_1')->where('status', 'Approved');
-     * Get the lineage of the character.
+    
+    /**
+     *  Get the lineage of the character.
      */
     public function lineage()
     {
