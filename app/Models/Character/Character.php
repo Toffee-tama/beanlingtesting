@@ -15,6 +15,7 @@ use App\Models\Character\Character;
 use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Character\CharacterBookmark;
+use App\Models\Character\CharacterRelation;
 
 use App\Models\Character\CharacterCurrency;
 use App\Models\Currency\Currency;
@@ -44,7 +45,7 @@ class Character extends Model
         'is_sellable', 'is_tradeable', 'is_giftable',
         'sale_value', 'transferrable_at', 'is_visible',
         'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'sort',
-        'is_myo_slot', 'name', 'trade_id', 'owner_url'
+        'is_myo_slot', 'name', 'trade_id', 'owner_url', 'is_links_open'
     ];
 
     /**
@@ -219,6 +220,12 @@ class Character extends Model
             $drop->createDrop($this->id);
         }
         return $this->hasOne('App\Models\Character\CharacterDrop', 'character_id');
+    /*
+    * Get the links for this character
+    */
+    public function links()
+    {
+       return $this->hasMany('App\Models\Character\CharacterRelation', 'chara_1')->where('status', 'Approved');
     }
 
     /**********************************************************************************************

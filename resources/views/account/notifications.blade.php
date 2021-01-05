@@ -72,9 +72,7 @@
                 $row.fadeOut(300, function() { $(this).remove(); });
             });
         });
-
     });
-
 
 </script>
 @endsection
