@@ -301,6 +301,29 @@ return [
         'name' => 'Link Accepted',
         'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Links.</a>)',
         'url' => '',
+    // PET_REMOVAL
+    40 => [
+        'name' => 'Pet Removal',
+        'message' => '{pet_name} (×{pet_quantity}) was removed from your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'inventory'
+    ],
+    // PET_TRANSFER
+    41 => [
+        'name' => 'Pet Transfer',
+        'message' => 'You have received {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'inventory'
+    ],
+    // FORCED_PET_TRANSFER
+    42 => [
+        'name' => 'Forced Pet Transfer',
+        'message' => '{pet_name} (×{pet_quantity}) was transferred out of your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'inventory'
+    ],
+    // PET_GRANT
+    43 => [
+        'name' => 'Pet Grant',
+        'message' => 'You have received a staff grant of {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'inventory'
     ],
     // REPORT_ASSIGNED
     220 => [

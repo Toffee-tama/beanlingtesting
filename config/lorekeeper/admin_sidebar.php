@@ -94,6 +94,10 @@ return [
                 'name' => 'Item Grants',
                 'url' => 'admin/grants/items'
             ],
+            [
+                'name' => 'Pet Grants',
+                'url' => 'admin/grants/pets'
+            ],
         ]
     ],
     'Masterlist' => [
@@ -187,6 +191,10 @@ return [
             [
                 'name' => 'Advent Calendars',
                 'url' => 'admin/data/advent-calendars'
+            ],
+            [
+                'name' => 'Pets',
+                'url' => 'admin/data/pets'
             ],
         ]
     ],
