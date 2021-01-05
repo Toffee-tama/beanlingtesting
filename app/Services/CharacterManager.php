@@ -1456,7 +1456,6 @@ class CharacterManager extends Service
 
     /**
      * Updates a character's profile.
-     * Updates a character's lineage.
      *
      * @param  array                            $data
      * @param  \App\Models\Character\Character  $character
@@ -1465,7 +1464,6 @@ class CharacterManager extends Service
      * @return  bool
      */
     public function updateCharacterLinks($data, $character, $user, $isAdmin)
-    public function updateCharacterLineage($data, $character, $user, $isAdmin = false)
     {
         DB::beginTransaction();
 
@@ -1516,6 +1514,24 @@ class CharacterManager extends Service
 
             return $this->commitReturn(true);
         } catch(\Exception $e) { 
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /** Updates a character's lineage.
+         *
+         * @param  array                            $data
+         * @param  \App\Models\Character\Character  $character
+         * @param  \App\Models\User\User            $user
+         * @param  bool                             $isAdmin
+         * @return  bool
+         */
+public function updateCharacterLineage($data, $character, $user, $isAdmin = false)
+    {
+        DB::beginTransaction();
+
+        try {
             if(!$user->hasPower('manage_characters')) throw new \Exception('You do not have the required permissions to do this.');
             $roots = [
                 'sire',
@@ -2579,8 +2595,6 @@ class CharacterManager extends Service
             $request->save();
 
             // Add a log for the character and user
-            $this->createLog($user->id, null, $request->character->user_id, $request->character->user->url, $request->character->id, $request->update_type == 'MYO' ? 'MYO Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'character');
-            $this->createLog($user->id, null, $request->character->user_id, $request->character->user->url, $request->character->id, $request->update_type == 'MYO' ? 'MYO Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'user');
             $this->createLog($user->id, null, $request->character->user_id, $request->character->user->alias, $request->character->id, $request->update_type == 'MYO' ? 'MYO Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'character');
             $this->createLog($user->id, null, $request->character->user_id, $request->character->user->alias, $request->character->id, $request->update_type == 'MYO' ? 'MYO Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'user');
 
