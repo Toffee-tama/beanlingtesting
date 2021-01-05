@@ -178,6 +178,7 @@ class CharacterController extends Controller
             'types' => $types,
         ]);
     }
+}
 
     /**
      * Shows a character's edit links page
