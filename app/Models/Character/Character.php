@@ -15,6 +15,9 @@ use App\Models\Character\Character;
 use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Character\CharacterBookmark;
+use App\Models\Character\CharacterRelation;
+use App\Models\Character\CharacterLineage;
+use App\Models\Character\CharacterLineageBlacklist;
 
 use App\Models\Character\CharacterCurrency;
 use App\Models\Currency\Currency;
@@ -23,6 +26,7 @@ use App\Models\Currency\CurrencyLog;
 use App\Models\Character\CharacterItem;
 use App\Models\Item\Item;
 use App\Models\Item\ItemLog;
+use App\Models\Character\CharacterDrop;
 
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
@@ -43,7 +47,7 @@ class Character extends Model
         'is_sellable', 'is_tradeable', 'is_giftable',
         'sale_value', 'transferrable_at', 'is_visible',
         'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'sort',
-        'is_myo_slot', 'name', 'trade_id', 'owner_url'
+        'is_myo_slot', 'name', 'trade_id', 'owner_url', 'is_links_open'
     ];
 
     /**
@@ -192,6 +196,11 @@ class Character extends Model
         return $this->belongsTo('App\Models\Rarity', 'rarity_id');
     }
 
+    public function pets()
+    {
+        return $this->hasMany('App\Models\User\UserPet', 'chara_id');
+    }
+    
     /**
      * Get the character's associated gallery submissions.
      */
@@ -206,6 +215,32 @@ class Character extends Model
     public function items()
     {
         return $this->belongsToMany('App\Models\Item\Item', 'character_items')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('character_items.deleted_at');
+    }
+
+    /**
+     * Get the character's character drop data.
+     */
+    public function drops() 
+    {
+        if(!CharacterDrop::where('character_id', $this->id)->first()) {
+            $drop = new CharacterDrop;
+            $drop->createDrop($this->id);
+        }
+        return $this->hasOne('App\Models\Character\CharacterDrop', 'character_id');
+    }
+    /**
+    * Get the links for this character
+    */
+    public function links()
+    {
+       return $this->hasMany('App\Models\Character\CharacterRelation', 'chara_1')->where('status', 'Approved');
+    }
+    /**
+     *  Get the lineage of the character.
+     */
+    public function lineage()
+    {
+        return $this->hasOne('App\Models\Character\CharacterLineage', 'character_id');
     }
 
     /**********************************************************************************************
@@ -545,5 +580,18 @@ class Character extends Model
                     'character_name' => $this->fullName
                 ]);
         }
+    }
+
+    /**
+     * Finds the lineage blacklist level of this character.
+     * 0 is no restriction at all
+     * 1 is no ancestors but no children
+     * 2 is no lineage at all
+     *
+     * @return int
+     */
+    public function getLineageBlacklistLevel($maxLevel = 2)
+    {
+        return CharacterLineageBlacklist::getBlacklistLevel($this, $maxLevel);
     }
 }

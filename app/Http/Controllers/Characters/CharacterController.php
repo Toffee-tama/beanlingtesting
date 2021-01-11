@@ -10,6 +10,7 @@ use Route;
 use Settings;
 use App\Models\User\User;
 use App\Models\Character\Character;
+use App\Models\Character\CharacterRelation;
 use App\Models\Species\Species;
 use App\Models\Rarity;
 use App\Models\Feature\Feature;
@@ -25,12 +26,14 @@ use App\Models\Item\ItemCategory;
 use App\Models\User\UserItem;
 use App\Models\Character\CharacterItem;
 use App\Models\Item\ItemLog;
+use App\Models\Character\CharacterDrop;
 
 use App\Models\Character\CharacterTransfer;
 
 use App\Services\CurrencyManager;
 use App\Services\InventoryManager;
 use App\Services\CharacterManager;
+use App\Services\LinkService;
 
 use App\Http\Controllers\Controller;
 
@@ -125,7 +128,7 @@ class CharacterController extends Controller
         $isOwner = ($this->character->user_id == Auth::user()->id);
         if(!$isMod && !$isOwner) abort(404);
         
-        if($service->updateCharacterProfile($request->only(['name', 'link', 'text', 'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'alert_user']), $this->character, Auth::user(), !$isOwner)) {
+        if($service->updateCharacterProfile($request->only(['name', 'link', 'text', 'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'is_links_open', 'alert_user']), $this->character, Auth::user(), !$isOwner)) {
             flash('Profile edited successfully.')->success();
         }
         else {
@@ -146,6 +149,127 @@ class CharacterController extends Controller
             'character' => $this->character,
             'submissions' => GallerySubmission::whereIn('id', $this->character->gallerySubmissions->pluck('gallery_submission_id')->toArray())->visible()->accepted()->orderBy('created_at', 'DESC')->paginate(20),
         ]);
+        }
+            
+        /**
+ *  Shows a character's links page.
+ *      *
+ * @param  string  $slug
+ * @return \Illuminate\Contracts\Support\Renderable
+ */ 
+
+public function getCharacterLinks($slug)
+    {
+        $types = [
+            '???',
+            'Acquaintence',
+            'Best Friends',
+            'Boss and Employee',
+            'Co-workers',
+            'Crushing',
+            'Enemy',
+            'Family',
+            'Friends',
+            'Frenemies',
+            'It\'s Complicated',
+            'Life Partners',
+            'On-and-Off',
+            'Partners in Crime',
+            'Past Relationship',
+            'Polyamorous Relationship',
+            'Rival',
+            'Roomate',
+            'Significant Others',
+        ];
+
+        return view('character.links', [
+            'character' => $this->character,
+            'types' => $types,
+        ]);
+    }
+
+    /**
+     * Shows a character's edit links page
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getEditCharacterLinks($slug)
+    {
+        if(!Auth::check()) abort(404);
+        
+        $isMod = Auth::user()->hasPower('manage_characters');
+        $isOwner = ($this->character->user_id == Auth::user()->id);
+        if(!$isMod && !$isOwner) abort(404);
+
+        return view('character.edit_link', [
+            'character' => $this->character,
+        ]);
+    }
+    
+    /**
+     * Edits a character's links
+     *
+     * @param  \Illuminate\Http\Request       $request
+     * @param  App\Services\CharacterManager  $service
+     * @param  string                         $slug
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEditCharacterLinks(Request $request, CharacterManager $service, $slug)
+    {
+        if(!Auth::check()) abort(404);
+
+        $isMod = Auth::user()->hasPower('manage_characters');
+        $isOwner = ($this->character->user_id == Auth::user()->id);
+        if(!$isMod && !$isOwner) abort(404);
+        
+        if($service->updateCharacterLinks($request->only(['slug']), $this->character, Auth::user(), $isMod)) {
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Edits a character's link info
+     *
+     * @param  \Illuminate\Http\Request       $request
+     * @param  App\Services\CharacterManager  $service
+     * @param  string                         $slug
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEditCharacterLinkInfo(Request $request, LinkService $service) 
+    {
+        // this is simple and messy
+
+        $data = $request->only(['chara_1', 'chara_2', 'info', 'type']);
+        if($service->updateInfo($data)) {
+            flash('Info updated successfully!')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+
+    }
+
+    /**
+     * deletes a link
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function postDeleteCharacterLink(Request $request, LinkService $service) 
+    {
+        $data = $request->only(['chara_1', 'chara_2']);
+        if($service->deleteLink($data)) {
+            flash('Link deleted successfully!')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
     }
 
     /**
@@ -333,6 +457,45 @@ class CharacterController extends Controller
     {
         if($service->deleteStack($this->character, CharacterItem::find($request->get('ids')), $request->get('quantities'))) {
             flash('Item deleted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Shows a character's drops page.
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterDrops($slug)
+    {
+        if(!$this->character->image->species->hasDrops || (!$this->character->drops->dropData->isActive && (!Auth::check() || !Auth::user()->hasPower('manage_characters')))) abort(404);
+        return view('character.drops', [
+            'character' => $this->character,
+            'drops' => $this->character->drops
+        ]);
+    }
+
+    /**
+     * Claims character drops.
+     *
+     * @param  \Illuminate\Http\Request       $request
+     * @param  App\Services\InventoryManager  $service
+     * @param  string                         $slug
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postClaimCharacterDrops(Request $request, InventoryManager $service, $slug)
+    {
+        if(!Auth::check()) abort(404);
+        if($this->character->user_id != Auth::user()->id) abort(404);
+        $drops = $this->character->drops;
+        if(!$drops) abort(404);
+
+        if($service->claimCharacterDrops($this->character, $this->character->user, $this->character->drops)) {
+            flash('Drops claimed successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

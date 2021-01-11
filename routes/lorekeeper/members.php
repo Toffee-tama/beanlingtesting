@@ -43,6 +43,16 @@ Route::group(['prefix' => 'inventory', 'namespace' => 'Users'], function() {
     Route::get('selector', 'InventoryController@getSelector');
 });
 
+Route::group(['prefix' => 'pets', 'namespace' => 'Users'], function() {
+    Route::get('/', 'PetController@getIndex');
+    Route::post('transfer/{id}', 'PetController@postTransfer');
+    Route::post('delete/{id}', 'PetController@postDelete');
+    Route::post('name/{id}', 'PetController@postName');
+    Route::post('attach/{id}', 'PetController@postAttach');
+
+    Route::get('selector', 'PetController@getSelector');
+});
+
 Route::group(['prefix' => 'characters', 'namespace' => 'Users'], function() {
     Route::get('/', 'CharacterController@getIndex');
     Route::post('sort', 'CharacterController@postSortCharacters');
@@ -82,6 +92,11 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/profile/edit', 'CharacterController@postEditCharacterProfile');
 
     Route::post('{slug}/inventory/edit', 'CharacterController@postInventoryEdit');
+    Route::get('{slug}/links/edit', 'CharacterController@getEditCharacterLinks');
+    Route::post('{slug}/links/edit', 'CharacterController@postEditCharacterLinks');
+
+    Route::post('{slug}/links/info/{id}', 'CharacterController@postEditCharacterLinkInfo');
+    Route::post('{slug}/links/delete/{id}', 'CharacterController@postDeleteCharacterLink');
 
     Route::post('{slug}/bank/transfer', 'CharacterController@postCurrencyTransfer');
     Route::get('{slug}/transfer', 'CharacterController@getTransfer');
@@ -90,7 +105,17 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
 
     Route::post('{slug}/approval', 'CharacterController@postCharacterApproval');
     Route::get('{slug}/approval', 'CharacterController@getCharacterApproval');
+
+    Route::get('{slug}/profile/edit', 'CharacterController@getEditCharacterProfile');
+    Route::post('{slug}/profile/edit', 'CharacterController@postEditCharacterProfile');
+
+    Route::post('{slug}/drops', 'CharacterController@postClaimCharacterDrops');
 });
+
+Route::get('links/accept/{id}', 'LinkController@getAcceptLink');
+Route::get('links/reject/{id}', 'LinkController@getRejectLink');
+// LINKS
+
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
     Route::get('{id}/profile/edit', 'MyoController@getEditCharacterProfile');
     Route::post('{id}/profile/edit', 'MyoController@postEditCharacterProfile');
@@ -191,11 +216,20 @@ Route::group(['prefix' => 'hunts'], function() {
 
 /**************************************************************************************************
     Comments
-**************************************************************************************************/	
+**************************************************************************************************/
 Route::group(['prefix' => 'comments', 'namespace' => 'Comments'], function() {
     Route::post('/', 'CommentController@store')->name('comments.store');
     Route::delete('/{comment}', 'CommentController@destroy')->name('comments.destroy');
     Route::put('/{comment}', 'CommentController@update')->name('comments.update');
     Route::post('/{comment}', 'CommentController@reply')->name('comments.reply');
     Route::post('/{id}/feature', 'CommentController@feature')->name('comments.feature');
+});
+
+/**************************************************************************************************
+    Advent Calendars
+**************************************************************************************************/
+
+Route::group(['prefix' => 'advent-calendars'], function() {
+    Route::get('{id}', 'AdventController@getAdvent');
+    Route::post('{id}', 'AdventController@postClaimPrize');
 });

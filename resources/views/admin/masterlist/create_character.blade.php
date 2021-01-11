@@ -208,11 +208,102 @@
         </div>
     @endif
 
+    <h3>Lineage</h3>
+
+    <div class="alert alert-info">Enter a sire and dam to autogenerate ancestry or enter ancestors manually. Do not enter anything if there are no ancestors in that slot.</div>
+
+    <?php
+        // Reduce errors and repetition
+        $k = [
+            'sire',
+            'dam',
+            'sire_sire',
+            'sire_sire_sire',
+            'sire_sire_dam',
+            'sire_dam',
+            'sire_dam_sire',
+            'sire_dam_dam',
+            'dam_sire',
+            'dam_sire_sire',
+            'dam_sire_dam',
+            'dam_dam',
+            'dam_dam_sire',
+            'dam_dam_dam'
+        ];
+        // Human-readable names for the things
+        $j = [
+            "Sire",
+            "Dam",
+            "Sire's Sire",
+            "Sire's Sire's Sire",
+            "Sire's Sire's Dam",
+            "Sire's Dam",
+            "Sire's Dam's Sire",
+            "Sire's Dam's Dam",
+            "Dam's Sire",
+            "Dam's Sire's Sire",
+            "Dam's Sire's Dam",
+            "Dam's Dam",
+            "Dam's Dam's Sire",
+            "Dam's Dam's Dam",
+        ];
+        ?>
+    <div class="row">
+        <div class="col-md-6">
+            @for ($i=0; $i < 14; $i++)
+                <?php $em = ($i < 3 || $i == 5 || $i == 8 || $i == 11); ?>
+                <div class="form-group text-center {{ $em ? 'pb-1 border-bottom' : '' }}">
+                    {!! Form::label($j[$i], null, ['class' => $em ? 'font-weight-bold' : '']) !!}
+                    <div class="row">
+                        <div class="col-sm-6 pr-sm-1">
+                            {!! Form::select($k[$i].'_id', $characterOptions, old($k[$i].'_id'), ['class' => 'form-control text-left character-select mb-1', 'placeholder' => 'None']) !!}
+                        </div>
+                        <div class="col-sm-6 pl-sm-1">
+                            {!! Form::text($k[$i].'_name', old($k[$i].'_name'), ['class' => 'form-control mb-1']) !!}
+                        </div>
+                    </div>
+                </div>
+                @if ($i == 0)
+                    </div>
+                    <div class="col-md-6">
+                @elseif ($i == 1)
+                    </div>
+                </div>
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" value="generate" name="generate_ancestors" id="generate_ancestors" checked>
+                    <label class="form-check-label" for="generate_ancestors">
+                        automatically fill in ancestors from the parent(s)/grandparent(s) lineages?
+                    </label>
+                </div>
+
+                <h4><a href="#advanced_lineage" class="dropdown-toggle" data-toggle="collapse" data-target="#advanced_lineage" aria-expanded="false" aria-controls="advanced_lineage">
+    				Advanced Lineage
+    			</a></h4>
+
+                <div class="mb-4">
+                    <div id="advanced_lineage" class="row collapse mb-0">
+                        <div class="col-md-6">
+                @elseif ($i == 7)
+                    </div>
+                    <div class="col-md-6">
+                @endif
+            @endfor
+        </div>
+    </div>
+    </div>
+
     <h3>Traits</h3>
 
     <div class="form-group">
         {!! Form::label('Species') !!} @if($isMyo) {!! add_help('This will lock the slot into a particular species. Leave it blank if you would like to give the user a choice.') !!} @endif
         {!! Form::select('species_id', $specieses, old('species_id'), ['class' => 'form-control', 'id' => 'species']) !!}
+    </div>
+
+    <div class="card mb-3 hide" id="dropOptions">
+        <div class="card-body" id="groups">
+            {!! Form::label('Group (Optional)') !!} {!! add_help('This is used for character drops. If no value is set, it will be randomly rolled from the species\' groups.') !!}
+            {!! Form::select('parameters', $parameters, old('parameters'), ['class' => 'form-control', 'id' => 'parameter']) !!}
+        </div>
     </div>
 
     <div class="form-group" id="subtypes">
@@ -260,6 +351,24 @@
       $.ajax({
         type: "GET", url: "{{ url('admin/masterlist/check-subtype') }}?species="+species+"&myo="+myo, dataType: "text"
       }).done(function (res) { $("#subtypes").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
+
+      var $dropOptions = $('#dropOptions');
+      var $dropSpecieses = '<?php echo(json_encode($dropSpecies)); ?>';
+      if($dropSpecieses.includes(species)) {
+          $dropOptions.removeClass('hide');
+          $.ajax({
+            type: "GET", url: "{{ url('admin/masterlist/check-group') }}?species="+species+"&myo="+myo, dataType: "text"
+            }).done(function (res) { $("#groups").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
+        }
+      else $dropOptions.addClass('hide');
+    });
+    $(document).ready(function()
+    {
+        $('.character-select').selectize();
+        $('#advanced_lineage').on('click', function(e)
+        {
+            e.preventDefault();
+        });
     });
 </script>
 

@@ -286,8 +286,44 @@ return [
     ],
     // BOOKMARK_GIFT_WRITING
     39 => [
+        'name' => 'Bookmark Gift Writing',
         'message' => 'A character you have bookmarked (<a href="{character_url}">{character_name}</a>) has had its Gift Writing Allowed status changed. (<a href="{url}">View Bookmarks</a>)',
         'url' => 'account/bookmarks'
+    ],
+    // LINK_REQUESTED
+    200 => [
+        'name' => 'Link Requested',
+        'message' => '<a href="{link}">{user}</a> has requested to link your character {requested} to {character}. <a href="/links/accept/{id}" class="btn btn-sm btn-success m-1">Accept</a> <a href="/links/reject/{id}" class="btn btn-sm btn-danger m-1">Reject</a>',
+        'url' => '',
+    ],
+    // LINK_ACCEPTED
+    201 => [
+        'name' => 'Link Accepted',
+        'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Links.</a>)',
+        'url' => '',
+    // PET_REMOVAL
+    40 => [
+        'name' => 'Pet Removal',
+        'message' => '{pet_name} (×{pet_quantity}) was removed from your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'inventory'
+    ],
+    // PET_TRANSFER
+    41 => [
+        'name' => 'Pet Transfer',
+        'message' => 'You have received {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'inventory'
+    ],
+    // FORCED_PET_TRANSFER
+    42 => [
+        'name' => 'Forced Pet Transfer',
+        'message' => '{pet_name} (×{pet_quantity}) was transferred out of your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'inventory'
+    ],
+    // PET_GRANT
+    43 => [
+        'name' => 'Pet Grant',
+        'message' => 'You have received a staff grant of {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'inventory'
     ],
     // REPORT_ASSIGNED
     220 => [
@@ -407,4 +443,5 @@ return [
         'message' => '<a href="{sender_url}">{sender}</a> has added you as a participant on a gallery submission. (<a href="{url}">View Submission</a>)',
         'url' => 'gallery/view/{submission_id}'
     ],
+    ]
 ];

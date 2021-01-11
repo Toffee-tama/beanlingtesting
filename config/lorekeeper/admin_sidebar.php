@@ -94,6 +94,10 @@ return [
                 'name' => 'Item Grants',
                 'url' => 'admin/grants/items'
             ],
+            [
+                'name' => 'Pet Grants',
+                'url' => 'admin/grants/pets'
+            ],
         ]
     ],
     'Masterlist' => [
@@ -161,6 +165,10 @@ return [
                 'url' => 'admin/data/shops'
             ],
             [
+                'name' => 'Character Drops',
+                'url' => 'admin/data/character-drops'
+            ],
+            [
                 'name' => 'Currencies',
                 'url' => 'admin/data/currencies'
             ],
@@ -179,6 +187,14 @@ return [
             [
                 'name' => 'Scavenger Hunts',
                 'url' => 'admin/data/hunts'
+            ],
+            [
+                'name' => 'Advent Calendars',
+                'url' => 'admin/data/advent-calendars'
+            ],
+            [
+                'name' => 'Pets',
+                'url' => 'admin/data/pets'
             ],
         ]
     ],
