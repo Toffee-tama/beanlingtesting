@@ -1,4 +1,4 @@
-<?php
+  <?php
 
 return [
 
@@ -301,6 +301,7 @@ return [
         'name' => 'Link Accepted',
         'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Links.</a>)',
         'url' => '',
+    ],
     // PET_REMOVAL
     40 => [
         'name' => 'Pet Removal',
