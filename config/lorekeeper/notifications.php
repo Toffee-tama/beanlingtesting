@@ -1,4 +1,4 @@
-<?php
+  <?php
 
 return [
 
@@ -301,6 +301,7 @@ return [
         'name' => 'Link Accepted',
         'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Links.</a>)',
         'url' => '',
+    ],
     // PET_REMOVAL
     40 => [
         'name' => 'Pet Removal',
@@ -443,5 +444,4 @@ return [
         'message' => '<a href="{sender_url}">{sender}</a> has added you as a participant on a gallery submission. (<a href="{url}">View Submission</a>)',
         'url' => 'gallery/view/{submission_id}'
     ],
-    ]
 ];

@@ -36,7 +36,7 @@ class SubmissionController extends Controller
     */
 
     /**********************************************************************************************
-    
+
         PROMPT SUBMISSIONS
 
     **********************************************************************************************/
@@ -52,7 +52,7 @@ class SubmissionController extends Controller
         $submissions = Submission::with('prompt')->where('user_id', Auth::user()->id)->whereNotNull('prompt_id');
         $type = $request->get('type');
         if(!$type) $type = 'Pending';
-        
+
         $submissions = $submissions->where('status', ucfirst($type));
 
         return view('home.submissions', [
@@ -60,7 +60,7 @@ class SubmissionController extends Controller
             'isClaims' => false
         ]);
     }
-    
+
     /**
      * Shows the submission page.
      *
@@ -99,8 +99,8 @@ class SubmissionController extends Controller
             'prompts' => Prompt::active()->sortAlphabetical()->pluck('name', 'id')->toArray(),
             'characterCurrencies' => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
             'categories' => ItemCategory::orderBy('sort', 'DESC')->get(),
-            'item_filter' => Item::orderBy('name')->get()->keyBy('id'),
-            'items' => Item::orderBy('name')->pluck('name', 'id'),
+            'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
+            'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'inventory' => $inventory,
@@ -153,7 +153,7 @@ class SubmissionController extends Controller
             'limit' => $limit
         ]);
     }
-    
+
     /**
      * Creates a new submission.
      *
@@ -174,7 +174,7 @@ class SubmissionController extends Controller
     }
 
     /**********************************************************************************************
-    
+
         CLAIMS
 
     **********************************************************************************************/
@@ -190,7 +190,7 @@ class SubmissionController extends Controller
         $submissions = Submission::where('user_id', Auth::user()->id)->whereNull('prompt_id');
         $type = $request->get('type');
         if(!$type) $type = 'Pending';
-        
+
         $submissions = $submissions->where('status', ucfirst($type));
 
         return view('home.submissions', [
@@ -198,7 +198,7 @@ class SubmissionController extends Controller
             'isClaims' => true
         ]);
     }
-    
+
     /**
      * Shows the claim page.
      *
@@ -218,7 +218,7 @@ class SubmissionController extends Controller
             'inventory' => $inventory
         ]);
     }
-    
+
     /**
      * Shows the submit claim page.
      *
@@ -237,15 +237,15 @@ class SubmissionController extends Controller
             'characterCurrencies' => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
             'categories' => ItemCategory::orderBy('sort', 'DESC')->get(),
             'inventory' => $inventory,
-            'item_filter' => Item::orderBy('name')->get()->keyBy('id'),
-            'items' => Item::orderBy('name')->pluck('name', 'id'),
+            'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
+            'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'page' => 'submission'
         ]));
     }
-    
+
     /**
      * Creates a new claim.
      *
