@@ -2067,18 +2067,14 @@ public function updateCharacterLineage($data, $character, $user, $isAdmin = fals
             ]);
         }
 
-        // Add a log for the ownership change
-        $this->createLog(
-            is_object($sender) ? $sender->id : null,
-            is_object($sender) ? null : $sender,
-            $recipient && is_object($recipient) ? $recipient->id : null,
-            $recipient && is_object($recipient) ? $recipient->url : ($recipient ? : null),
-            $sender ? $sender->id : null,
-            $sender ? null : $character->owner_alias,
-            $recipient && is_object($recipient) ? $recipient->id : null,
-            $recipient && is_object($recipient) ? $recipient->alias : ($recipient ? : null),
-            $character->id, $logType ? $logType : ($character->is_myo_slot ? 'MYO Slot Transferred' : 'Character Transferred'), $data, 'user');
-    }
+    // Add a log for the ownership change
+    $this->createLog(
+        is_object($sender) ? $sender->id : null,
+                    is_object($sender) ? null : $sender,
+                    $recipient && is_object($recipient) ? $recipient->id : null,
+                    $recipient && is_object($recipient) ? $recipient->url : ($recipient ? : null),
+                    $character->id, $logType ? $logType : ($character->is_myo_slot ? 'MYO Slot Transferred' : 'Character Transferred'), $data, 'user');
+            }
 
     /**
      * Creates a character design update request (or a MYO design approval request).
