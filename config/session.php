@@ -153,7 +153,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', null),
+    'domain' => env('SESSION_DOMAIN', 'beanling-patch.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -166,7 +166,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE', true),
+    'secure' => env('SESSION_SECURE_COOKIE', false),
 
     /*
     |--------------------------------------------------------------------------
