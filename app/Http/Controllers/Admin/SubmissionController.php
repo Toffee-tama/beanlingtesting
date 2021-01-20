@@ -93,7 +93,7 @@ class SubmissionController extends Controller
             'count' => $count,
             'prompt' => $prompt,
             'limit' => $limit
-        ] : []));
+        ]);
     }   
     
     /**
@@ -148,6 +148,8 @@ class SubmissionController extends Controller
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
              'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'prompt' => $prompt,
+            'limit' => $limit
         ]);
     }  
 
