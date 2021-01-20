@@ -151,7 +151,7 @@ class SubmissionController extends Controller
             'count' => $count,
             'prompt' => $prompt,
             'limit' => $limit
-        ] : []));
+        ]);
     }  
 
     /**
