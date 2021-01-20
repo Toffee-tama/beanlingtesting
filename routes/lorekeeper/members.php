@@ -39,6 +39,7 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
 Route::group(['prefix' => 'inventory', 'namespace' => 'Users'], function() {
     Route::get('/', 'InventoryController@getIndex');
     Route::post('edit', 'InventoryController@postEdit');
+    Route::get('account-search', 'InventoryController@getAccountSearch');
 
     Route::get('selector', 'InventoryController@getSelector');
 });
@@ -146,7 +147,7 @@ Route::group(['prefix' => 'gallery'], function() {
     Route::post('edit/{id}', 'GalleryController@postCreateEditGallerySubmission');
 
     Route::post('collaborator/{id}', 'GalleryController@postEditCollaborator');
-    
+
     Route::get('archive/{id}', 'GalleryController@getArchiveSubmission');
     Route::post('archive/{id}', 'GalleryController@postArchiveSubmission');
 });
