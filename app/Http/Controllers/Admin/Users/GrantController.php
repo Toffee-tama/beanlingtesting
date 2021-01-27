@@ -21,6 +21,7 @@ use App\Models\Character\Character;
 use App\Services\CurrencyManager;
 use App\Services\InventoryManager;
 use App\Services\PetManager;
+use App\Services\Stats\ExperienceManager;
 
 use App\Http\Controllers\Controller;
 
@@ -99,6 +100,14 @@ class GrantController extends Controller
     {
         return view('admin.grants.pets', [
             'pets' => Pet::orderBy('name')->pluck('name', 'id')
+            ]);
+        }
+     /**       * Grants or removes exp (show)
+     */
+    public function getExp()
+    {
+        return view('admin.grants.exp', [
+            'users' => User::orderBy('id')->pluck('name', 'id'),
         ]);
     }
 
@@ -114,12 +123,23 @@ class GrantController extends Controller
         $data = $request->only(['names', 'pet_id', 'quantity', 'data', 'disallow_transfer', 'notes']);
         if($service->grantPets($data, Auth::user())) {
             flash('Pets granted successfully.')->success();
+            ]);
+        }
+    /**  * Grants or removes exp
+     */
+    public function postExp(Request $request, ExperienceManager $service)
+    {
+        $data = $request->only(['names', 'quantity', 'data']);
+        if($service->grantExp($data, Auth::user())) {
+            flash('EXP granted successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->back();
-     * Show the item search page.
+        ]);
+    }
+     /** Show the item search page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */

@@ -154,6 +154,7 @@ class Notification extends Model
     const COMMENT_REPLY                     = 240;
     const CHARACTER_ITEM_GRANT              = 501;
     const CHARACTER_ITEM_REMOVAL            = 502;
+    const EXP_GRANT                       = 45;
     const GALLERY_SUBMISSION_COLLABORATOR   = 505;
     const GALLERY_COLLABORATORS_APPROVED    = 506;
     const GALLERY_SUBMISSION_ACCEPTED       = 507;

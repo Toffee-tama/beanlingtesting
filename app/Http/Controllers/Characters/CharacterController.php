@@ -346,6 +346,23 @@ public function getCharacterLinks($slug)
     }
 
     /**
+     * Shows a character's levels
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterLevel($name)
+    {
+        return view('character.stats.level', [
+            'character' => $this->character,
+            'exps' => $this->character->getExpLogs(),
+            'levels' => $this->character->getLevelLogs(),
+            'stats' => $this->character->getStatLogs(),
+            'counts' => $this->character->getCountLogs(),
+        ]);
+    }
+    
+    /**
      * Transfers currency between the user and character.
      *
      * @param  \Illuminate\Http\Request       $request
