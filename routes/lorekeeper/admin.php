@@ -188,6 +188,17 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('shops/sort', 'ShopController@postSortShop');
     Route::post('shops/restrictions/{id}', 'ShopController@postRestrictShop');
 
+    # ADOPTIONS
+    Route::get('adoptions', 'AdoptionController@getIndex');
+    Route::get('stock', 'AdoptionController@getStockIndex');
+    Route::get('adoptions/edit/{id}', 'AdoptionController@getEditAdoption');
+    Route::get('stock/create', 'AdoptionController@getCreateStock');
+    Route::get('stock/edit/{id}', 'AdoptionController@getEditStock');
+    Route::post('adoptions/edit/{id?}', 'AdoptionController@postCreateEditAdoption');
+    Route::post('stock/{id}', 'AdoptionController@postEditAdoptionStock');
+    Route::post('stock/create/new', 'AdoptionController@postCreateStock');
+    Route::post('stock/delete/{id}', 'AdoptionController@postDeleteStock');
+    
     # FEATURES (TRAITS)
     Route::get('trait-categories', 'FeatureController@getIndex');
     Route::get('trait-categories/create', 'FeatureController@getCreateFeatureCategory');
@@ -480,6 +491,7 @@ Route::group(['prefix' => 'claims', 'middleware' => 'power:manage_submissions'],
     Route::post('edit/{id}/{action}', 'SubmissionController@postSubmission')->where('action', 'approve|reject');
 });
 
+<<<<<<< HEAD
 # SUBMISSIONS
 Route::group(['prefix' => 'gallery', 'middleware' => 'power:manage_submissions'], function() {
     Route::get('/submissions', 'GalleryController@getSubmissionIndex');
@@ -489,6 +501,15 @@ Route::group(['prefix' => 'gallery', 'middleware' => 'power:manage_submissions']
     Route::post('edit/{id}/{action}', 'GalleryController@postEditSubmission')->where('action', 'accept|reject|comment|move|value');
 });
 
+=======
+# SURRENDERS
+Route::group(['prefix' => 'surrenders', 'middleware' => ['power:manage_submissions', 'power:manage_characters']], function() {
+    Route::get('/', 'SurrenderController@getSurrenderIndex');
+    Route::get('/{status}', 'SurrenderController@getSurrenderIndex')->where('status', 'pending|approved|rejected');
+    Route::get('edit/{id}', 'SurrenderController@getSurrender');
+    Route::post('edit/{id}/{action}', 'SurrenderController@postSurrender')->where('action', 'approve|reject');
+});
+>>>>>>> 09f09a8134c0f4d676194622dce593b10e3645d0
 # REPORTS
 Route::group(['prefix' => 'reports', 'middleware' => 'power:manage_reports'], function() {
     Route::get('/', 'ReportController@getReportIndex');
