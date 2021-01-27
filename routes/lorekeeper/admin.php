@@ -491,7 +491,6 @@ Route::group(['prefix' => 'claims', 'middleware' => 'power:manage_submissions'],
     Route::post('edit/{id}/{action}', 'SubmissionController@postSubmission')->where('action', 'approve|reject');
 });
 
-<<<<<<< HEAD
 # SUBMISSIONS
 Route::group(['prefix' => 'gallery', 'middleware' => 'power:manage_submissions'], function() {
     Route::get('/submissions', 'GalleryController@getSubmissionIndex');
@@ -501,7 +500,6 @@ Route::group(['prefix' => 'gallery', 'middleware' => 'power:manage_submissions']
     Route::post('edit/{id}/{action}', 'GalleryController@postEditSubmission')->where('action', 'accept|reject|comment|move|value');
 });
 
-=======
 # SURRENDERS
 Route::group(['prefix' => 'surrenders', 'middleware' => ['power:manage_submissions', 'power:manage_characters']], function() {
     Route::get('/', 'SurrenderController@getSurrenderIndex');
@@ -509,7 +507,6 @@ Route::group(['prefix' => 'surrenders', 'middleware' => ['power:manage_submissio
     Route::get('edit/{id}', 'SurrenderController@getSurrender');
     Route::post('edit/{id}/{action}', 'SurrenderController@postSurrender')->where('action', 'approve|reject');
 });
->>>>>>> 09f09a8134c0f4d676194622dce593b10e3645d0
 # REPORTS
 Route::group(['prefix' => 'reports', 'middleware' => 'power:manage_reports'], function() {
     Route::get('/', 'ReportController@getReportIndex');
