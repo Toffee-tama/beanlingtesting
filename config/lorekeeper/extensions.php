@@ -23,7 +23,7 @@ return [
     'navbar_news_notif' => 1,
 
     // Species Trait Index - Mercury
-    'species_trait_index' => 0,
+    'species_trait_index' => 1,
 
     // Character Status Badges - Juni
     'character_status_badges' => 1,
@@ -32,7 +32,7 @@ return [
     'character_TH_profile_link' => 1,
 
     // Design Update Voting - Mercury
-    'design_update_voting' => 0,
+    'design_update_voting' => 1,
 
     // Item Entry Expansion - Mercury
     'item_entry_expansion' => [
