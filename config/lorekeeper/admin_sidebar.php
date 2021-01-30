@@ -107,7 +107,6 @@ return [
                 'url' => 'admin/grants/exp'
             ],
             [
-                [
                 'name' => 'Event Currency',
                 'url' => 'admin/grants/event-currency'
             ],
@@ -142,6 +141,7 @@ return [
             ],
         ]
     ],
+	
     'Stats' => [
         'power' => 'edit_stats',
         'links' => [
@@ -151,6 +151,7 @@ return [
             ],
         ]
     ],
+	
     'Levels' => [
         'power' => 'edit_levels',
         'links' => [
