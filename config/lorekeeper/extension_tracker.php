@@ -19,6 +19,10 @@ return [
     'advent_calendars' => [
         'key' => 'advent_calendars',
         'wiki_key' => 'Advent_Calendars',
+        ],
+    'event_tools' => [
+        'key' => 'event_tools',
+        'wiki_key' => 'event_tools',
         'creators' => json_encode([
             'Mercury' => 'https://github.com/itinerare/',
         ]),

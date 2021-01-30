@@ -112,7 +112,7 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
 
 Route::group(['prefix' => 'world'], function() {
     Route::get('/', 'WorldController@getIndex');
-    
+
     Route::get('currencies', 'WorldController@getCurrencies');
     Route::get('rarities', 'WorldController@getRarities');
     Route::get('species', 'WorldController@getSpecieses');
@@ -146,6 +146,7 @@ Route::group(['prefix' => 'adoptions'], function() {
     Route::get('/', 'AdoptionController@getAdoption');
     Route::get('{id}/{stockId}', 'AdoptionController@getAdoptionStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
 });
+Route::get('event-tracking', 'PromptsController@getEventTracking');
 
 /**************************************************************************************************
     Site Pages

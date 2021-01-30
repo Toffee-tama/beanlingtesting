@@ -348,8 +348,13 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
     Route::post('pets', 'GrantController@postPets');
     
     Route::get('item-search', 'GrantController@getItemSearch');
+    
     Route::get('exp', 'GrantController@getExp');
     Route::post('exp', 'GrantController@postExp');
+
+    Route::get('event-currency', 'GrantController@getEventCurrency');
+    Route::get('event-currency/clear', 'GrantController@getClearEventCurrency');
+    Route::post('event-currency/clear', 'GrantController@postClearEventCurrency');
 });
 
 
