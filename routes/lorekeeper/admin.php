@@ -355,6 +355,8 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
     Route::get('event-currency', 'GrantController@getEventCurrency');
     Route::get('event-currency/clear', 'GrantController@getClearEventCurrency');
     Route::post('event-currency/clear', 'GrantController@postClearEventCurrency');
+    
+    Route::get('item-search', 'GrantController@getItemSearch');
 });
 
 

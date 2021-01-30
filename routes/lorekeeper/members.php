@@ -124,14 +124,17 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/stats-area/{id}', 'LevelController@postStat');
     Route::post('{slug}/stats-area/admin/{id}', 'LevelController@postAdminStat');
     Route::post('{slug}/stats-area/edit/{id}', 'LevelController@postEditStat');
+
     # EXP
     Route::post('{slug}/level-area/exp-grant', 'LevelController@postExpGrant');
     Route::post('{slug}/level-area/stat-grant', 'LevelController@postStatGrant');
-});
 
+// LINKS
 Route::get('links/accept/{id}', 'LinkController@getAcceptLink');
 Route::get('links/reject/{id}', 'LinkController@getRejectLink');
-// LINKS
+});
+
+// MYO
 
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
     Route::get('{id}/profile/edit', 'MyoController@getEditCharacterProfile');

@@ -105,6 +105,7 @@ class GrantController extends Controller
             'pets' => Pet::orderBy('name')->pluck('name', 'id')
             ]);
         }
+
      /**       * Grants or removes exp (show)
      */
     public function getExp()
@@ -126,8 +127,14 @@ class GrantController extends Controller
         $data = $request->only(['names', 'pet_id', 'quantity', 'data', 'disallow_transfer', 'notes']);
         if($service->grantPets($data, Auth::user())) {
             flash('Pets granted successfully.')->success();
-            ]);
         }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+        ]);
+    }
+
     /**  * Grants or removes exp
      */
     public function postExp(Request $request, ExperienceManager $service)
