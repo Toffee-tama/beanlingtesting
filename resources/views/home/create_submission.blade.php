@@ -49,18 +49,17 @@
         @else
             <p>Note that any rewards added here are <u>in addition</u> to the default prompt rewards. If you do not require any additional rewards, you can leave this blank.</p>
         @endif
+        @if($isClaim)
+            @include('widgets._loot_select', ['loots' => null, 'showLootTables' => false, 'showRaffles' => true])
+        @else
+            @include('widgets._loot_select', ['loots' => null, 'showLootTables' => false, 'showRaffles' => false])
+        @endif
         @if(!$isClaim)
             <div id="rewards" class="mb-3"></div>
         @endif
 
         <h2>Characters</h2>
-        @if(!$isClaim)
-            <p>Please select a character who shall receive any stat / level awards. The character must be apart of the prompt / the focus character and owned by you.</p>
-
-            @include('widgets._link_select')
-            
-            <p>Any extra / background characters should be included here.</p>
-        @else
+        @if($isClaim)
             <p>If there are character-specific rewards you would like to claim, attach them here. Otherwise, this section can be left blank.</p>
         @endif
         <div id="characters" class="mb-3">
@@ -83,9 +82,9 @@
 
     @include('widgets._character_select', ['characterCurrencies' => $characterCurrencies])
     @if($isClaim)
-        @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'pets' => $pets, 'showLootTables' => false, 'showRaffles' => true])
+        @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => false, 'showRaffles' => true])
     @else
-        @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'pets' => $pets, 'showLootTables' => false, 'showRaffles' => false])
+        @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => false, 'showRaffles' => false])
     @endif
 
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
@@ -111,6 +110,9 @@
 @parent
 @if(!$closed)
     @if($isClaim)
+        @include('js._loot_js', ['showLootTables' => false, 'showRaffles' => true])
+    @else
+        @include('js._loot_js', ['showLootTables' => false, 'showRaffles' => false])
     @endif
     @include('js._character_select_js')
     @include('widgets._inventory_select_js', ['readOnly' => true])
@@ -123,22 +125,18 @@
             var $confirmationModal = $('#confirmationModal');
             var $formSubmit = $('#formSubmit');
             var $submissionForm = $('#submissionForm');
-
             @if(!$isClaim)
                 var $prompt = $('#prompt');
                 var $rewards = $('#rewards');
-
                 $prompt.selectize();
                 $prompt.on('change', function(e) {
                     $rewards.load('{{ url('submissions/new/prompt') }}/'+$(this).val());
                 });
             @endif
-
             $submitButton.on('click', function(e) {
                 e.preventDefault();
                 $confirmationModal.modal('show');
             });
-
             $formSubmit.on('click', function(e) {
                 e.preventDefault();
                 $submissionForm.submit();
