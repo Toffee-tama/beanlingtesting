@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use Auth;
 use Config;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Models\Prompt\PromptCategory;
@@ -14,9 +13,6 @@ use App\Models\Item\ItemCategory;
 use App\Models\Currency\Currency;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
-use App\Models\Prompt\Prompt;
-use App\Models\Character\Character;
-use App\Models\Pet\Pet;
 
 use App\Services\SubmissionManager;
 
@@ -66,35 +62,23 @@ class SubmissionController extends Controller
     public function getSubmission($id)
     {
         $submission = Submission::whereNotNull('prompt_id')->where('id', $id)->first();
-        $prompt = Prompt::where('id', $submission->prompt_id)->first();
+        $inventory = isset($submission->data['user']) ? parseAssetData($submission->data['user']) : null;
         if(!$submission) abort(404);
-
-        $count['all'] = Submission::submitted($prompt->id, $submission->user_id)->count();
-        $count['Hour'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfHour())->count();
-        $count['Day'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfDay())->count();
-        $count['Week'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfWeek())->count();
-        $count['Month'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfMonth())->count();
-        $count['Year'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfYear())->count();
-
-        if($prompt->limit_character) {
-            $limit = $prompt->limit * Character::visible()->where('is_myo_slot', 0)->where('user_id', $submission->user_id)->count();
-        } else {
-            $limit = $prompt->limit;
-        }
-
         return view('admin.submissions.submission', [
             'submission' => $submission,
+            'inventory' => $inventory,
+            'rewardsData' => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null,
+            'itemsrow' => Item::all()->keyBy('id'),
+            'page' => 'submission',
         ] + ($submission->status == 'Pending' ? [
             'characterCurrencies' => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
             'items' => Item::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
-            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
-            'count' => $count,
-            'prompt' => $prompt,
-            'limit' => $limit
-        ]:[]));
-    }   
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'count' => Submission::where('prompt_id', $submission->prompt_id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count()
+        ] : []));
+    }    
     
     /**
      * Shows the claim index page.
@@ -124,7 +108,7 @@ class SubmissionController extends Controller
         ]);
     }
     
-      /**
+    /**
      * Shows the claim detail page.
      *
      * @param  int  $id
@@ -144,9 +128,10 @@ class SubmissionController extends Controller
             'items' => Item::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
             'rewardsData' => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null
-        ]);
+        ] : []));
     }
 
     /**
@@ -160,7 +145,7 @@ class SubmissionController extends Controller
      */
     public function postSubmission(Request $request, SubmissionManager $service, $id, $action)
     {
-        $data = $request->only(['slug',  'character_quantity', 'character_currency_id', 'rewardable_type', 'rewardable_id', 'quantity', 'staff_comments', 'bonus_exp', 'bonus_points', 'bonus_user_exp', 'bonus_user_points' ]);
+        $data = $request->only(['slug',  'character_quantity', 'character_currency_id', 'rewardable_type', 'rewardable_id', 'quantity', 'staff_comments' ]);
         if($action == 'reject' && $service->rejectSubmission($request->only(['staff_comments']) + ['id' => $id], Auth::user())) {
             flash('Submission rejected successfully.')->success();
         }
