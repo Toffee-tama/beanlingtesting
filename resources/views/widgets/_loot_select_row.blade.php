@@ -15,7 +15,4 @@
     @if($showLootTables)
         {!! Form::select('rewardable_id[]', $tables, null, ['class' => 'form-control table-select', 'placeholder' => 'Select Loot Table']) !!}
     @endif
-    @if($showRaffles)
-        {!! Form::select('rewardable_id[]', $raffles, null, ['class' => 'form-control raffle-select', 'placeholder' => 'Select Raffle']) !!}
-    @endif
 </div>
