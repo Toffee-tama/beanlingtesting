@@ -49,11 +49,6 @@
         @else
             <p>Note that any rewards added here are <u>in addition</u> to the default prompt rewards. If you do not require any additional rewards, you can leave this blank.</p>
         @endif
-        @if($isClaim)
-            @include('widgets._loot_select', ['loots' => null, 'showLootTables' => false, 'showRaffles' => true])
-        @else
-            @include('widgets._loot_select', ['loots' => null, 'showLootTables' => false, 'showRaffles' => false])
-        @endif
         @if(!$isClaim)
             <div id="rewards" class="mb-3"></div>
         @endif
@@ -116,9 +111,6 @@
 @parent
 @if(!$closed)
     @if($isClaim)
-        @include('js._loot_js', ['showLootTables' => false, 'showRaffles' => true])
-    @else
-        @include('js._loot_js', ['showLootTables' => false, 'showRaffles' => false])
     @endif
     @include('js._character_select_js')
     @include('widgets._inventory_select_js', ['readOnly' => true])
