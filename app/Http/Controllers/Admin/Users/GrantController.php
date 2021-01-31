@@ -146,7 +146,6 @@ class GrantController extends Controller
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->back();
-        ]);
     }
      /** Show the item search page.
      *
