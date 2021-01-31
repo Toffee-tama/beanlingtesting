@@ -1729,6 +1729,16 @@ public function updateCharacterLineage($data, $character, $user, $isAdmin = fals
             if(!$recipient) throw new \Exception("Invalid user selected.");
             if($recipient->is_banned) throw new \Exception("Cannot transfer character to a banned member.");
 
+            // deletes any pending design drafts
+            foreach($character->designUpdate as $update)
+            {
+               if($update->status == 'Draft')
+               {
+                   $update->deleted_at = carbon::now();
+                   $update->save();
+               }
+            }
+
             $queueOpen = Settings::get('open_transfers_queue');
 
             CharacterTransfer::create([
@@ -1787,6 +1797,15 @@ public function updateCharacterLineage($data, $character, $user, $isAdmin = fals
                 $transfer->status = 'Canceled';
                 $transfer->reason = 'Transfer canceled by '.$user->displayName.' in order to transfer character to another user';
                 $transfer->save();
+            }
+            // deletes any pending design drafts
+            foreach($character->designUpdate as $update)
+            {
+                if($update->status == 'Draft')
+                {
+                    $update->deleted_at = carbon::now();
+                    $update->save();
+                }
             }
 
             $sender = $character->user;
