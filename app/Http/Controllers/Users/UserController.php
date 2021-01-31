@@ -69,11 +69,15 @@ class UserController extends Controller
      */
     public function getUser($name)
     {
+        $characters = $this->user->characters();
+        if(!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) $characters->visible();
+        
         return view('user.profile', [
             'user' => $this->user,
             'items' => $this->user->items()->where('count', '>', 0)->orderBy('user_items.updated_at', 'DESC')->take(4)->get(),
             'pets' => $this->user->pets()->orderBy('user_pets.updated_at', 'DESC')->take(5)->get(),
-            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get(),
+            'characters' => $characters,
         ]);
     }
 
@@ -85,7 +89,7 @@ class UserController extends Controller
      */
     public function getUserCharacters($name)
     {
-        $query = Character::myo(0)->visible()->where('user_id', $this->user->id);
+        $query = Character::myo(0)->where('user_id', $this->user->id);
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
 
         if($sublists = Sublist::where('show_main', 0)->get())
@@ -102,6 +106,8 @@ class UserController extends Controller
 
         $query->whereIn('id', $imageQuery->pluck('character_id'));
 
+        if(!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) $query->visible();
+
         return view('user.characters', [
             'user' => $this->user,
             'characters' => $query->orderBy('sort', 'DESC')->get(),
@@ -117,7 +123,7 @@ class UserController extends Controller
      */
     public function getUserSublist($name, $key)
     {
-        $query = Character::myo(0)->visible()->where('user_id', $this->user->id);
+        $query = Character::myo(0)->where('user_id', $this->user->id);
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
 
         $sublist = Sublist::where('key', $key)->first();
@@ -129,6 +135,8 @@ class UserController extends Controller
         if($subSpecies) $imageQuery->whereIn('species_id', $subSpecies);
 
         $query->whereIn('id', $imageQuery->pluck('character_id'));
+
+        if(!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) $query->visible();
 
         return view('user.sublist', [
             'user' => $this->user,
@@ -146,9 +154,12 @@ class UserController extends Controller
      */
     public function getUserMyoSlots($name)
     {
+        $myo = $this->user->myoSlots()->get();
+        if(!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) $myo->visible();
+
         return view('user.myo_slots', [
             'user' => $this->user,
-            'myos' => $this->user->myoSlots()->visible()->get(),
+            'myos' => $myo,
             'sublists' => Sublist::orderBy('sort', 'DESC')->get()
         ]);
     }
