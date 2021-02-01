@@ -144,18 +144,8 @@ class Notification extends Model
     const SURRENDER_APPROVED              = 218;
     const SURRENDER_REJECTED              = 219;
     const BOOKMARK_GIFT_WRITING           = 39;
-    const PET_REMOVAL                     = 240;
-    const PET_TRANSFER                    = 241;
-    const FORCED_PET_TRANSFER             = 242;
-    const PET_GRANT                       = 243;
     const LINK_REQUESTED                  = 200;
     const LINK_ACCEPTED                   = 201;
-    const REPORT_ASSIGNED                 = 220;
-    const REPORT_CLOSED                   = 221;
-    const COMMENT_MADE                      = 239;
-    const COMMENT_REPLY                     = 240;
-    const CHARACTER_ITEM_GRANT              = 501;
-    const CHARACTER_ITEM_REMOVAL            = 502;
     const EXP_GRANT                       = 245;
     const GALLERY_SUBMISSION_COLLABORATOR   = 505;
     const GALLERY_COLLABORATORS_APPROVED    = 506;
@@ -174,4 +164,14 @@ class Notification extends Model
     const FORCED_AWARD_TRANSFER           = 44;
     const CHARACTER_AWARD_GRANT           = 45;
     const CHARACTER_AWARD_REMOVAL         = 46;
+    const REPORT_ASSIGNED                 = 220;
+    const REPORT_CLOSED                   = 221;
+    const COMMENT_MADE                    = 239;
+    const COMMENT_REPLY                   = 240;
+    const PET_REMOVAL                     = 241;
+    const PET_TRANSFER                    = 242;
+    const FORCED_PET_TRANSFER             = 243;
+    const PET_GRANT                       = 244;
+    const CHARACTER_ITEM_GRANT            = 501;
+    const CHARACTER_ITEM_REMOVAL          = 502;
 }
