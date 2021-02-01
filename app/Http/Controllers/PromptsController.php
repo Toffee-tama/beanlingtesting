@@ -12,6 +12,8 @@ use App\Models\Prompt\PromptCategory;
 use App\Models\Prompt\Prompt;
 use App\Models\User\UserCurrency;
 use App\Models\SitePage;
+use App\Models\Award\AwardCategory;
+use App\Models\Award\Award;
 
 class PromptsController extends Controller
 {

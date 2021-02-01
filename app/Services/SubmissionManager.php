@@ -13,11 +13,13 @@ use Settings;
 use Illuminate\Support\Arr;
 use App\Models\User\User;
 use App\Models\User\UserItem;
+use App\Models\User\UserAward;
 use App\Models\Character\Character;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
+use App\Models\Award\Award;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Prompt\Prompt;
@@ -92,6 +94,14 @@ class SubmissionManager extends Service
             }
             else $characters = [];
 
+            // Return any currency associated with this request
+            $currencyManager = new CurrencyManager;
+            if(isset($requestData['user']) && isset($requestData['user']['currencies'])) {
+                foreach($requestData['user']['currencies'] as $currencyId=>$quantity) {
+                    $currencyManager->creditCurrency(null, $request->user, null, null, $currencyId, $quantity);
+                }
+            }
+
             $userAssets = createAssetsArray();
 
             // Attach items. Technically, the user doesn't lose ownership of the item - we're just adding an additional holding field.
@@ -145,6 +155,7 @@ class SubmissionManager extends Service
                 }
                 else $focusId = NULL;
             }
+
             // Get a list of rewards, then create the submission itself
             $promptRewards = createAssetsArray();
             if(!$isClaim)
@@ -162,7 +173,7 @@ class SubmissionManager extends Service
                 'status' => 'Pending',
                 'comments' => $data['comments'],
                 'data' => json_encode([
-                    'user' => Arr::only(getDataReadyAssets($userAssets), ['user_items','currencies']),
+                    'user' => array_only(getDataReadyAssets($userAssets), ['user_items', 'user_awards', 'currencies']),
                     'rewards' => getDataReadyAssets($promptRewards)
                     ]) // list of rewards and addons
             ] + ($isClaim ? [] : ['prompt_id' => $prompt->id,]));
@@ -243,6 +254,8 @@ class SubmissionManager extends Service
                         case 'Pet':
                             if (!$isStaff) break;
                             $reward = Pet::find($data['rewardable_id'][$key]);
+                        case 'Award':
+                            $reward = Award::find($data['rewardable_id'][$key]);
                             break;
                         case 'LootTable':
                             if (!$isStaff) break;
@@ -362,7 +375,6 @@ class SubmissionManager extends Service
 
                 // Workaround for user not being unset after inventory shuffling, preventing proper staff ID assignment
                 $staff = $user;
-
                 foreach($stacks as $stackId=>$quantity) {
                     $stack = UserItem::find($stackId);
                     $user = User::find($submission->user_id);

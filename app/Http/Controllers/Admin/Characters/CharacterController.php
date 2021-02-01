@@ -21,7 +21,6 @@ use App\Models\Trade;
 use App\Models\User\UserItem;
 use App\Models\Character\CharacterDropData;
 use App\Models\Stats\Character\Stat;
-
 use App\Services\CharacterManager;
 use App\Services\CurrencyManager;
 use App\Services\TradeManager;
@@ -700,7 +699,6 @@ class CharacterController extends Controller
                 }
             }
         }
-
         return view('admin.masterlist.character_trades', [
             'trades' => $trades->orderBy('id', 'DESC')->paginate(20),
             'tradesQueue' => Settings::get('open_transfers_queue'),

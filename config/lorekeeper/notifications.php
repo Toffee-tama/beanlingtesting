@@ -317,31 +317,31 @@ return [
         'url' => '',
     ],
     // PET_REMOVAL
-    40 => [
+    240 => [
         'name' => 'Pet Removal',
         'message' => '{pet_name} (×{pet_quantity}) was removed from your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'inventory'
     ],
     // PET_TRANSFER
-    41 => [
+    241 => [
         'name' => 'Pet Transfer',
         'message' => 'You have received {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'inventory'
     ],
     // FORCED_PET_TRANSFER
-    42 => [
+    242 => [
         'name' => 'Forced Pet Transfer',
         'message' => '{pet_name} (×{pet_quantity}) was transferred out of your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'inventory'
     ],
     // PET_GRANT
-    43 => [
+    243 => [
         'name' => 'Pet Grant',
         'message' => 'You have received a staff grant of {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'inventory'
     ],
         // EXP_GRANT
-    45 => [
+    245 => [
         'name' => 'EXP Grant',
         'message' => 'You have received a staff grant of {quantity} EXP from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Level Area</a>)',
         'url' => 'level'
@@ -377,6 +377,10 @@ return [
     // CHARACTER_ITEM_GRANT
     501 => [
         'name' => 'Character Item Grant',
+    ],
+
+    // CHARACTER_ITEM_GRANT
+    39 => [
         'message' => '{character_name} has received a staff grant of {item_name} (×{item_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'character/{character_slug}/inventory'
     ],
@@ -463,5 +467,45 @@ return [
         'name' => 'Gallery Submission Participant',
         'message' => '<a href="{sender_url}">{sender}</a> has added you as a participant on a gallery submission. (<a href="{url}">View Submission</a>)',
         'url' => 'gallery/view/{submission_id}'
+    ],
+    40 => [
+        'message' => '{item_name} (×{item_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'character/{character_slug}/inventory'
+    ],
+    
+    // AWARD_GRANT
+    41 => [
+        'message' => 'You have earned the following award(s): {award_name} (×{award_quantity}). Congratulations! (<a href="{url}">View Awards</a>)',
+        'url' => 'awardcase'
+    ],
+    
+    // AWARD_REMOVAL
+    42 => [
+        'message' => '{award_name} (×{award_quantity}) was removed from your Awards by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Awards</a>)',
+        'url' => 'awardcase'
+    ],
+    
+    // AWARD_TRANSFER 
+    43 => [
+        'message' => 'You have received {award_name} (×{award_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Awards</a>)',
+        'url' => 'awardcase'
+    ],
+    
+    // FORCED_AWARD_TRANSFER
+    44 => [
+        'message' => '{item_name} (×{item_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'character/{character_slug}/inventory'
+    ],
+    
+    // CHARACTER_AWARD_GRANT
+    45 => [
+        'message' => '{character_name} has earned the following award(s): {award_name} (×{award_quantity}). Congratulations! (<a href="{url}">View Awards</a>)',
+        'url' => 'character/{character_slug}/awardcase'
+    ],
+    
+    // CHARACTER_AWARD_REMOVAL
+    46 => [
+        'message' => '{award_name} (×{award_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Awards</a>)',
+        'url' => 'character/{character_slug}/awardcase'
     ],
 ];

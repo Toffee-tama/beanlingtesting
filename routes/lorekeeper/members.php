@@ -53,6 +53,11 @@ Route::group(['prefix' => 'pets', 'namespace' => 'Users'], function() {
     Route::post('detach/{id}', 'PetController@postDetach');
 
     Route::get('selector', 'PetController@getSelector');
+Route::group(['prefix' => 'awardcase', 'namespace' => 'Users'], function() {
+    Route::get('/', 'AwardCaseController@getIndex');
+    Route::post('edit', 'AwardCaseController@postEdit');
+
+    Route::get('selector', 'AwardCaseController@getSelector');
 });
 
 Route::group(['prefix' => 'characters', 'namespace' => 'Users'], function() {
@@ -107,6 +112,8 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/links/delete/{id}', 'CharacterController@postDeleteCharacterLink');
 
     Route::post('{slug}/bank/transfer', 'CharacterController@postCurrencyTransfer');
+    Route::post('{slug}/inventory/edit', 'CharacterController@postInventoryEdit');
+    
     Route::get('{slug}/transfer', 'CharacterController@getTransfer');
     Route::post('{slug}/transfer', 'CharacterController@postTransfer');
     Route::post('{slug}/transfer/{id}/cancel', 'CharacterController@postCancelTransfer');

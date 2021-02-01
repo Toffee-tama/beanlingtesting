@@ -110,6 +110,10 @@ return [
                 'name' => 'Event Currency',
                 'url' => 'admin/grants/event-currency'
             ],
+            [
+                'name' => 'Award Grants',
+                'url' => 'admin/grants/awards'
+            ],
         ]
     ],
     'Masterlist' => [
@@ -204,6 +208,18 @@ return [
             [
                 'name' => 'Character Drops',
                 'url' => 'admin/data/character-drops'
+            ];
+            [
+                'name' => 'Award Categories',
+                'url' => 'admin/data/award-categories'
+            ],
+            [
+                'name' => 'Awards',
+                'url' => 'admin/data/awards'
+            ],
+            [
+                'name' => 'Prompt Categories',
+                'url' => 'admin/data/prompt-categories'
             ],
             [
                 'name' => 'Adoption Center',
