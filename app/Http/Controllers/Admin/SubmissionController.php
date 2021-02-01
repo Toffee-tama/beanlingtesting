@@ -11,15 +11,12 @@ use App\Models\Prompt\PromptCategory;
 use App\Models\Submission\Submission;
 use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
-use App\Models\Award\Award;
-use App\Models\Award\AwardCategory;
 use App\Models\Currency\Currency;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Prompt\Prompt;
 use App\Models\Character\Character;
 use App\Models\Pet\Pet;
-use App\Models\Recipe\Recipe;
 
 use App\Services\SubmissionManager;
 
@@ -79,7 +76,7 @@ class SubmissionController extends Controller
         $count['Week'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfWeek())->count();
         $count['Month'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfMonth())->count();
         $count['Year'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfYear())->count();
-        
+
         if($prompt->limit_character) {
             $limit = $prompt->limit * Character::visible()->where('is_myo_slot', 0)->where('user_id', $submission->user_id)->count();
         } else {
