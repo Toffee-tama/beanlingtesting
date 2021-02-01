@@ -53,6 +53,7 @@ Route::group(['prefix' => 'pets', 'namespace' => 'Users'], function() {
     Route::post('detach/{id}', 'PetController@postDetach');
 
     Route::get('selector', 'PetController@getSelector');
+});  
 Route::group(['prefix' => 'awardcase', 'namespace' => 'Users'], function() {
     Route::get('/', 'AwardCaseController@getIndex');
     Route::post('edit', 'AwardCaseController@postEdit');
@@ -157,7 +158,6 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
 
 Route::group(['prefix' => 'level', 'namespace' => 'Users'], function() {
     Route::get('/', 'LevelController@getIndex');
-
 });
 
 
