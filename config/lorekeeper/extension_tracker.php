@@ -11,31 +11,6 @@ return [
     //     ]),
     //     'version' => '1.0.0',
     // ],
-
-    'character_drops' => [
-        'key' => 'character_drops',
-        'wiki_key' => 'Character_Drops',
-        'creators' => json_encode([
-            'Mercury' => 'https://github.com/itinerare/',
-        ]),
-        'version' => '1.0.0',
-        ],000
-    'advent_calendars' => [
-        'key' => 'advent_calendars',
-        'wiki_key' => 'Advent_Calendars',
-		        'creators' => json_encode([
-            'Mercury' => 'https://github.com/itinerare/',
-        ]),
-        'version' => '1.0.0',
-        ],
-    'event_tools' => [
-        'key' => 'event_tools',
-        'wiki_key' => 'event_tools',
-        'creators' => json_encode([
-            'Mercury' => 'https://github.com/itinerare/',
-        ]),
-        'version' => '1.0.0',
-        ],
     
      'Levels_&_Stats' => [
          'key' => 'Levels_&_Stats',
