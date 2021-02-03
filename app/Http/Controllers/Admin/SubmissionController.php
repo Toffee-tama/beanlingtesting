@@ -99,12 +99,9 @@ class SubmissionController extends Controller
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'count' => Submission::where('prompt_id', $submission->prompt_id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
-            'awardsrow' => Award::all()->keyBy('id'),
-            'awards' => Award::orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'prompt' => $prompt,
-            'limit' => $limit,
-            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id')
+            'limit' => $limit
 
         ] : []));
     }    
@@ -160,10 +157,8 @@ class SubmissionController extends Controller
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
-            'awards' => Award::orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'count' => $count,
-            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
             'limit' => $limit,
             'rewardsData' => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null
         ] : []));
