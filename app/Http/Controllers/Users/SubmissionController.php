@@ -19,6 +19,7 @@ use App\Models\Award\AwardCategory;
 use App\Models\Currency\Currency;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
+use App\Models\Pet\Pet;
 use App\Models\Prompt\Prompt;
 
 use App\Services\SubmissionManager;
