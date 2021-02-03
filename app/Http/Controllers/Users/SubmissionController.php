@@ -83,7 +83,7 @@ class SubmissionController extends Controller
         ]);
     }
 
-    /**
+        /**
      * Shows the submit page.
      *
      * @param  \Illuminate\Http\Request  $request
