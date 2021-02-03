@@ -27,8 +27,9 @@
                 <div class="col-md-10 col-8">{!! $submission->prompt->displayName !!}</div>
             </div>
             <div class="row">
-                <div class="col-md-2 col-4"><h5>Previous Submissions{!! add_help('This is the number of times the user has submitted this prompt before, pending or approved.') !!}</h5></div>
-                <div class="col-md-10 col-8">
+                <div class="col-md-2 col-4"><h5>Previous Submissions</h5></div>
+                <div class="col-md-10 col-8">{{ $count }} {!! add_help('This is the number of times the user has submitted this prompt before and had their submission approved.') !!}
+            <div class="col-md-10 col-8">
                     <div class="row text-center">
                         <div class="col"><strong>All Time</strong></div>
                         <div class="col"><strong>Past Hour</strong></div>
@@ -244,11 +245,9 @@
         $(document).ready(function() {
             var $confirmationModal = $('#confirmationModal');
             var $submissionForm = $('#submissionForm');
-
             var $approvalButton = $('#approvalButton');
             var $approvalContent = $('#approvalContent');
             var $approvalSubmit = $('#approvalSubmit');
-
             var $rejectionButton = $('#rejectionButton');
             var $rejectionContent = $('#rejectionContent');
             var $rejectionSubmit = $('#rejectionSubmit');
@@ -266,20 +265,17 @@
                 $approvalContent.addClass('hide');
                 $confirmationModal.modal('show');
             });
-
             $approvalSubmit.on('click', function(e) {
                 e.preventDefault();
                 $submissionForm.attr('action', '{{ url()->current() }}/approve');
                 $submissionForm.submit();
             });
-
             $rejectionSubmit.on('click', function(e) {
                 e.preventDefault();
                 $submissionForm.attr('action', '{{ url()->current() }}/reject');
                 $submissionForm.submit();
             });
         });
-
     </script>
 @endif
 @endsection

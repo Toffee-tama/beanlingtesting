@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use Settings;
-use Carbon\Carbon;
 use App\Models\User\User;
 use App\Models\User\UserItem;
 use App\Models\Character\Character;
@@ -18,7 +17,6 @@ use App\Models\Currency\Currency;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
 use App\Models\Prompt\Prompt;
-use App\Models\Pet\Pet;
 
 use App\Services\SubmissionManager;
 
@@ -36,9 +34,7 @@ class SubmissionController extends Controller
     */
 
     /**********************************************************************************************
-
         PROMPT SUBMISSIONS
-
     **********************************************************************************************/
 
     /**
@@ -102,7 +98,6 @@ class SubmissionController extends Controller
             'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
             'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
-            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'inventory' => $inventory,
             'page' => 'submission'
         ]));
@@ -134,23 +129,9 @@ class SubmissionController extends Controller
         $prompt = Prompt::active()->where('id', $id)->first();
         if(!$prompt) return response(404);
 
-        $count['all'] = Submission::submitted($id, Auth::user()->id)->count();
-        $count['Hour'] = Submission::submitted($id, Auth::user()->id)->where('created_at', '>=', now()->startOfHour())->count();
-        $count['Day'] = Submission::submitted($id, Auth::user()->id)->where('created_at', '>=', now()->startOfDay())->count();
-        $count['Week'] = Submission::submitted($id, Auth::user()->id)->where('created_at', '>=', now()->startOfWeek())->count();
-        $count['Month'] = Submission::submitted($id, Auth::user()->id)->where('created_at', '>=', now()->startOfMonth())->count();
-        $count['Year'] = Submission::submitted($id, Auth::user()->id)->where('created_at', '>=', now()->startOfYear())->count();
-
-        if($prompt->limit_character) {
-            $limit = $prompt->limit * Character::visible()->where('is_myo_slot', 0)->where('user_id', Auth::user()->id)->count();
-        } else {
-            $limit = $prompt->limit;
-        }
-
         return view('home._prompt', [
             'prompt' => $prompt,
-            'count' => $count,
-            'limit' => $limit
+            'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', Auth::user()->id)->count()
         ]);
     }
 
@@ -174,9 +155,7 @@ class SubmissionController extends Controller
     }
 
     /**********************************************************************************************
-
         CLAIMS
-
     **********************************************************************************************/
 
     /**
@@ -240,7 +219,7 @@ class SubmissionController extends Controller
             'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
             'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
-            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'page' => 'submission'
         ]));
     }

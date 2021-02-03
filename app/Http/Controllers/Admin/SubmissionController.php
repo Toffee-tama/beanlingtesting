@@ -17,7 +17,6 @@ use App\Models\Raffle\Raffle;
 use App\Models\Prompt\Prompt;
 use App\Models\Character\Character;
 use App\Models\Pet\Pet;
-use App\Models\Recipe\Recipe;
 
 use App\Services\SubmissionManager;
 
@@ -99,8 +98,7 @@ class SubmissionController extends Controller
             'count' => Submission::where('prompt_id', $submission->prompt_id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'prompt' => $prompt,
-            'limit' => $limit,
-            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id')
+            'limit' => $limit
 
         ] : []));
     }    
@@ -158,7 +156,6 @@ class SubmissionController extends Controller
             'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'count' => $count,
-            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
             'limit' => $limit,
             'rewardsData' => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null
         ] : []));
