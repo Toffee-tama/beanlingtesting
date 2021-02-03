@@ -17,6 +17,7 @@ use App\Models\Raffle\Raffle;
 use App\Models\Prompt\Prompt;
 use App\Models\Character\Character;
 use App\Models\Pet\Pet;
+use App\Models\Recipe\Recipe;
 
 use App\Services\SubmissionManager;
 
@@ -76,7 +77,7 @@ class SubmissionController extends Controller
         $count['Week'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfWeek())->count();
         $count['Month'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfMonth())->count();
         $count['Year'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfYear())->count();
-
+        
         if($prompt->limit_character) {
             $limit = $prompt->limit * Character::visible()->where('is_myo_slot', 0)->where('user_id', $submission->user_id)->count();
         } else {
@@ -96,8 +97,6 @@ class SubmissionController extends Controller
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'count' => Submission::where('prompt_id', $submission->prompt_id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
-            'awardsrow' => Award::all()->keyBy('id'),
-            'awards' => Award::orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'prompt' => $prompt,
             'limit' => $limit,
@@ -157,7 +156,6 @@ class SubmissionController extends Controller
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
-            'awards' => Award::orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'count' => $count,
             'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
