@@ -66,7 +66,6 @@ class CharacterController extends Controller
             'dropSpecies' => Species::whereIn('id', CharacterDropData::pluck('species_id')->toArray())->pluck('id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
             'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
-            'parameters' => ['0' => 'Pick a Species First'],
             'isMyo' => false,
             'stats' => Stat::orderBy('name')->get(),
         ]);
@@ -87,7 +86,6 @@ class CharacterController extends Controller
             'dropSpecies' => Species::whereIn('id', CharacterDropData::pluck('species_id')->toArray())->pluck('id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
             'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
-            'parameters' => ['0' => 'Pick a Species First'],
             'isMyo' => true,
             'stats' => Stat::orderBy('name')->get(),
         ]);
@@ -100,12 +98,12 @@ class CharacterController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateCharacterMyoSubtype(Request $request) {
-      $species = $request->input('species');
-      return view('admin.masterlist._create_character_subtype', [
-          'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-          'isMyo' => $request->input('myo')
-      ]);
-    }
+        $species = $request->input('species');
+        return view('admin.masterlist._create_character_subtype', [
+            'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'isMyo' => $request->input('myo')
+        ]);
+      }
 
     /**
      * Shows the edit group portion of the form.
@@ -157,7 +155,7 @@ class CharacterController extends Controller
             'generate_ancestors',
 
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data',
-            'image', 'thumbnail', 'image_description', 'parameters', 'stats'
+            'image', 'thumbnail', 'image_description', 'stats'
         ]);
         if ($character = $service->createCharacter($data, Auth::user())) {
             flash('Character created successfully.')->success();
@@ -205,7 +203,7 @@ class CharacterController extends Controller
             'generate_ancestors',
 
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data',
-            'image', 'thumbnail', 'parameters', 'stats'
+            'image', 'thumbnail', 'stats'
         ]);
         if ($character = $service->createCharacter($data, Auth::user(), true)) {
             flash('MYO slot created successfully.')->success();

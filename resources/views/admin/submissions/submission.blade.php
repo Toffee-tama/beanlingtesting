@@ -122,7 +122,7 @@
             </div>
         </div>
     </div>
-        @if($submission->prompt_id)
+    @if($submission->prompt_id)
         <div class="mb-3">
             @include('home._prompt', ['prompt' => $submission->prompt, 'staffView' => true])
         </div>
@@ -305,7 +305,7 @@
             </tr>
         </table>
     </div>
-    @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'awards' => $awards, 'showLootTables' => true, 'showRaffles' => true])
+    @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => true, 'showRaffles' => true])
 
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">

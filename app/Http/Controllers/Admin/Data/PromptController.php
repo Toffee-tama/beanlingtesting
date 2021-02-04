@@ -165,10 +165,6 @@ class PromptController extends Controller
         $query = Prompt::query();
 
         $data = $request->only(['prompt_category_id', 'name']);
-<<<<<<< HEAD
-=======
-
->>>>>>> 2281409c62992cc5e6edd2bbc9bfc42b8aba7600
         if(isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none')
             $query->where('prompt_category_id', $data['prompt_category_id']);
         if(isset($data['name']))

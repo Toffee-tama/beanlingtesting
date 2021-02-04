@@ -24,7 +24,6 @@ use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Prompt\Prompt;
 use App\Models\Pet\Pet;
-
 use App\Services\Stats\ExperienceManager;
 use App\Services\Stats\StatManager;
 
@@ -155,7 +154,7 @@ class SubmissionManager extends Service
                 }
                 else $focusId = NULL;
             }
-
+            
             // Get a list of rewards, then create the submission itself
             $promptRewards = createAssetsArray();
             if(!$isClaim)

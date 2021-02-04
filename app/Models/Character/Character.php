@@ -52,7 +52,7 @@ class Character extends Model
         'is_sellable', 'is_tradeable', 'is_giftable',
         'sale_value', 'transferrable_at', 'is_visible',
         'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'sort',
-        'is_myo_slot', 'name', 'trade_id', 'owner_url', 'is_links_open'
+        'is_myo_slot', 'name', 'trade_id', 'owner_url'
     ];
 
     /**
@@ -96,8 +96,8 @@ class Character extends Model
         'slug' => 'required|alpha_dash',
         'description' => 'nullable',
         'sale_value' => 'nullable|integer',
-        'image' => 'required|mimes:jpeg,gif,png|max:20000',
-        'thumbnail' => 'nullable|mimes:jpeg,gif,png|max:20000',
+        'image' => 'required|mimes:jpeg,jpg,gif,png|max:20000',
+        'thumbnail' => 'nullable|mimes:jpeg,jpg,gif,png|max:20000',
         'owner_url' => 'url|nullable',
     ];
 
@@ -475,7 +475,7 @@ class Character extends Model
         return $currencies;
     }
 
-    /**
+       /**
      * Get the character's exp logs.
      *
      * @param  int  $limit
@@ -615,7 +615,7 @@ class Character extends Model
         return $query->paginate(30);
     }
 
-    /**
+      /**
      * Get submissions that the character has been included in.
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
