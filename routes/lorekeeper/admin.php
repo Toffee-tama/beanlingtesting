@@ -158,7 +158,6 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::get('items/tag/{id}', 'ItemController@getAddItemTag');
     Route::post('items/tag/{id}', 'ItemController@postAddItemTag');
 
-<<<<<<< HEAD
     # PETS
     Route::get('pet-categories', 'PetController@getIndex');
     Route::get('pet-categories/create', 'PetController@getCreatePetCategory');
@@ -202,7 +201,6 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::get('awards/tag/{id}', 'AwardController@getAddAwardTag');
     Route::post('awards/tag/{id}', 'AwardController@postAddAwardTag');
 
-=======
     # RECIPES
     Route::get('recipes', 'RecipeController@getRecipeIndex');
     Route::get('recipes/create', 'RecipeController@getCreateRecipe');
@@ -212,7 +210,6 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('recipes/edit/{id?}', 'RecipeController@postCreateEditRecipe');
     Route::post('recipes/delete/{id}', 'RecipeController@postDeleteRecipe');
     
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
     # SHOPS
     Route::get('shops', 'ShopController@getIndex');
     Route::get('shops/create', 'ShopController@getCreateShop');
@@ -381,7 +378,6 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
 
     Route::get('items', 'GrantController@getItems');
     Route::post('items', 'GrantController@postItems');
-<<<<<<< HEAD
 
     Route::get('pets', 'GrantController@getPets');
     Route::post('pets', 'GrantController@postPets');
@@ -394,8 +390,6 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
     Route::get('event-currency', 'GrantController@getEventCurrency');
     Route::get('event-currency/clear', 'GrantController@getClearEventCurrency');
     Route::post('event-currency/clear', 'GrantController@postClearEventCurrency');
-=======
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
     
     Route::get('item-search', 'GrantController@getItemSearch');
 
