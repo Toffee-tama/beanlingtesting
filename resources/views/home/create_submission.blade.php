@@ -82,9 +82,9 @@
 
     @include('widgets._character_select', ['characterCurrencies' => $characterCurrencies])
     @if($isClaim)
-        @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'pets' => $pets, 'showLootTables' => false, 'showRaffles' => true])
+        @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => false, 'showRaffles' => true, 'showRecipes' => true])
     @else
-        @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'pets' => $pets, 'showLootTables' => false, 'showRaffles' => false])
+        @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => false, 'showRaffles' => false, 'showRecipes' => false])
     @endif
 
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
@@ -110,9 +110,9 @@
 @parent
 @if(!$closed)
     @if($isClaim)
-        @include('js._loot_js', ['showLootTables' => false, 'showRaffles' => true])
+        @include('js._loot_js', ['showLootTables' => false, 'showRaffles' => true, 'showRecipes' => true])
     @else
-        @include('js._loot_js', ['showLootTables' => false, 'showRaffles' => false])
+        @include('js._loot_js', ['showLootTables' => false, 'showRaffles' => false, 'showRecipes' => false])
     @endif
     @include('js._character_select_js')
     @include('widgets._inventory_select_js', ['readOnly' => true])
@@ -125,22 +125,18 @@
             var $confirmationModal = $('#confirmationModal');
             var $formSubmit = $('#formSubmit');
             var $submissionForm = $('#submissionForm');
-
             @if(!$isClaim)
                 var $prompt = $('#prompt');
                 var $rewards = $('#rewards');
-
                 $prompt.selectize();
                 $prompt.on('change', function(e) {
                     $rewards.load('{{ url('submissions/new/prompt') }}/'+$(this).val());
                 });
             @endif
-
             $submitButton.on('click', function(e) {
                 e.preventDefault();
                 $confirmationModal.modal('show');
             });
-
             $formSubmit.on('click', function(e) {
                 e.preventDefault();
                 $submissionForm.submit();

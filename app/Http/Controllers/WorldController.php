@@ -13,6 +13,8 @@ use App\Models\Item\ItemCategory;
 use App\Models\Item\Item;
 use App\Models\Pet\PetCategory;
 use App\Models\Pet\Pet;
+use App\Models\Award\AwardCategory;
+use App\Models\Award\Award;
 use App\Models\Feature\FeatureCategory;
 use App\Models\Feature\Feature;
 use App\Models\Character\CharacterCategory;
@@ -21,6 +23,8 @@ use App\Models\Prompt\Prompt;
 use App\Models\Shop\Shop;
 use App\Models\Shop\ShopStock;
 use App\Models\User\User;
+
+use App\Models\Recipe\Recipe;
 
 class WorldController extends Controller
 {
@@ -125,7 +129,23 @@ class WorldController extends Controller
             'categories' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
         ]);
     }
-
+    
+        /**
+     * Shows the item categories page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getAwardCategories(Request $request)
+    {
+        $query = AwardCategory::query();
+        $name = $request->get('name');
+        if($name) $query->where('name', 'LIKE', '%'.$name.'%');
+        return view('world.award_categories', [  
+            'categories' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
+        ]);
+    }
+    
     /**
      * Shows the trait categories page.
      *
@@ -449,6 +469,64 @@ class WorldController extends Controller
         return view('world.pets', [
             'pets' => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + PetCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
+        ]);
+    }
+    /**
+     * Shows the items page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getRecipes(Request $request)
+    {
+        $query = Recipe::query();
+        $data = $request->only(['name', 'sort']);
+        if(isset($data['name']))
+            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+
+        if(isset($data['sort']))
+        {
+            switch($data['sort']) {
+                case 'alpha':
+                    $query->sortAlphabetical();
+                    break;
+                case 'alpha-reverse':
+                    $query->sortAlphabetical(true);
+                    break;
+                case 'newest':
+                    $query->sortNewest();
+                    break;
+                case 'oldest':
+                    $query->sortOldest();
+                    break;
+                case 'locked':
+                    $query->sortNeedsUnlocking();
+                    break;
+            }
+        }
+        else $query->sortNewest();
+
+        return view('world.recipes.recipes', [
+            'recipes' => $query->paginate(20)->appends($request->query()),
+        ]);
+    }
+
+    /**
+     * Shows an individual recipe;ss page.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getRecipe($id)
+    {
+        $recipe = Recipe::where('id', $id)->first();
+        if(!$recipe) abort(404);
+
+        return view('world.recipes._recipe_page', [
+            'recipe' => $recipe,
+            'imageUrl' => $recipe->imageUrl,
+            'name' => $recipe->displayName,
+            'description' => $recipe->parsed_description,
         ]);
     }
 }

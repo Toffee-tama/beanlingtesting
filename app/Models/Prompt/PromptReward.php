@@ -63,6 +63,8 @@ class PromptReward extends Model
                 break;
             case 'Currency':
                 return $this->belongsTo('App\Models\Currency\Currency', 'rewardable_id');
+            case 'Award':
+                return $this->belongsTo('App\Models\Award\Award', 'rewardable_id');
                 break;
             case 'LootTable':
                 return $this->belongsTo('App\Models\Loot\LootTable', 'rewardable_id');
@@ -72,8 +74,16 @@ class PromptReward extends Model
             break;
             case 'Raffle':
                 return $this->belongsTo('App\Models\Raffle\Raffle', 'rewardable_id');
+<<<<<<< HEAD
             break;
         }
+=======
+                break;
+            case 'Recipe':
+                return $this->belongsTo('App\Models\Recipe\Recipe', 'rewardable_id');
+                break;
+        }   
+>>>>>>> d6c2d037946decba62b3720114d4ce721774e437
         return null;
     }
 }

@@ -135,6 +135,32 @@ class AddSiteSettings extends Command
             $this->info("Added:   is_myos_open / Default: 1");
         }
         else $this->line("Skipped: is_myos_open");
+        
+        if(!DB::table('site_settings')->where('key', 'is_surrenders_open')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'is_surrenders_open',
+                    'value' => 1,
+                    'description' => '0: Characters can not be surrendered by users to the adoption center, 1: Characters can be submitted to surrender queue.'
+                ]
+
+            ]);
+            $this->info("Added:   is_surrenders_open / Default: 1");
+        }
+        else $this->line("Skipped: is_surrenders_open");
+
+        if(!DB::table('site_settings')->where('key', 'calculate_by_traits')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'calculate_by_traits',
+                    'value' => 0,
+                    'description' => '0: Characters must have currency be added manually, 1: Characters are valued automaticall by traits. THIS MUST BE HARDCODED. The controller has been commented for ease.'
+                ]
+
+            ]);
+            $this->info("Added:   calculate_by_traits / Default: 0");
+        }
+        else $this->line("Skipped: calculate_by_traits");
 
         if(!DB::table('site_settings')->where('key', 'is_design_updates_open')->exists()) {
             DB::table('site_settings')->insert([
@@ -277,6 +303,57 @@ class AddSiteSettings extends Command
             $this->info("Added:   coupon_settings / Default: 0");
         }
         else $this->line("Skipped: coupon_settings");
+        if(!DB::table('site_settings')->where('key', 'adopts_user')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'adopts_user',
+                    'value' => 1,
+                    'description' => 'ID of the site\'s adoption center user.'
+                ]
+
+            ]);
+            $this->info("Added:   adopts_user / Default: 1");
+        }
+        else $this->line("Skipped: adopts_user");
+
+        if(!DB::table('site_settings')->where('key', 'event_currency')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'event_currency',
+                    'value' => 1,
+                    'description' => 'ID of the currency used for events.'
+                ]
+
+            ]);
+            $this->info("Added:   event_currency / Default: 1");
+        }
+        else $this->line("Skipped: event_currency");
+
+        if(!DB::table('site_settings')->where('key', 'global_event_score')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'global_event_score',
+                    'value' => 0,
+                    'description' => '0: Event currency is only tracked individually, 1: A global tally of all event currency is also kept.'
+                ]
+
+            ]);
+            $this->info("Added:   global_event_score / Default: 0");
+        }
+        else $this->line("Skipped: global_event_score");
+
+        if(!DB::table('site_settings')->where('key', 'global_event_goal')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'global_event_goal',
+                    'value' => 0,
+                    'description' => 'Goal for global event score. Has no effect if global event score is not 1 and/or if set to 0.'
+                ]
+
+            ]);
+            $this->info("Added:   global_event_goal / Default: 0");
+        }
+        else $this->line("Skipped: global_event_goal");
 
         $this->line("\nSite settings up to date!");
 

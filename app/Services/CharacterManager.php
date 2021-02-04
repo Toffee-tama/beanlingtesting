@@ -35,6 +35,8 @@ use App\Models\Rarity;
 use App\Models\Currency\Currency;
 use App\Models\Feature\Feature;
 
+use App\Models\Stats\Character\CharacterStat;
+
 class CharacterManager extends Service
 {
     /*
@@ -130,53 +132,65 @@ class CharacterManager extends Service
             // Create character lineage
             $lineage = $this->handleCharacterLineage($data, $character, $isMyo);
 
-            // Create character image
-            $data['is_valid'] = true; // New image of new characters are always valid
-            $image = $this->handleCharacterImage($data, $character, $isMyo);
-            if(!$image) throw new \Exception("Error happened while trying to create image.");
+          // Create character image
+          $data['is_valid'] = true; // New image of new characters are always valid
+          $image = $this->handleCharacterImage($data, $character, $isMyo);
+          if(!$image) throw new \Exception("Error happened while trying to create image.");
 
-            // Update the character's image ID
-            $character->character_image_id = $image->id;
-            $character->save();
+          // Update the character's image ID
+          $character->character_image_id = $image->id;
+          $character->save();
 
-            // Create drop information for the character, if relevant
-            if($character->image->species && $character->image->species->dropData) {
-                $drop = new CharacterDrop;
-                if($drop->createDrop($character->id, isset($data['parameters']) && $data['parameters'] ? $data['parameters'] : null)) throw new \Exception('Failed to create character drop.');
-            }
+          // Create character stats
+          $character->level()->create([
+              'character_id' => $character->id
+          ]);
+          
+          if(isset($data['stats']))
+          {
+              foreach($data['stats'] as $key=>$stat)
+              {
+                  CharacterStat::create([
+                      'character_id' => $character->id,
+                      'stat_id' => $key,
+                      'count' => $stat,
+                  ]);
+              }
+          }
+          
+          // Add a log for the character
+          // This logs all the updates made to the character
+          $this->createLog($user->id, null, $recipientId, $url, $character->id, $isMyo ? 'MYO Slot Created' : 'Character Created', 'Initial upload', 'character');
 
-            // Add a log for the character
-            // This logs all the updates made to the character
-            $this->createLog($user->id, null, $recipientId, $url, $character->id, $isMyo ? 'MYO Slot Created' : 'Character Created', 'Initial upload', 'character');
+          // Add a log for the user
+          // This logs ownership of the character
+          $this->createLog($user->id, null, $recipientId, $url, $character->id, $isMyo ? 'MYO Slot Created' : 'Character Created', 'Initial upload', 'user');
 
-            // Add a log for the user
-            // This logs ownership of the character
-            $this->createLog($user->id, null, $recipientId, $url, $character->id, $isMyo ? 'MYO Slot Created' : 'Character Created', 'Initial upload', 'user');
+          // Update the user's FTO status and character count
+          if(is_object($recipient)) {
+              if(!$isMyo) {
+                  $recipient->settings->is_fto = 0; // MYO slots don't affect the FTO status - YMMV
+              }
+              $recipient->settings->save();
+          }
 
-            // Update the user's FTO status and character count
-            if(is_object($recipient)) {
-                if(!$isMyo) {
-                    $recipient->settings->is_fto = 0; // MYO slots don't affect the FTO status - YMMV
-                }
-                $recipient->settings->save();
-            }
+          // If the recipient has an account, send them a notification
+          if(is_object($recipient) && $user->id != $recipient->id) {
+              Notifications::create($isMyo ? 'MYO_GRANT' : 'CHARACTER_UPLOAD', $recipient, [
+                  'character_url' => $character->url,
+              ] + ($isMyo ?
+                  ['name' => $character->name] :
+                  ['character_slug' => $character->slug]
+              ));
+          }
 
-            // If the recipient has an account, send them a notification
-            if(is_object($recipient) && $user->id != $recipient->id) {
-                Notifications::create($isMyo ? 'MYO_GRANT' : 'CHARACTER_UPLOAD', $recipient, [
-                    'character_url' => $character->url,
-                ] + ($isMyo ?
-                    ['name' => $character->name] :
-                    ['character_slug' => $character->slug]
-                ));
-            }
-
-            return $this->commitReturn($character);
+          return $this->commitReturn($character);
         } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
+
 
     /**
      * Handles character data.
@@ -1789,7 +1803,6 @@ public function updateCharacterLineage($data, $character, $user, $isAdmin = fals
                 $recipient = checkAlias($data['recipient_url']);
             }
             else throw new \Exception("Please enter a recipient for the transfer.");
-
             // If the character is in an active transfer, cancel it
             $transfer = CharacterTransfer::active()->where('character_id', $character->id)->first();
             if($transfer) {

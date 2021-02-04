@@ -617,4 +617,12 @@ tr.outflow {
     
 @media only screen and (max-width: 600px) {
     .comment_replies { padding-left:1rem;}
+<<<<<<< HEAD
+=======
+}
+
+/* RECIPES ***************************************************************************************/
+.recipe-image {
+    width: 150px;
+>>>>>>> d6c2d037946decba62b3720114d4ce721774e437
 }

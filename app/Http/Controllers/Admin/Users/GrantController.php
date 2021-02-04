@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 
 use App\Models\User\User;
 use App\Models\Item\Item;
-use App\Models\Pet\Pet;
+use App\Models\Award\Award;
+use App\Models\Recipe\Recipe;
 use App\Models\Currency\Currency;
 
 use App\Models\User\UserItem;
@@ -20,7 +21,9 @@ use App\Models\Submission\Submission;
 use App\Models\Character\Character;
 use App\Services\CurrencyManager;
 use App\Services\InventoryManager;
-use App\Services\PetManager;
+use App\Services\Stats\ExperienceManager;
+use App\Services\AwardCaseManager;
+use App\Services\RecipeService;
 
 use App\Http\Controllers\Controller;
 
@@ -89,38 +92,42 @@ class GrantController extends Controller
         }
         return redirect()->back();
     }
-
+    
     /**
-     * Show the pet grant page.
+     * Show the recipe grant page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPets()
+    public function getRecipes()
     {
-        return view('admin.grants.pets', [
-            'pets' => Pet::orderBy('name')->pluck('name', 'id')
+        return view('admin.grants.recipes', [
+            'users' => User::orderBy('id')->pluck('name', 'id'),
+            'recipes' => Recipe::orderBy('name')->pluck('name', 'id')
         ]);
     }
 
     /**
-     * Grants or removes pets from multiple users.
+     * Grants or removes items from multiple users.
      *
      * @param  \Illuminate\Http\Request        $request
-     * @param  App\Services\InvenntoryManager  $service
+     * @param  App\Services\InventoryManager  $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postPets(Request $request, PetManager $service)
+    public function postRecipes(Request $request, RecipeService $service)
     {
-        $data = $request->only(['names', 'pet_id', 'quantity', 'data', 'disallow_transfer', 'notes']);
-        if($service->grantPets($data, Auth::user())) {
-            flash('Pets granted successfully.')->success();
+        $data = $request->only(['names', 'recipe_ids', 'data']);
+        if($service->grantRecipes($data, Auth::user())) {
+            flash('Recipes granted successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->back();
-     
-     /*   * Show the item search page.
+    }
+
+
+    /**
+     * Show the item search page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -156,4 +163,60 @@ class GrantController extends Controller
         ]);
     }
 
+    /**
+     * Show the award grant page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getAwards()
+    {
+        return view('admin.grants.awards', [
+            'users' => User::orderBy('id')->pluck('name', 'id'),
+            'awards' => Award::orderBy('name')->pluck('name', 'id')
+        ]);
+    }
+
+    /**
+     * Grants or removes awards from multiple users.
+     *
+     * @param  \Illuminate\Http\Request        $request
+     * @param  App\Services\AwardCaseManager  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postAwards(Request $request, AwardCaseManager $service)
+    {
+        $data = $request->only(['names', 'award_ids', 'quantities', 'data', 'disallow_transfer', 'notes']);
+        if($service->grantAwards($data, Auth::user())) {
+            flash('Awards granted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+ 
+    /**
+     * Grants or removes exp (show)
+     */
+    public function getExp()
+    {
+        return view('admin.grants.exp', [
+            'users' => User::orderBy('id')->pluck('name', 'id'),
+        ]);
+    }
+
+    /**
+     * Grants or removes exp
+     */
+    public function postExp(Request $request, ExperienceManager $service)
+    {
+        $data = $request->only(['names', 'quantity', 'data']);
+        if($service->grantExp($data, Auth::user())) {
+            flash('EXP granted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
 }

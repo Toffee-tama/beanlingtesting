@@ -284,12 +284,27 @@ return [
         'message' => 'The transfer for <a href="{character_url}">{character_name}</a> was approved by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Transfers</a>)',
         'url' => 'characters/transfers/incoming'
     ],
+    // SURRENDER_ACCEPTED
+    218 => [
+        'name' => 'Surrender Approved',
+        'message' => 'Your surrender (#{surrender_id}) was approved by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
+        'url' => 'surrender/view/{surrender_id}'
+    ],
+
+    // surrenders_REJECTED
+    219 => [
+        'name' => 'Surrender Rejected',
+        'message' => 'Your surrender (#{surrender_id}) was rejected by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
+        'url' => 'surrender/view/{surrender_id}'
+    ],
+    
     // BOOKMARK_GIFT_WRITING
     39 => [
         'name' => 'Bookmark Gift Writing',
         'message' => 'A character you have bookmarked (<a href="{character_url}">{character_name}</a>) has had its Gift Writing Allowed status changed. (<a href="{url}">View Bookmarks</a>)',
         'url' => 'account/bookmarks'
     ],
+
     // LINK_REQUESTED
     200 => [
         'name' => 'Link Requested',
@@ -302,30 +317,14 @@ return [
         'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Links.</a>)',
         'url' => '',
     ],
-    // PET_REMOVAL
-    40 => [
-        'name' => 'Pet Removal',
-        'message' => '{pet_name} (×{pet_quantity}) was removed from your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
-        'url' => 'inventory'
+
+        // EXP_GRANT
+    245 => [
+        'name' => 'EXP Grant',
+        'message' => 'You have received a staff grant of {quantity} EXP from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Level Area</a>)',
+        'url' => 'level'
     ],
-    // PET_TRANSFER
-    41 => [
-        'name' => 'Pet Transfer',
-        'message' => 'You have received {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
-        'url' => 'inventory'
-    ],
-    // FORCED_PET_TRANSFER
-    42 => [
-        'name' => 'Forced Pet Transfer',
-        'message' => '{pet_name} (×{pet_quantity}) was transferred out of your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
-        'url' => 'inventory'
-    ],
-    // PET_GRANT
-    43 => [
-        'name' => 'Pet Grant',
-        'message' => 'You have received a staff grant of {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
-        'url' => 'inventory'
-    ],
+
     // REPORT_ASSIGNED
     220 => [
         'name' => 'Report Assigned',
@@ -354,9 +353,37 @@ return [
         'url' => ''
     ],
 
+        // PET_REMOVAL
+    241 => [
+        'name' => 'Pet Removal',
+        'message' => '{pet_name} (×{pet_quantity}) was removed from your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'pets'
+    ],
+    // PET_TRANSFER
+    242 => [
+        'name' => 'Pet Transfer',
+        'message' => 'You have received {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'pets'
+    ],
+    // FORCED_PET_TRANSFER
+    243 => [
+        'name' => 'Forced Pet Transfer',
+        'message' => '{pet_name} (×{pet_quantity}) was transferred out of your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'pets'
+    ],
+    // PET_GRANT
+    244 => [
+        'name' => 'Pet Grant',
+        'message' => 'You have received a staff grant of {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'pets'
+    ],
     // CHARACTER_ITEM_GRANT
     501 => [
         'name' => 'Character Item Grant',
+    ],
+
+    // CHARACTER_ITEM_GRANT
+    39 => [
         'message' => '{character_name} has received a staff grant of {item_name} (×{item_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'character/{character_slug}/inventory'
     ],
@@ -443,5 +470,54 @@ return [
         'name' => 'Gallery Submission Participant',
         'message' => '<a href="{sender_url}">{sender}</a> has added you as a participant on a gallery submission. (<a href="{url}">View Submission</a>)',
         'url' => 'gallery/view/{submission_id}'
+    ],
+<<<<<<< HEAD
+    40 => [
+        'message' => '{item_name} (×{item_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'character/{character_slug}/inventory'
+    ],
+    
+    // AWARD_GRANT
+    41 => [
+        'message' => 'You have earned the following award(s): {award_name} (×{award_quantity}). Congratulations! (<a href="{url}">View Awards</a>)',
+        'url' => 'awardcase'
+    ],
+    
+    // AWARD_REMOVAL
+    42 => [
+        'message' => '{award_name} (×{award_quantity}) was removed from your Awards by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Awards</a>)',
+        'url' => 'awardcase'
+    ],
+    
+    // AWARD_TRANSFER 
+    43 => [
+        'message' => 'You have received {award_name} (×{award_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Awards</a>)',
+        'url' => 'awardcase'
+    ],
+    
+    // FORCED_AWARD_TRANSFER
+    44 => [
+        'message' => '{item_name} (×{item_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+        'url' => 'character/{character_slug}/inventory'
+    ],
+    
+    // CHARACTER_AWARD_GRANT
+    45 => [
+        'message' => '{character_name} has earned the following award(s): {award_name} (×{award_quantity}). Congratulations! (<a href="{url}">View Awards</a>)',
+        'url' => 'character/{character_slug}/awardcase'
+    ],
+    
+    // CHARACTER_AWARD_REMOVAL
+    46 => [
+        'message' => '{award_name} (×{award_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Awards</a>)',
+        'url' => 'character/{character_slug}/awardcase'
+=======
+
+    // RECIPE_GRANT
+    600 => [
+        'name' => 'Recipe Grant',
+        'message' => 'You have received a staff grant of the crafting recipe {recipe_name} from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Unlocked Recipes</a>)',
+        'url' => 'crafting'
+>>>>>>> d6c2d037946decba62b3720114d4ce721774e437
     ],
 ];
