@@ -81,10 +81,6 @@ return [
                 'name' => 'Claim Submissions',
                 'url' => 'admin/claims'
             ],
-            [
-                'name' => 'Surrenders',
-                'url' => 'admin/surrenders/pending'
-            ],
         ]
     ],
     'Grants' => [
@@ -101,18 +97,6 @@ return [
             [
                 'name' => 'Pet Grants',
                 'url' => 'admin/grants/pets'
-            ],
-            [
-                'name' => 'EXP Grants',
-                'url' => 'admin/grants/exp'
-            ],
-            [
-                'name' => 'Event Currency',
-                'url' => 'admin/grants/event-currency'
-            ],
-            [
-                'name' => 'Award Grants',
-                'url' => 'admin/grants/awards'
             ],
         ]
     ],
@@ -145,31 +129,6 @@ return [
             ],
         ]
     ],
-	
-    'Stats' => [
-        'power' => 'edit_stats',
-        'links' => [
-            [
-                'name' => 'Stats',
-                'url' => 'admin/stats'
-            ],
-        ]
-    ],
-	
-    'Levels' => [
-        'power' => 'edit_levels',
-        'links' => [
-            [
-                'name' => 'User Levels',
-                'url' => 'admin/levels'
-            ],
-            [
-                'name' => 'Character Levels',
-                'url' => 'admin/levels/character'
-            ],
-        ]
-    ],
-    
     'Data' => [
         'power' => 'edit_data',
         'links' => [
@@ -208,30 +167,6 @@ return [
             [
                 'name' => 'Character Drops',
                 'url' => 'admin/data/character-drops'
-            ];
-            [
-                'name' => 'Award Categories',
-                'url' => 'admin/data/award-categories'
-            ],
-            [
-                'name' => 'Awards',
-                'url' => 'admin/data/awards'
-            ],
-            [
-                'name' => 'Prompt Categories',
-                'url' => 'admin/data/prompt-categories'
-            ],
-            [
-                'name' => 'Adoption Center',
-                'url' => 'admin/data/adoptions/edit/1'
-            ],
-            [
-                'name' => 'Adopts',
-                'url' => 'admin/data/stock'
-            ],
-            [
-                'name' => 'Prompt Categories',
-                'url' => 'admin/data/prompt-categories'
             ],
             [
                 'name' => 'Currencies',

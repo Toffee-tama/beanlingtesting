@@ -6,7 +6,6 @@ use App\Services\Service;
 use DB;
 use Config;
 use Notifications;
-use Settings;
 
 use App\Models\User\User;
 use App\Models\Currency\Currency;
@@ -219,7 +218,7 @@ class CurrencyManager extends Service
     public function creditCurrency($sender, $recipient, $type, $data, $currency, $quantity)
     {
         DB::beginTransaction();
-        
+
         try {
             if(is_numeric($currency)) $currency = Currency::find($currency);
             if($recipient->logType == 'User') {
@@ -230,19 +229,6 @@ class CurrencyManager extends Service
                 }
                 else {
                     $record = UserCurrency::create(['user_id' => $recipient->id, 'currency_id' => $currency->id, 'quantity' => $quantity]);
-                }
-
-                // If global event score tracking is enabled, and the currency is the current
-                // event currency, credit the same amount to the admin user for global tracking
-                if(Settings::get('global_event_score') && $currency->id == Settings::get('event_currency') && $recipient->id != Settings::get('admin_user')) {
-                    $adminRecord = UserCurrency::where('user_id', Settings::get('admin_user'))->where('currency_id', $currency->id)->first();
-                    if($adminRecord) {
-                        // Laravel doesn't support composite primary keys, so directly updating the DB row here
-                        DB::table('user_currencies')->where('user_id',  Settings::get('admin_user'))->where('currency_id', $currency->id)->update(['quantity' => $record->quantity + $quantity]);
-                    }
-                    else {
-                        $adminRecord = UserCurrency::create(['user_id' =>  Settings::get('admin_user'), 'currency_id' => $currency->id, 'quantity' => $quantity]);
-                    }
                 }
             }
             else {

@@ -14,12 +14,7 @@ use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
 use App\Models\Item\ItemLog;
 use App\Models\Pet\PetLog;
-use App\Models\Stats\ExpLog;
-use App\Models\Stats\StatTransferLog;
-use App\Models\Stats\LevelLog;
 use App\Models\Shop\ShopLog;
-use App\Models\Adoption\AdoptionLog;
-use App\Models\Award\AwardLog;
 use App\Models\User\UserCharacterLog;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
@@ -28,10 +23,6 @@ use App\Models\Gallery\GallerySubmission;
 use App\Models\Gallery\GalleryCollaborator;
 use App\Models\Gallery\GalleryFavorite;
 use App\Traits\Commenter;
-
-use App\Models\Character\CharacterDesignUpdate;
-use App\Models\Character\CharacterTransfer;
-use App\Models\Trade;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -103,14 +94,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get user settings.
-     */
-    public function level() 
-    {
-        return $this->hasOne('App\Models\Stats\User\UserLevel');
-    }
-
-    /*
      * Get the user's aliases.
      */
     public function aliases()
@@ -195,13 +178,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function pets()
     {
         return $this->belongsToMany('App\Models\Pet\Pet', 'user_pets')->withPivot('data', 'updated_at', 'id')->whereNull('user_pets.deleted_at');
-    }
-        /**
-     * Get the user's awards.
-     */
-    public function awards()
-    {
-        return $this->belongsToMany('App\Models\Award\Award', 'user_awards')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('user_awards.deleted_at');
     }
 
 
@@ -435,58 +411,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the user's exp logs.
-     *
-     * @param  int  $limit
-     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function getExpLogs($limit = 10)
-    {
-        $user = $this;
-        $query = ExpLog::where(function($query) use ($user) {
-            $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
-        })->orWhere(function($query) use ($user) {
-            $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
-        })->orderBy('id', 'DESC');
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
-
-    /**
-     * Get the user's stat logs.
-     *
-     * @param  int  $limit
-     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function getStatLogs($limit = 10)
-    {
-        $user = $this;
-        $query = StatTransferLog::where(function($query) use ($user) {
-            $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
-        })->orWhere(function($query) use ($user) {
-            $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
-        })->orderBy('id', 'DESC');
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
-
-    /**
-     * Get the user's level logs.
-     *
-     * @param  int  $limit
-     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function getLevelLogs($limit = 10)
-    {
-        $user = $this;
-        $query = LevelLog::where(function($query) use ($user) {
-            $query->with('recipient')->where('leveller_type', 'User')->where('recipient_id', $user->id);
-        })->orderBy('id', 'DESC');
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
-
-    /**
      * Get the user's item logs.
      *
      * @param  int  $limit
@@ -516,25 +440,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $query = PetLog::with('sender')->with('recipient')->with('pet')->where(function($query) use ($user) {
             $query->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Staff Removal']);
         })->orWhere(function($query) use ($user) {
-            $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
-        })->orderBy('id', 'DESC');
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
-    
-        /**
-     * Get the user's award logs.
-     *
-     * @param  int  $limit
-     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function getAwardLogs($limit = 10)
-    {
-        $user = $this;
-        $query = AwardLog::with('award')->where(function($query) use ($user) {
-            $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
-        })->orWhere(function($query) use ($user) {
-            $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
+            $query->where('recipient_id', $user->id);
         })->orderBy('id', 'DESC');
         if($limit) return $query->take($limit)->get();
         else return $query->paginate(30);
@@ -553,21 +459,6 @@ class User extends Authenticatable implements MustVerifyEmail
         if($limit) return $query->take($limit)->get();
         else return $query->paginate(30);
     }
-
-    /**
-     * Get the user's adopt purchase logs.
-     *
-     * @param  int  $limit
-     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function getAdoptionLogs($limit = 10)
-    {
-        $user = $this;
-        $query = AdoptionLog::where('user_id', $this->id)->with('character')->with('adoption')->with('adopt')->with('currency')->orderBy('id', 'DESC');
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
-
 
     /**
      * Get the user's character ownership logs.
@@ -647,24 +538,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return CharacterBookmark::where('user_id', $this->id)->where('character_id', $character->id)->first();
     }
-
-
-
-    /**
-     * Check if there are any Admin Notifications
-     *
-     * @return int
-     */
-     public function hasAdminNotification($user)
-     {
-       $submissionCount = $user->hasPower('manage_submissions') ? Submission::where('status', 'Pending')->whereNotNull('prompt_id')->count() : 0;
-       $claimCount = $user->hasPower('manage_submissions') ? Submission::where('status', 'Pending')->whereNull('prompt_id')->count() : 0;
-       $designCount = $user->hasPower('manage_characters') ? CharacterDesignUpdate::characters()->where('status', 'Pending')->count() : 0;
-       $myoCount = $user->hasPower('manage_characters') ? CharacterDesignUpdate::myos()->where('status', 'Pending')->count() : 0;
-       $transferCount =  $user->hasPower('manage_characters') ? CharacterTransfer::active()->where('is_approved', 0)->count() : 0;
-       $tradeCount = $user->hasPower('manage_characters') ? Trade::where('status', 'Pending')->count() : 0;
-       $total = $submissionCount + $claimCount + $designCount + $myoCount + $transferCount + $tradeCount;
-       return $total;
-     }
-
 }

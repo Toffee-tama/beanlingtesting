@@ -11,8 +11,6 @@ use App\Models\Prompt\PromptCategory;
 use App\Models\Submission\Submission;
 use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
-use App\Models\Award\Award;
-use App\Models\Award\AwardCategory;
 use App\Models\Currency\Currency;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
@@ -174,7 +172,7 @@ class SubmissionController extends Controller
      */
     public function postSubmission(Request $request, SubmissionManager $service, $id, $action)
     {
-        $data = $request->only(['slug',  'character_quantity', 'character_currency_id', 'rewardable_type', 'rewardable_id', 'quantity', 'staff_comments', 'bonus_exp', 'bonus_points', 'bonus_user_exp', 'bonus_user_points' ]);
+        $data = $request->only(['slug',  'character_quantity', 'character_currency_id', 'rewardable_type', 'rewardable_id', 'quantity', 'staff_comments' ]);
         if($action == 'reject' && $service->rejectSubmission($request->only(['staff_comments']) + ['id' => $id], Auth::user())) {
             flash('Submission rejected successfully.')->success();
         }

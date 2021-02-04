@@ -43,7 +43,7 @@ class CharacterDropService extends Service
             $data['parameters'] = json_encode($paramData);
 
             $data['data']['frequency'] = ['frequency' => $data['drop_frequency'], 'interval' => $data['drop_interval']];
-            $data['is_active'] = isset($data['is_active']) && $data['is_active'] ? $data['is_active'] : 0;
+            $data['data']['is_active'] = isset($data['is_active']) && $data['is_active'] ? $data['is_active'] : 0;
             $data['data']['drop_name'] = isset($data['drop_name']) ? $data['drop_name'] : null;
             $data['data'] = json_encode($data['data']);
 
@@ -100,12 +100,11 @@ class CharacterDropService extends Service
             }
 
             $data['data']['frequency'] = ['frequency' => $data['drop_frequency'], 'interval' => $data['drop_interval']];
-            $data['is_active'] = isset($data['is_active']) && $data['is_active'] ? $data['is_active'] : 0;
+            $data['data']['is_active'] = isset($data['is_active']) && $data['is_active'] ? $data['is_active'] : 0;
             $data['data']['drop_name'] = isset($data['drop_name']) ? $data['drop_name'] : null;
-            $data['data']['cap'] = isset($data['cap']) ? $data['cap'] : null;
             $data['data'] = json_encode($data['data']);
 
-            $drop->update(Arr::only($data, ['species_id', 'parameters', 'data', 'is_active']));
+            $drop->update(Arr::only($data, ['species_id', 'parameters', 'data']));
 
             return $this->commitReturn($drop);
         } catch(\Exception $e) {

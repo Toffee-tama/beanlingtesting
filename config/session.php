@@ -153,7 +153,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', 'http://localhost/'),
+    'domain' => env('SESSION_DOMAIN', 'beanling-patch.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -179,7 +179,7 @@ return [
     |
     */
 
-    'http_only' => false,
+    'http_only' => true,
 
     /*
     |--------------------------------------------------------------------------

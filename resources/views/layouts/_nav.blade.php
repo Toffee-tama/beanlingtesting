@@ -43,9 +43,6 @@
                             <a class="dropdown-item" href="{{ url('bank') }}">
                                 Bank
                             </a>
-                            <a class="dropdown-item" href="{{ url('level') }}">
-                                Level Area
-                            </a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -64,9 +61,6 @@
                             </a>
                             <a class="dropdown-item" href="{{ url('designs') }}">
                                 Design Approvals
-                            </a>
-                            <a class="dropdown-item" href="{{ url('surrenders') }}">
-                                Surrenders
                             </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url('characters/transfers/incoming') }}">
@@ -183,9 +177,6 @@
 						<a class="dropdown-item" href="{{ url('info/growingyourbean') }}">
                             Growing your Beanling
                         </a>
-                        <a class="dropdown-item" href="{{ url('adoptions') }}">
-                            Adoption Center
-                        </a>
                     </div>
                 </li>
 				                <li class="nav-item">
@@ -227,9 +218,6 @@
                             </a>
                             <a class="dropdown-item" href="{{ url('claims/new') }}">
                                 Submit Claim
-                            </a>
-                            <a class="dropdown-item" href="{{ url('surrenders/new') }}">
-                                Submit Surrender
                             </a>
                             <a class="dropdown-item" href="{{ url('reports/new') }}">
                                 Submit Report

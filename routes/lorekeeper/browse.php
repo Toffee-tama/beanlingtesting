@@ -17,8 +17,6 @@
 Route::get('items/{id}', 'Users\InventoryController@getStack');
 Route::get('pets/{id}', 'Users\PetController@getStack');
 Route::get('items/character/{id}', 'Users\InventoryController@getCharacterStack');
-Route::get('awards/{id}', 'Users\AwardCaseController@getStack');
-Route::get('awards/character/{id}', 'Users\AwardCaseController@getCharacterStack');
 
 /**************************************************************************************************
     News
@@ -59,21 +57,12 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function() {
     Route::get('{name}/inventory', 'UserController@getUserInventory');
     Route::get('{name}/pets', 'UserController@getUserPets');
     Route::get('{name}/bank', 'UserController@getUserBank');
-    Route::get('{name}/level', 'UserController@getUserLevel');
     
     Route::get('{name}/currency-logs', 'UserController@getUserCurrencyLogs');
     Route::get('{name}/item-logs', 'UserController@getUserItemLogs');
     Route::get('{name}/pet-logs', 'UserController@getUserPetLogs');
-    Route::get('{name}/awardcase', 'UserController@getUserAwardCase');
-    
-    Route::get('{name}/currency-logs', 'UserController@getUserCurrencyLogs');
-    Route::get('{name}/item-logs', 'UserController@getUserItemLogs');
-    Route::get('{name}/award-logs', 'UserController@getUserAwardLogs');
     Route::get('{name}/ownership', 'UserController@getUserOwnershipLogs');
     Route::get('{name}/submissions', 'UserController@getUserSubmissions');
-    Route::get('{name}/exp-logs', 'UserController@getUserExpLogs');
-    Route::get('{name}/level-logs', 'UserController@getUserLevelLogs');
-    Route::get('{name}/stat-logs', 'UserController@getUserStatLogs');
 });
 
 /**************************************************************************************************
@@ -87,7 +76,6 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::get('{slug}/profile', 'CharacterController@getCharacterProfile');
     Route::get('{slug}/links', 'CharacterController@getCharacterLinks');
     Route::get('{slug}/bank', 'CharacterController@getCharacterBank');
-    Route::get('{slug}/level-logs', 'CharacterController@getCharacterLevel');
     Route::get('{slug}/inventory', 'CharacterController@getCharacterInventory');
     Route::get('{slug}/images', 'CharacterController@getCharacterImages');
     Route::get('{slug}/drops', 'CharacterController@getCharacterDrops');
@@ -119,7 +107,7 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
 
 Route::group(['prefix' => 'world'], function() {
     Route::get('/', 'WorldController@getIndex');
-
+    
     Route::get('currencies', 'WorldController@getCurrencies');
     Route::get('rarities', 'WorldController@getRarities');
     Route::get('species', 'WorldController@getSpecieses');
@@ -134,9 +122,6 @@ Route::group(['prefix' => 'world'], function() {
     Route::get('pets', 'WorldController@getPets');
     Route::get('prompt-categories', 'WorldController@getPromptCategories');
     Route::get('prompts', 'WorldController@getPrompts');
-    Route::get('award-categories', 'WorldController@getAwardCategories');
-    Route::get('awards', 'WorldController@getAwards');
-    Route::get('awards/{id}', 'WorldController@getAward');
     Route::get('character-categories', 'WorldController@getCharacterCategories');
 });
 
@@ -151,12 +136,6 @@ Route::group(['prefix' => 'shops'], function() {
     Route::get('{id}', 'ShopController@getShop')->where(['id' => '[0-9]+']);
     Route::get('{id}/{stockId}', 'ShopController@getShopStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
 });
-
-Route::group(['prefix' => 'adoptions'], function() {
-    Route::get('/', 'AdoptionController@getAdoption');
-    Route::get('{id}/{stockId}', 'AdoptionController@getAdoptionStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
-});
-Route::get('event-tracking', 'PromptsController@getEventTracking');
 
 /**************************************************************************************************
     Site Pages
@@ -180,9 +159,6 @@ Route::group(['prefix' => 'submissions', 'namespace' => 'Users'], function() {
 });
 Route::group(['prefix' => 'claims', 'namespace' => 'Users'], function() {
     Route::get('view/{id}', 'SubmissionController@getClaim');
-});
-Route::group(['prefix' => 'surrender'], function() {
-    Route::get('view/{id}', 'SurrenderController@getPublicSurrender');
 });
 
 /**************************************************************************************************

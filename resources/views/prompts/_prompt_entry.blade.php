@@ -22,73 +22,38 @@
                 <h4>Details</h4>
                 @if($prompt->parsed_description)
                     {!! $prompt->parsed_description !!}
-                @else
+                @else 
                     <p>No further details.</p>
                 @endif
-                @if($prompt->hide_submissions == 1 && isset($prompt->end_at) && $prompt->end_at > Carbon\Carbon::now())
-                    <p class="text-info">Submissions to this prompt are hidden until this prompt ends.</p>
-                @elseif($prompt->hide_submissions == 2)
-                    <p class="text-info">Submissions to this prompt are hidden.</p>
-                @endif
             </div>
-            <div class="row">
-                <div class="col">
-                    <h4>Rewards</h4>
-                    @if(!count($prompt->rewards))
-                        No rewards.
-                    @else 
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th width="70%">Reward</th>
-                                    <th width="30%">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($prompt->rewards as $reward)
-                                    <tr>
-                                        <td>{!! $reward->reward->displayName !!}</td>
-                                        <td>{{ $reward->quantity }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @endif
-                </div>
-                <div class="col">
-                    <h4>Stat & Level Rewards</h4>
-                    <div class="row">
-                        <div class="col">
-                            @if(!$prompt->expreward->user_exp && !$prompt->expreward->user_points)
-                            No user rewards.
-                            @else
-                            {{ $prompt->expreward->user_exp ? $prompt->expreward->user_exp : 0  }} user EXP
-                                <br>
-                            {{ $prompt->expreward->user_points ? $prompt->expreward->user_points : 0  }} user points
-                            @endif
-                        </div>
-                        <div class="col">
-                            @if(!$prompt->expreward->chara_exp && !$prompt->expreward->chara_points)
-                            No character rewards.
-                            @else
-                            {{ $prompt->expreward->chara_exp ? $prompt->expreward->chara_exp : 0  }} character EXP
-                                <br>
-                            {{ $prompt->expreward->chara_points ? $prompt->expreward->chara_points : 0  }} character points
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="text-right mt-1">
-            @if($prompt->level_req)
-            <p class="text-danger">This prompt requires you to be at least level {{ $prompt->level_req }}</p>
+            <h4>Rewards</h4>
+            @if(!count($prompt->rewards))
+                No rewards.
+            @else 
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th width="70%">Reward</th>
+                            <th width="30%">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($prompt->rewards as $reward)
+                            <tr>
+                                <td>{!! $reward->reward->displayName !!}</td>
+                                <td>{{ $reward->quantity }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             @endif
+        </div>
+        <div class="text-right">
             @if($prompt->end_at && $prompt->end_at->isPast())
                 <span class="text-secondary">This prompt has ended.</span>
             @elseif($prompt->start_at && $prompt->start_at->isFuture())
                 <span class="text-secondary">This prompt is not open for submissions yet.</span>
-            @else
+            @else 
                 <a href="{{ url('submissions/new?prompt_id=' . $prompt->id) }}" class="btn btn-primary">Submit Prompt</a>
             @endunless
         </div>

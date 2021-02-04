@@ -50,15 +50,8 @@ Route::group(['prefix' => 'pets', 'namespace' => 'Users'], function() {
     Route::post('delete/{id}', 'PetController@postDelete');
     Route::post('name/{id}', 'PetController@postName');
     Route::post('attach/{id}', 'PetController@postAttach');
-    Route::post('detach/{id}', 'PetController@postDetach');
 
     Route::get('selector', 'PetController@getSelector');
-});  
-Route::group(['prefix' => 'awardcase', 'namespace' => 'Users'], function() {
-    Route::get('/', 'AwardCaseController@getIndex');
-    Route::post('edit', 'AwardCaseController@postEdit');
-
-    Route::get('selector', 'AwardCaseController@getSelector');
 });
 
 Route::group(['prefix' => 'characters', 'namespace' => 'Users'], function() {
@@ -74,12 +67,6 @@ Route::group(['prefix' => 'characters', 'namespace' => 'Users'], function() {
 Route::group(['prefix' => 'bank', 'namespace' => 'Users'], function() {
     Route::get('/', 'BankController@getIndex');
     Route::post('transfer', 'BankController@postTransfer');
-});
-
-Route::group(['prefix' => 'level', 'namespace' => 'Users'], function() {
-    Route::get('/', 'LevelController@getIndex');
-    Route::post('up', 'LevelController@postLevel');
-    Route::post('transfer', 'LevelController@postTransfer');
 });
 
 Route::group(['prefix' => 'trades', 'namespace' => 'Users'], function() {
@@ -113,8 +100,6 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/links/delete/{id}', 'CharacterController@postDeleteCharacterLink');
 
     Route::post('{slug}/bank/transfer', 'CharacterController@postCurrencyTransfer');
-    Route::post('{slug}/inventory/edit', 'CharacterController@postInventoryEdit');
-    
     Route::get('{slug}/transfer', 'CharacterController@getTransfer');
     Route::post('{slug}/transfer', 'CharacterController@postTransfer');
     Route::post('{slug}/transfer/{id}/cancel', 'CharacterController@postCancelTransfer');
@@ -126,23 +111,11 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/profile/edit', 'CharacterController@postEditCharacterProfile');
 
     Route::post('{slug}/drops', 'CharacterController@postClaimCharacterDrops');
-    Route::get('{slug}/level-area', 'LevelController@getIndex');
-    Route::get('{slug}/stats-area', 'LevelController@getStatsIndex');
-    Route::post('{slug}/level-area/up', 'LevelController@postLevel');
-    Route::post('{slug}/stats-area/{id}', 'LevelController@postStat');
-    Route::post('{slug}/stats-area/admin/{id}', 'LevelController@postAdminStat');
-    Route::post('{slug}/stats-area/edit/{id}', 'LevelController@postEditStat');
-
-    # EXP
-    Route::post('{slug}/level-area/exp-grant', 'LevelController@postExpGrant');
-    Route::post('{slug}/level-area/stat-grant', 'LevelController@postStatGrant');
-
-// LINKS
-Route::get('links/accept/{id}', 'LinkController@getAcceptLink');
-Route::get('links/reject/{id}', 'LinkController@getRejectLink');
 });
 
-// MYO
+Route::get('links/accept/{id}', 'LinkController@getAcceptLink');
+Route::get('links/reject/{id}', 'LinkController@getRejectLink');
+// LINKS
 
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
     Route::get('{id}/profile/edit', 'MyoController@getEditCharacterProfile');
@@ -155,12 +128,6 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
     Route::post('{id}/approval', 'MyoController@postCharacterApproval');
     Route::get('{id}/approval', 'MyoController@getCharacterApproval');
 });
-
-Route::group(['prefix' => 'level', 'namespace' => 'Users'], function() {
-    Route::get('/', 'LevelController@getIndex');
-});
-
-
 
 /**************************************************************************************************
     Submissions
@@ -249,22 +216,6 @@ Route::group(['prefix' => 'hunts'], function() {
 });
 
 /**************************************************************************************************
-    Adoptions
-**************************************************************************************************/
-
-Route::group(['prefix' => 'adoptions'], function() {
-    Route::post('buy', 'AdoptionController@postBuy');
-    Route::get('history', 'AdoptionController@getPurchaseHistory');
-});
-
-Route::group(['prefix' => 'surrenders'], function() {
-Route::get('new', 'SurrenderController@getSurrender');
-Route::get('/', 'SurrenderController@getIndex')->where('status', 'pending|approved|rejected');
-Route::post('new/post', 'SurrenderController@postSurrender');
-});
-
-
-/**************************************************************************************************	
     Comments
 **************************************************************************************************/
 Route::group(['prefix' => 'comments', 'namespace' => 'Comments'], function() {

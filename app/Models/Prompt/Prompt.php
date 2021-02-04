@@ -17,7 +17,7 @@ class Prompt extends Model
      */
     protected $fillable = [
         'prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active',
-        'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix', 'limit', 'limit_period', 'limit_character', 'hide_submissions', 'level_req'
+        'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix', 'limit', 'limit_period', 'limit_character', 'hide_submissions'
     ];
 
     /**
@@ -82,14 +82,6 @@ class Prompt extends Model
     public function rewards()
     {
         return $this->hasMany('App\Models\Prompt\PromptReward', 'prompt_id');
-    }
-
-    /**
-     * Get the rewards attached to this prompt.
-     */
-    public function expreward()
-    {
-        return $this->hasOne('App\Models\Prompt\PromptExpReward', 'prompt_id');
     }
 
     /**********************************************************************************************

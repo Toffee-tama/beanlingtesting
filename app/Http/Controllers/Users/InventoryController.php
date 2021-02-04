@@ -142,7 +142,6 @@ class InventoryController extends Controller
                     break;
                 case 'characterTransfer':
                     return $this->postTransferToCharacter($request, $service);
-                    break;
                 case 'resell':
                     return $this->postResell($request, $service);
                     break;
