@@ -515,16 +515,12 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-<<<<<<< HEAD
      * Get the user's pet logs.
-=======
-     * Get the user's recipe logs.
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
+
      *
      * @param  int  $limit
      * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
      */
-<<<<<<< HEAD
     public function getPetLogs($limit = 10)
     {
         $user = $this;
@@ -550,15 +546,22 @@ class User extends Authenticatable implements MustVerifyEmail
             $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
         })->orWhere(function($query) use ($user) {
             $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
-=======
-    public function getRecipeLogs($limit = 10)
+        })->orderBy('id', 'DESC');
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
+    }
+     /**      * Get the user's recipe logs.  
+     *
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+     */
+      public function getRecipeLogs($limit = 10)
     {
         $user = $this;
         $query = UserRecipeLog::with('recipe')->where(function($query) use ($user) {
             $query->with('sender')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
         })->orWhere(function($query) use ($user) {
             $query->with('recipient')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
         })->orderBy('id', 'DESC');
         if($limit) return $query->take($limit)->get();
         else return $query->paginate(30);
@@ -672,7 +675,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return CharacterBookmark::where('user_id', $this->id)->where('character_id', $character->id)->first();
     }
 
-<<<<<<< HEAD
 
 
     /**
@@ -692,7 +694,6 @@ class User extends Authenticatable implements MustVerifyEmail
        return $total;
      }
 
-=======
     /** 
      * Checks if the user has the named recipe
      * 
@@ -705,5 +706,4 @@ class User extends Authenticatable implements MustVerifyEmail
         $default = !$recipe->needs_unlocking;
         return $default ? true : $user_has;
     }
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
 }
