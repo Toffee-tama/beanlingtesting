@@ -16,6 +16,12 @@ use App\Services\CharacterManager;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\Item\Item;
+use App\Models\Item\ItemCategory;
+use App\Models\Currency\Currency;
+use App\Models\Loot\LootTable;
+use App\Models\Raffle\Raffle;
+
 class LevelController extends Controller
 {
     // index for levels
@@ -37,6 +43,10 @@ class LevelController extends Controller
     {
         return view('admin.stats.user.create_edit_level', [
             'level' => new Level,
+            'items' => Item::orderBy('name')->pluck('name', 'id'),
+            'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
         ]);
     }
     
@@ -49,6 +59,10 @@ class LevelController extends Controller
         if(!$level) abort(404);
         return view('admin.stats.user.create_edit_level', [
             'level' => $level,
+            'items' => Item::orderBy('name')->pluck('name', 'id'),
+            'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
         ]);
     }
 
@@ -59,7 +73,7 @@ class LevelController extends Controller
     {
         $id ? $request->validate(Level::$updateRules) : $request->validate(Level::$createRules);
         $data = $request->only([
-            'level', 'exp_required', 'stat_points'
+            'level', 'exp_required', 'stat_points', 'rewardable_type', 'rewardable_id', 'quantity'
         ]);
         if($id && $service->updateLevel(Level::find($id), $data)) {
             flash('Level updated successfully.')->success();
@@ -124,8 +138,15 @@ class LevelController extends Controller
      */
     public function getCharaCreateLevel()
     {
+        $categories = ItemCategory::where('is_character_owned', '1')->orderBy('sort', 'DESC')->get();
+        $itemOptions = Item::whereIn('item_category_id', $categories->pluck('id'));
+        $item = Item::whereIn('id', $itemOptions->pluck('id'))->pluck('name', 'id');
         return view('admin.stats.character.create_edit_character_level', [
             'level' => new CharacterLevel,
+            'items' => $item,
+            'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
         ]);
     }
     
@@ -136,8 +157,16 @@ class LevelController extends Controller
     {
         $level = CharacterLevel::find($id);
         if(!$level) abort(404);
+
+        $categories = ItemCategory::where('is_character_owned', '1')->orderBy('sort', 'DESC')->get();
+        $itemOptions = Item::whereIn('item_category_id', $categories->pluck('id'));
+        $item = Item::whereIn('id', $itemOptions->pluck('id'))->pluck('name', 'id');
         return view('admin.stats.character.create_edit_character_level', [
             'level' => $level,
+            'items' => $item,
+            'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
         ]);
     }
 
@@ -148,7 +177,7 @@ class LevelController extends Controller
     {
         $id ? $request->validate(CharacterLevel::$updateRules) : $request->validate(CharacterLevel::$createRules);
         $data = $request->only([
-            'level', 'exp_required', 'stat_points'
+            'level', 'exp_required', 'stat_points', 'rewardable_type', 'rewardable_id', 'quantity'
         ]);
         if($id && $service->updateCharaLevel(CharacterLevel::find($id), $data)) {
             flash('Level updated successfully.')->success();
