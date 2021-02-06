@@ -35,12 +35,9 @@
                 <li class="list-group-item"><a href="{{ url('world/award-categories') }}">Award Categories</a></li>
                 <li class="list-group-item"><a href="{{ url('world/awards') }}">All Awards</a></li>
                 <li class="list-group-item"><a href="{{ url('world/currencies') }}">Currencies</a></li>
-<<<<<<< HEAD
                 <li class="list-group-item"><a href="{{ url('world/pet-categories') }}">Pet Categories</a></li>
                 <li class="list-group-item"><a href="{{ url('world/pets') }}">All Pets</a></li>
-=======
                 <li class="list-group-item"><a href="{{ url('world/recipes') }}">All Recipes</a></li>
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
             </ul>
         </div>
     </div>
