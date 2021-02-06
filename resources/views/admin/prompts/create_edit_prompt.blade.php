@@ -172,12 +172,7 @@
 </div>
 
 {!! Form::close() !!}
-<<<<<<< HEAD
-@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'pets' => $pets, 'tables' => $tables, 'raffles' => $raffles, 'showLootTables' => true, 'showRaffles' => true])
-=======
-
-@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'raffles' => $raffles, 'recipes' => $recipes, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
+@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'pets' => $pets, 'tables' => $tables, 'raffles' => $raffles, 'recipes' => $recipes, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 
 @if($prompt->id)
     <h3>Preview</h3>
