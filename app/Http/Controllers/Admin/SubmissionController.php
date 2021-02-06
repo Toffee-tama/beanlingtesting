@@ -159,7 +159,6 @@ class SubmissionController extends Controller
             'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),            
             'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
-            'limit' => $limit,
             'rewardsData' => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null
         ] : []));
     }
