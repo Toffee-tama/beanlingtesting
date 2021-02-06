@@ -23,13 +23,10 @@ use App\Models\Award\Award;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Prompt\Prompt;
-<<<<<<< HEAD
 use App\Models\Pet\Pet;
 use App\Services\Stats\ExperienceManager;
 use App\Services\Stats\StatManager;
-=======
 use App\Models\Recipe\Recipe;
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
 
 class SubmissionManager extends Service
 {
