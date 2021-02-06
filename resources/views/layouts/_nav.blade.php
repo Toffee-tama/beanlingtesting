@@ -17,13 +17,6 @@
                         <a class="nav-link" href="{{ url('news') }}">News</a>
                     @endif
                 </li>
-                <li class="nav-item">
-                    @if(Auth::check() && Auth::user()->is_sales_unread && Config::get('lorekeeper.extensions.navbar_news_notif'))
-                        <a class="nav-link d-flex text-warning" href="{{ url('sales') }}"><strong>Sales</strong><i class="fas fa-bell"></i></a>
-                    @else
-                        <a class="nav-link" href="{{ url('sales') }}">Sales</a>
-                    @endif
-                </li>
                 @if(Auth::check())
                     <li class="nav-item dropdown">
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -65,14 +58,9 @@
                             <a class="dropdown-item" href="{{ url('designs') }}">
                                 Design Approvals
                             </a>
-<<<<<<< HEAD
                             <a class="dropdown-item" href="{{ url('surrenders') }}">
                                 Surrenders
-=======
-                            <a class="dropdown-item" href="{{ url('crafting') }}">
-                                Crafting
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
-                            </a>
+                                </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url('characters/transfers/incoming') }}">
                                 Character Transfers
@@ -97,14 +85,6 @@
                         </a>
                         <a class="dropdown-item" href="{{ url('myos') }}">
                             MYO Slot Masterlist
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ url('raffles') }}">
-                            Raffles
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ url('sales') }}">
-                            Sales
                         </a>
                     </div>
                 </li>
@@ -145,7 +125,7 @@
                             New Player Guide
                         </a>
 					   <a class="dropdown-item" href="{{ url('world') }}">
-                            World Glossary
+                            Species Information
                         </a>
 						<a class="dropdown-item" href="{{ url('info/lore') }}">
                             Lore Directory
@@ -174,8 +154,11 @@
                             Achievements
                         </a>
                         <a class="dropdown-item" href="{{ url('info/crafting') }}">
-                            Crafting
+                            Crafting Recipes
                         </a>
+                        <a class="dropdown-item" href="{{ url('crafting') }}">
+                                Crafting
+                            </a>
                         <a class="dropdown-item" href="{{ url('info/guilds') }}">
                             Guilds
                         </a>
@@ -192,6 +175,13 @@
                             Adoption Center
                         </a>
                     </div>
+                </li>
+                <li class="nav-item">
+                    @if(Auth::check() && Auth::user()->is_sales_unread && Config::get('lorekeeper.extensions.navbar_news_notif'))
+                        <a class="nav-link d-flex text-warning" href="{{ url('sales') }}"><strong>Sales</strong><i class="fas fa-bell"></i></a>
+                    @else
+                        <a class="nav-link" href="{{ url('sales') }}">Sales</a>
+                    @endif
                 </li>
 				                <li class="nav-item">
                     <a class="nav-link" href="{{ url('gallery') }}">Gallery</a>
