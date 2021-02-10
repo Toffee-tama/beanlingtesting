@@ -13,20 +13,17 @@ use Settings;
 use Illuminate\Support\Arr;
 use App\Models\User\User;
 use App\Models\User\UserItem;
-use App\Models\User\UserAward;
 use App\Models\Character\Character;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
-use App\Models\Award\Award;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Prompt\Prompt;
-use App\Models\Pet\Pet;
+
 use App\Services\Stats\ExperienceManager;
 use App\Services\Stats\StatManager;
-use App\Models\Recipe\Recipe;
 
 class SubmissionManager extends Service
 {
@@ -61,26 +58,6 @@ class SubmissionManager extends Service
             if(!$isClaim) {
                 $prompt = Prompt::active()->where('id', $data['prompt_id'])->with('rewards')->first();
                 if(!$prompt) throw new \Exception("Invalid prompt selected.");
-                //check that the prompt limit hasn't been hit
-                if($prompt->limit) {
-                    //check that the user hasn't hit the prompt submission limit
-                    //filter the submissions by hour/day/week/etc and count
-                    $count['all'] = Submission::submitted($prompt->id, $user->id)->count();
-                    $count['Hour'] = Submission::submitted($prompt->id, $user->id)->where('created_at', '>=', now()->startOfHour())->count();
-                    $count['Day'] = Submission::submitted($prompt->id, $user->id)->where('created_at', '>=', now()->startOfDay())->count();
-                    $count['Week'] = Submission::submitted($prompt->id, $user->id)->where('created_at', '>=', now()->startOfWeek())->count();
-                    $count['Month'] = Submission::submitted($prompt->id, $user->id)->where('created_at', '>=', now()->startOfMonth())->count();
-                    $count['Year'] = Submission::submitted($prompt->id, $user->id)->where('created_at', '>=', now()->startOfYear())->count();
-
-                    //if limit by character is on... multiply by # of chars. otherwise, don't
-                    if($prompt->limit_character) {
-                        $limit = $prompt->limit * Character::visible()->where('is_myo_slot', 0)->where('user_id', $user->id)->count();
-                    } else { $limit = $prompt->limit; }
-                    //if limit by time period is on
-                    if($prompt->limit_period) {
-                        if($count[$prompt->limit_period] >= $limit) throw new \Exception("You have already submitted to this prompt the maximum number of times.");
-                    } else if($count['all'] >= $limit) throw new \Exception("You have already submitted to this prompt the maximum number of times.");
-                }
             }
             else $prompt = null;
 
@@ -93,14 +70,6 @@ class SubmissionManager extends Service
                 if(count($characters) != count($data['slug'])) throw new \Exception("One or more of the selected characters do not exist.");
             }
             else $characters = [];
-
-            // Return any currency associated with this request
-            $currencyManager = new CurrencyManager;
-            if(isset($requestData['user']) && isset($requestData['user']['currencies'])) {
-                foreach($requestData['user']['currencies'] as $currencyId=>$quantity) {
-                    $currencyManager->creditCurrency(null, $request->user, null, null, $currencyId, $quantity);
-                }
-            }
 
             $userAssets = createAssetsArray();
 
@@ -174,7 +143,7 @@ class SubmissionManager extends Service
                 'status' => 'Pending',
                 'comments' => $data['comments'],
                 'data' => json_encode([
-                    'user' => array_only(getDataReadyAssets($userAssets), ['user_items', 'user_awards', 'currencies']),
+                    'user' => Arr::only(getDataReadyAssets($userAssets), ['user_items','currencies']),
                     'rewards' => getDataReadyAssets($promptRewards)
                     ]) // list of rewards and addons
             ] + ($isClaim ? [] : ['prompt_id' => $prompt->id,]));
@@ -253,12 +222,6 @@ class SubmissionManager extends Service
                             $reward = Currency::find($data['rewardable_id'][$key]);
                             if(!$reward->is_user_owned) throw new \Exception("Invalid currency selected.");
                             break;
-                        case 'Pet':
-                            if (!$isStaff) break;
-                            $reward = Pet::find($data['rewardable_id'][$key]);
-                        case 'Award':
-                            $reward = Award::find($data['rewardable_id'][$key]);
-                            break;
                         case 'LootTable':
                             if (!$isStaff) break;
                             $reward = LootTable::find($data['rewardable_id'][$key]);
@@ -266,11 +229,6 @@ class SubmissionManager extends Service
                         case 'Raffle':
                             if (!$isStaff) break;
                             $reward = Raffle::find($data['rewardable_id'][$key]);
-                            break;
-                        case 'Recipe':
-                            if (!$isStaff) break;
-                            $reward = Recipe::find($data['rewardable_id'][$key]);
-                            if(!$reward->needs_unlocking) throw new \Exception("Invalid recipe selected.");
                             break;
                     }
                     if(!$reward) continue;
@@ -382,6 +340,7 @@ class SubmissionManager extends Service
 
                 // Workaround for user not being unset after inventory shuffling, preventing proper staff ID assignment
                 $staff = $user;
+
                 foreach($stacks as $stackId=>$quantity) {
                     $stack = UserItem::find($stackId);
                     $user = User::find($submission->user_id);
