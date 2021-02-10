@@ -376,14 +376,9 @@ return [
         'name' => 'Pet Grant',
         'message' => 'You have received a staff grant of {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'pets'
-    ],
-    // CHARACTER_ITEM_GRANT
-    501 => [
-        'name' => 'Character Item Grant',
-    ],
 
     // CHARACTER_ITEM_GRANT
-    39 => [
+    501 => [
         'message' => '{character_name} has received a staff grant of {item_name} (×{item_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'character/{character_slug}/inventory'
     ],
