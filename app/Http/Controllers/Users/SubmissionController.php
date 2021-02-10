@@ -13,14 +13,14 @@ use App\Models\Character\Character;
 use App\Models\Item\Item;
 use App\Models\Raffle\Raffle;
 use App\Models\Item\ItemCategory;
-use App\Models\User\UserAward;
-use App\Models\Award\Award;
-use App\Models\Award\AwardCategory;
 use App\Models\Currency\Currency;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
-use App\Models\Recipe\Recipe;
 use App\Models\Prompt\Prompt;
+use App\Models\User\UserAward;
+use App\Models\Award\Award;
+use App\Models\Award\AwardCategory;
+use App\Models\Recipe\Recipe;
 
 use App\Services\SubmissionManager;
 
@@ -93,7 +93,6 @@ class SubmissionController extends Controller
     {
         $closed = !Settings::get('is_prompts_open');
         $inventory = UserItem::with('item')->whereNull('deleted_at')->where('count', '>', '0')->where('user_id', Auth::user()->id)->get();
-        $awardcase = UserAward::with('award')->whereNull('deleted_at')->where('count', '>', '0')->where('user_id', Auth::user()->id)->get();
         return view('home.create_submission', [
             'closed' => $closed,
             'isClaim' => false
