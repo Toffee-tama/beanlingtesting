@@ -471,7 +471,6 @@ return [
         'message' => '<a href="{sender_url}">{sender}</a> has added you as a participant on a gallery submission. (<a href="{url}">View Submission</a>)',
         'url' => 'gallery/view/{submission_id}'
     ],
-<<<<<<< HEAD
     40 => [
         'message' => '{item_name} (×{item_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'character/{character_slug}/inventory'
@@ -511,13 +510,11 @@ return [
     46 => [
         'message' => '{award_name} (×{award_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Awards</a>)',
         'url' => 'character/{character_slug}/awardcase'
-=======
-
+    ],
     // RECIPE_GRANT
     600 => [
         'name' => 'Recipe Grant',
         'message' => 'You have received a staff grant of the crafting recipe {recipe_name} from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Unlocked Recipes</a>)',
         'url' => 'crafting'
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
     ],
 ];
