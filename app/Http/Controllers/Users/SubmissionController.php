@@ -76,10 +76,8 @@ class SubmissionController extends Controller
             'submission' => $submission,
             'user' => $submission->user,
             'categories' => ItemCategory::orderBy('sort', 'DESC')->get(),
-            'awardcategories' => AwardCategory::orderBy('sort', 'DESC')->get(),
             'inventory' => $inventory,
-            'itemsrow' => Item::all()->keyBy('id'),
-            'awardsrow' => Award::all()->keyBy('id')
+            'itemsrow' => Item::all()->keyBy('id')
         ]);
     }
 
@@ -103,7 +101,6 @@ class SubmissionController extends Controller
             'categories' => ItemCategory::orderBy('sort', 'DESC')->get(),
             'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
             'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
-            'awards' => Award::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'inventory' => $inventory,
             'page' => 'submission'
@@ -201,7 +198,6 @@ class SubmissionController extends Controller
             'user' => $submission->user,
             'categories' => ItemCategory::orderBy('sort', 'DESC')->get(),
             'itemsrow' => Item::all()->keyBy('id'),
-            'awardsrow' => Award::all()->keyBy('id'),
             'inventory' => $inventory
         ]);
     }
