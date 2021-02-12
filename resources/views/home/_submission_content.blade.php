@@ -1,4 +1,4 @@
-<h1>
+h1>
     {{ $submission->prompt_id ? 'Submission' : 'Claim' }} (#{{ $submission->id }})
     <span class="float-right badge badge-{{ $submission->status == 'Pending' ? 'secondary' : ($submission->status == 'Approved' ? 'success' : 'danger') }}">{{ $submission->status }}</span>
 </h1>
