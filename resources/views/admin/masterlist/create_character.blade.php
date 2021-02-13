@@ -299,13 +299,6 @@
         {!! Form::select('species_id', $specieses, old('species_id'), ['class' => 'form-control', 'id' => 'species']) !!}
     </div>
 
-    <div class="card mb-3 hide" id="dropOptions">
-        <div class="card-body" id="groups">
-            {!! Form::label('Group (Optional)') !!} {!! add_help('This is used for character drops. If no value is set, it will be randomly rolled from the species\' groups.') !!}
-            {!! Form::select('parameters', $parameters, old('parameters'), ['class' => 'form-control', 'id' => 'parameter']) !!}
-        </div>
-    </div>
-
     <div class="form-group" id="subtypes">
         {!! Form::label('Subtype (Optional)') !!} @if($isMyo) {!! add_help('This will lock the slot into a particular subtype. Leave it blank if you would like to give the user a choice, or not select a subtype. The subtype must match the species selected above, and if no species is specified, the subtype will not be applied.') !!} @endif
         {!! Form::select('subtype_id', $subtypes, old('subtype_id'), ['class' => 'form-control disabled', 'id' => 'subtype']) !!}
@@ -327,7 +320,17 @@
             <a href="#" class="remove-feature btn btn-danger mb-2">×</a>
         </div>
     </div>
-
+    @if($stats)
+    <h3>Stats</h3>
+    <p class="alert alert-info">If you want a character to have different stats from the default, set them here. Else, leave it as default</p>
+    <div class="form-group">
+        @foreach($stats as $stat)
+            {!! Form::label($stat->name) !!}
+            {!! Form::number('stats['.$stat->id.']', $stat->default, ['class' => 'form-control m-1',]) !!}
+        @endforeach
+    </div>
+    @endif
+    
     <div class="text-right">
         {!! Form::submit('Create Character', ['class' => 'btn btn-primary']) !!}
     </div>
