@@ -59,13 +59,7 @@
         @endif
 
         <h2>Characters</h2>
-        @if(!$isClaim)
-            <p>Please select a character who shall receive any stat / level awards. The character must be apart of the prompt / the focus character and owned by you.</p>
-
-            @include('widgets._link_select')
-            
-            <p>Any extra / background characters should be included here.</p>
-        @else
+        @if($isClaim)
             <p>If there are character-specific rewards you would like to claim, attach them here. Otherwise, this section can be left blank.</p>
         @endif
         <div id="characters" class="mb-3">
