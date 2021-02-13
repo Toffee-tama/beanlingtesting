@@ -58,6 +58,10 @@ return [
     'edit_levels' => [
         'name' => 'Edit Levels',
         'description' => 'Allow rank to edit levels.'
+    ],
+    'manage_research' => [
+        'name' => 'Manage Research',
+        'description' => 'Allow rank to create, edit, and delete Research and Research Trees.'
     ]
 
 ];

@@ -20,6 +20,7 @@ use App\Models\Stats\LevelLog;
 use App\Models\Shop\ShopLog;
 use App\Models\Adoption\AdoptionLog;
 use App\Models\Award\AwardLog;
+use App\Models\Research\ResearchLog;
 use App\Models\User\UserCharacterLog;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
@@ -214,6 +215,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany('App\Models\Award\Award', 'user_awards')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('user_awards.deleted_at');
     }
 
+    /**
+     * Get the research attached to this research.
+     */
+    public function researches() 
+    {
+        return $this->belongsToMany('App\Models\Research\Research', 'user_research')->withPivot('updated_at', 'id')->whereNull('user_research.deleted_at');
+    }
 
     /**********************************************************************************************
 
@@ -468,6 +476,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param  int  $limit
      * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
      */
+
     public function getStatLogs($limit = 10)
     {
         $user = $this;
@@ -492,6 +501,21 @@ class User extends Authenticatable implements MustVerifyEmail
         $query = LevelLog::where(function($query) use ($user) {
             $query->with('recipient')->where('leveller_type', 'User')->where('recipient_id', $user->id);
         })->orderBy('id', 'DESC');
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
+    }
+
+/** 
+ * Get the user's currency logs.
+*
+* @param  int  $limit
+* @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+*/
+    public function getResearchLogs($limit = 10)
+    {
+        $user = $this;
+        $query = ResearchLog::where('recipient_id', $this->id)->with('tree')->with('research')->with('currency')->orderBy('id', 'DESC');
+
         if($limit) return $query->take($limit)->get();
         else return $query->paginate(30);
     }

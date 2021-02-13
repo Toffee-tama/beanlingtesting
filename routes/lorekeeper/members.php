@@ -296,3 +296,15 @@ Route::group(['prefix' => 'advent-calendars'], function() {
     Route::get('{id}', 'AdventController@getAdvent');
     Route::post('{id}', 'AdventController@postClaimPrize');
 });
+
+
+/**************************************************************************************************
+    Research
+**************************************************************************************************/
+
+Route::group(['prefix' => 'research', 'namespace' => 'Research'], function() {
+    Route::get('/purchase/{id}', 'ResearchController@getPurchaseResearch');
+    Route::post('/purchase/{id}', 'ResearchController@postPurchaseResearch');
+    Route::get('history', 'ResearchController@getResearchHistory');
+    Route::get('unlocked', 'TreeController@getUserTree');
+});

@@ -26,4 +26,10 @@
         <div class="sidebar-item"><a href="{{ url('world/levels/character') }}" class="{{ set_active('world/levels/character*') }}">Character Levels</a></div>
         <div class="sidebar-item"><a href="{{ url('world/stats') }}" class="{{ set_active('world/stats*') }}">Stats</a></div>
     </li>
+    
+    <li class="sidebar-section">
+        <div class="sidebar-section-header">Research</div>
+        <div class="sidebar-item"><a href="{{ url('research-trees') }}">Research Trees</a></div>
+        <div class="sidebar-item"><a href="{{ url('research') }}">All Research</a></div>
+    </li>
 </ul>

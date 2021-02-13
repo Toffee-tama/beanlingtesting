@@ -11,6 +11,8 @@ use App\Models\Item\Item;
 use App\Models\Award\Award;
 use App\Models\Recipe\Recipe;
 use App\Models\Currency\Currency;
+use App\Models\Research\Research;
+use App\Models\User\User;
 
 use App\Models\User\UserItem;
 use App\Models\Character\CharacterItem;
@@ -24,6 +26,7 @@ use App\Services\InventoryManager;
 use App\Services\Stats\ExperienceManager;
 use App\Services\AwardCaseManager;
 use App\Services\RecipeService;
+use App\Services\ResearchService;
 
 use App\Http\Controllers\Controller;
 
@@ -213,6 +216,34 @@ class GrantController extends Controller
         $data = $request->only(['names', 'quantity', 'data']);
         if($service->grantExp($data, Auth::user())) {
             flash('EXP granted successfully.')->success();
+        }
+        }
+    
+    /**
+     * Show the item grant page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getResearch()
+    {
+        return view('admin.grants.research', [
+            'users' => User::orderBy('id')->pluck('name', 'id'),
+            'research' => Research::orderBy('name')->pluck('name', 'id')
+        ]);
+    }
+
+    /**
+     * Grants or removes items from multiple users.
+     *
+     * @param  \Illuminate\Http\Request        $request
+     * @param  App\Services\InventoryManager  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postResearch(Request $request, ResearchService $service)
+    {
+        $data = $request->only(['users', 'research_ids', 'message']);
+        if($service->grantResearch($data, Auth::user())) {
+            flash('Items granted successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

@@ -245,6 +245,32 @@ return [
                 'name' => 'Prompts',
                 'url' => 'admin/data/prompts'
             ],
+        ]
+    ],
+    'Research' => [
+        'power' => 'manage_research',
+        'links' => [
+            [
+                'name' => 'Research Trees',
+                'url' => 'admin/data/trees'
+            ],
+            [
+                'name' => 'Research Branches',
+                'url' => 'admin/data/research'
+            ],
+            [
+                'name' => 'Research Grants',
+                'url' => 'admin/grants/research'
+            ],
+            [
+                'name' => 'User Research Log',
+                'url' => 'admin/data/research/users'
+            ],
+        ]
+    ],
+    'Masterlist' => [
+        'power' => 'manage_characters',
+        'links' => [
             [
                 'name' => 'Loot Tables',
                 'url' => 'admin/data/loot-tables'

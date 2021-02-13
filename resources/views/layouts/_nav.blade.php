@@ -39,6 +39,9 @@
                             <a class="dropdown-item" href="{{ url('level') }}">
                                 Level Area
                             </a>
+                            <a class="dropdown-item" href="{{ url('research/unlocked') }}">
+                                My Research
+                            </a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -173,6 +176,9 @@
                         </a>
                         <a class="dropdown-item" href="{{ url('adoptions') }}">
                             Adoption Center
+                        </a>
+                        <a class="dropdown-item" href="{{ url('research-trees') }}">
+                            Research
                         </a>
                     </div>
                 </li>

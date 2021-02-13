@@ -77,6 +77,9 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function() {
 
     Route::get('{name}/recipe-logs', 'UserController@getUserRecipeLogs');
 });
+Route::group(['prefix' => 'user', 'namespace' => 'Research'], function() {
+    Route::get('{name}/unlocked-research', 'TreeController@getUserTree');
+});
 
 /**************************************************************************************************
     Characters
@@ -165,6 +168,16 @@ Route::group(['prefix' => 'adoptions'], function() {
     Route::get('{id}/{stockId}', 'AdoptionController@getAdoptionStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
 });
 Route::get('event-tracking', 'PromptsController@getEventTracking');
+
+
+Route::group(['prefix' => 'research-trees', 'namespace' => 'Research'], function() {
+    Route::get('/', 'TreeController@getIndex');
+    Route::get('/{id}', 'TreeController@getTree')->where(['id' => '[0-9]+']);
+});
+Route::group(['prefix' => 'research', 'namespace' => 'Research'], function() {
+    Route::get('/', 'ResearchController@getIndex');
+    Route::get('/{id}', 'ResearchController@getResearch')->where(['id' => '[0-9]+']);
+});
 
 /**************************************************************************************************
     Site Pages
