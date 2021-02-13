@@ -12,7 +12,6 @@ use App\Models\Award\Award;
 use App\Models\Recipe\Recipe;
 use App\Models\Currency\Currency;
 use App\Models\Research\Research;
-use App\Models\User\User;
 
 use App\Models\User\UserItem;
 use App\Models\Character\CharacterItem;
