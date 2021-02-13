@@ -15,7 +15,7 @@ use App\Models\SitePage;
 
 class PromptsController extends Controller
 {
-    /*
+       /*
     |--------------------------------------------------------------------------
     | Prompts Controller
     |--------------------------------------------------------------------------
@@ -46,7 +46,7 @@ class PromptsController extends Controller
         $query = PromptCategory::query();
         $name = $request->get('name');
         if($name) $query->where('name', 'LIKE', '%'.$name.'%');
-        return view('prompts.prompt_categories', [
+        return view('prompts.prompt_categories', [  
             'categories' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
         ]);
     }
@@ -61,12 +61,12 @@ class PromptsController extends Controller
     {
         $query = Prompt::active()->with('category');
         $data = $request->only(['prompt_category_id', 'name', 'sort']);
-        if(isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none')
+        if(isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none') 
             $query->where('prompt_category_id', $data['prompt_category_id']);
-        if(isset($data['name']))
+        if(isset($data['name'])) 
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
 
-        if(isset($data['sort']))
+        if(isset($data['sort'])) 
         {
             switch($data['sort']) {
                 case 'alpha':
@@ -97,7 +97,7 @@ class PromptsController extends Controller
                     $query->sortEnd(true);
                     break;
             }
-        }
+        } 
         else $query->sortCategory();
 
         return view('prompts.prompts', [
