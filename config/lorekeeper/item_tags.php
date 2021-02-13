@@ -18,7 +18,7 @@ return [
         'text_color' => '#ffffff',
         'background_color' => '#f6993f'
     ],
-    
+
     'slot' => [
         'name' => 'Slot',
         'text_color' => '#ffffff',
@@ -29,5 +29,11 @@ return [
         'name' => 'Coupon',
         'text_color' => '#ffffff',
         'background_color' => '#ff5ca8'
+    ],
+    
+    'raritybox' => [
+        'name' => 'Rarity Box',
+        'text_color' => '#ffffff',
+        'background_color' => '#58507D'
     ],
 ];
