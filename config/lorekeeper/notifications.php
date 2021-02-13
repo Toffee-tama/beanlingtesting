@@ -1,4 +1,4 @@
-  <?php
+<?php
 
 return [
 
@@ -284,188 +284,12 @@ return [
         'message' => 'The transfer for <a href="{character_url}">{character_name}</a> was approved by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Transfers</a>)',
         'url' => 'characters/transfers/incoming'
     ],
-    // SURRENDER_ACCEPTED
-    218 => [
-        'name' => 'Surrender Approved',
-        'message' => 'Your surrender (#{surrender_id}) was approved by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
-        'url' => 'surrender/view/{surrender_id}'
-    ],
-
-    // surrenders_REJECTED
-    219 => [
-        'name' => 'Surrender Rejected',
-        'message' => 'Your surrender (#{surrender_id}) was rejected by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
-        'url' => 'surrender/view/{surrender_id}'
-    ],
     
     // BOOKMARK_GIFT_WRITING
     39 => [
         'name' => 'Bookmark Gift Writing',
         'message' => 'A character you have bookmarked (<a href="{character_url}">{character_name}</a>) has had its Gift Writing Allowed status changed. (<a href="{url}">View Bookmarks</a>)',
         'url' => 'account/bookmarks'
-    ],
-
-    // LINK_REQUESTED
-    200 => [
-        'name' => 'Link Requested',
-        'message' => '<a href="{link}">{user}</a> has requested to link your character {requested} to {character}. <a href="/links/accept/{id}" class="btn btn-sm btn-success m-1">Accept</a> <a href="/links/reject/{id}" class="btn btn-sm btn-danger m-1">Reject</a>',
-        'url' => '',
-    ],
-    // LINK_ACCEPTED
-    201 => [
-        'name' => 'Link Accepted',
-        'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Links.</a>)',
-        'url' => '',
-    ],
-
-        // EXP_GRANT
-    245 => [
-        'name' => 'EXP Grant',
-        'message' => 'You have received a staff grant of {quantity} EXP from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Level Area</a>)',
-        'url' => 'level'
-    ],
-
-    // REPORT_ASSIGNED
-    220 => [
-        'name' => 'Report Assigned',
-        'message' => 'Your report (#{report_id}) was assigned to <a href="{staff_url}">{staff_name}</a>, you can expect a response soon. (<a href="{url}">View Report</a>)',
-        'url' => 'reports/view/{report_id}'
-    ],
-
-    // REPORT_CLOSED
-    221 => [
-        'name' => 'Report Closed',
-        'message' => 'Your report (#{report_id}) was closed by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Report</a>)',
-        'url' => 'reports/view/{report_id}'
-    ],
-    // Comment made on user's model
-    // COMMENT_MADE
-    239 => [
-        'name' => 'Comment Made',
-        'message' => '<a href="{sender_url}">{sender}</a> has made a comment on {post_type}. <a href="{comment_url}">See Context.</a>',
-        'url' => ''
-    ],
-    // Comment recieved reply
-    // COMMENT_REPLY
-    240 => [
-        'name' => 'Comment Reply',
-        'message' => '<a href="{sender_url}">{sender}</a> has made a reply to your comment. <a href="comment/{comment_url}">See Reply.</a>',
-        'url' => ''
-    ],
-
-        // PET_REMOVAL
-    241 => [
-        'name' => 'Pet Removal',
-        'message' => '{pet_name} (×{pet_quantity}) was removed from your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
-        'url' => 'pets'
-    ],
-    // PET_TRANSFER
-    242 => [
-        'name' => 'Pet Transfer',
-        'message' => 'You have received {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
-        'url' => 'pets'
-    ],
-    // FORCED_PET_TRANSFER
-    243 => [
-        'name' => 'Forced Pet Transfer',
-        'message' => '{pet_name} (×{pet_quantity}) was transferred out of your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
-        'url' => 'pets'
-    ],
-    // PET_GRANT
-    244 => [
-        'name' => 'Pet Grant',
-        'message' => 'You have received a staff grant of {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
-        'url' => 'pets'
-    ],
-
-    // CHARACTER_ITEM_GRANT
-    501 => [
-        'message' => '{character_name} has received a staff grant of {item_name} (×{item_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
-        'url' => 'character/{character_slug}/inventory'
-    ],
-
-    // CHARACTER_ITEM_REMOVAL
-    502 => [
-        'name' => 'Character Item Removal',
-        'message' => '{item_name} (×{item_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
-        'url' => 'character/{character_slug}/inventory'
-    ],
-
-    // GALLERY_SUBMISSION_COLLABORATOR
-    505 => [
-        'name' => 'Gallery Submission Collaborator',
-        'message' => '<a href="{sender_url}">{sender}</a> has added you as a collaborator on a gallery submission, which needs your approval. (<a href="{url}">View Submission</a>)',
-        'url' => 'gallery/view/{submission_id}'
-    ],
-
-    // GALLERY_COLLABORATORS_APPROVED
-    506 => [
-        'name' => 'Gallery Submission Collaborators Approved',
-        'message' => 'All of the collaborators on your submission <strong>{submission_title}</strong> (#{submission_id}) have approved it, and it is now pending staff review. (<a href="{url}">View Submission</a>)',
-        'url' => 'gallery/view/{submission_id}'
-    ],
-
-    // GALLERY_SUBMISSION_ACCEPTED
-    507 => [
-        'name' => 'Gallery Submission Accepted',
-        'message' => 'Your submission <strong>{submission_title}</strong> (#{submission_id}) was accepted. (<a href="{url}">View Submission</a>)',
-        'url' => 'gallery/queue/{submission_id}'
-    ],
-
-    // GALLERY_SUBMISSION_REJECTED
-    508 => [
-        'name' => 'Gallery Submission Rejected',
-        'message' => 'Your submission <strong>{submission_title}</strong> (#{submission_id}) was rejected. (<a href="{url}">View Submission</a>)',
-        'url' => 'submissions/queue/{submission_id}'
-    ],
-
-    // GALLERY_SUBMISSION_VALUED
-    509 => [
-        'name' => 'Gallery Submission Valued',
-        'message' => 'You have been awarded {currency_quantity} {currency_name} for the gallery submission <strong>{submission_title}</strong> (#{submission_id}). (<a href="{url}">View Submission</a>)',
-        'url' => 'gallery/queue/{submission_id}'
-    ],
-
-    // GALLERY_SUBMISSION_MOVED
-    510 => [
-        'name' => 'Gallery Submission Moved',
-        'message' => 'Your gallery submission <strong>{submission_title}</strong> (#{submission_id}) has been moved by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Submission</a>)',
-        'url' => 'gallery/view/{submission_id}'
-    ],
-
-    // GALLERY_SUBMISSION_CHARACTER
-    511 => [
-        'name' => 'Gallery Submission Character',
-        'message' => '<a href="{sender_url}">{sender}</a> has added your character <a href="{character_url}">{character}</a> to a gallery submission. (<a href="{url}">View Submission</a>)',
-        'url' => 'gallery/view/{submission_id}'
-    ],
-
-    // GALLERY_SUBMISSION_FAVORITE
-    512 => [
-        'name' => 'Gallery Submission Favorite',
-        'message' => '<a href="{sender_url}">{sender}</a> has added your gallery submission <strong>{submission_title}</strong> (#{submission_id}) to their favorites. (<a href="{url}">View Submission</a>)',
-        'url' => 'gallery/view/{submission_id}'
-    ],
-
-    // GALLERY_SUBMISSION_STAFF_COMMENTS
-    513 => [
-        'name' => 'Gallery Submission Staff Comments',
-        'message' => '<a href="{sender_url}">{sender}</a> updated the staff comments on your gallery submission <strong>{submission_title}</strong> (#{submission_id}). (<a href="{url}">View Submission</a>)',
-        'url' => 'gallery/queue/{submission_id}'
-    ],
-
-    // GALLERY_SUBMISSION_EDITED
-    514 => [
-        'name' => 'Gallery Submission Edited',
-        'message' => 'Your gallery submission <strong>{submission_title}</strong> (#{submission_id}) has been edited by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Submission</a>)',
-        'url' => 'gallery/view/{submission_id}'
-    ],
-
-    // GALLERY_SUBMISSION_PARTICIPANT
-    515 => [
-        'name' => 'Gallery Submission Participant',
-        'message' => '<a href="{sender_url}">{sender}</a> has added you as a participant on a gallery submission. (<a href="{url}">View Submission</a>)',
-        'url' => 'gallery/view/{submission_id}'
     ],
     
     // AWARD_GRANT
@@ -503,6 +327,182 @@ return [
         'message' => '{award_name} (×{award_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Awards</a>)',
         'url' => 'character/{character_slug}/awardcase'
     ],
+        // LINK_REQUESTED
+        200 => [
+            'name' => 'Link Requested',
+            'message' => '<a href="{link}">{user}</a> has requested to link your character {requested} to {character}. <a href="/links/accept/{id}" class="btn btn-sm btn-success m-1">Accept</a> <a href="/links/reject/{id}" class="btn btn-sm btn-danger m-1">Reject</a>',
+            'url' => '',
+        ],
+        // LINK_ACCEPTED
+        201 => [
+            'name' => 'Link Accepted',
+            'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Links.</a>)',
+            'url' => '',
+        ],
+    
+            // SURRENDER_ACCEPTED
+            218 => [
+                'name' => 'Surrender Approved',
+                'message' => 'Your surrender (#{surrender_id}) was approved by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
+                'url' => 'surrender/view/{surrender_id}'
+            ],
+        
+            // surrenders_REJECTED
+            219 => [
+                'name' => 'Surrender Rejected',
+                'message' => 'Your surrender (#{surrender_id}) was rejected by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Surrender</a>)',
+                'url' => 'surrender/view/{surrender_id}'
+            ],
+    
+    
+        // REPORT_ASSIGNED
+        220 => [
+            'name' => 'Report Assigned',
+            'message' => 'Your report (#{report_id}) was assigned to <a href="{staff_url}">{staff_name}</a>, you can expect a response soon. (<a href="{url}">View Report</a>)',
+            'url' => 'reports/view/{report_id}'
+        ],
+    
+        // REPORT_CLOSED
+        221 => [
+            'name' => 'Report Closed',
+            'message' => 'Your report (#{report_id}) was closed by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Report</a>)',
+            'url' => 'reports/view/{report_id}'
+        ],
+        // Comment made on user's model
+        // COMMENT_MADE
+        239 => [
+            'name' => 'Comment Made',
+            'message' => '<a href="{sender_url}">{sender}</a> has made a comment on {post_type}. <a href="{comment_url}">See Context.</a>',
+            'url' => ''
+        ],
+        // Comment recieved reply
+        // COMMENT_REPLY
+        240 => [
+            'name' => 'Comment Reply',
+            'message' => '<a href="{sender_url}">{sender}</a> has made a reply to your comment. <a href="comment/{comment_url}">See Reply.</a>',
+            'url' => ''
+        ],
+    
+            // PET_REMOVAL
+        241 => [
+            'name' => 'Pet Removal',
+            'message' => '{pet_name} (×{pet_quantity}) was removed from your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+            'url' => 'pets'
+        ],
+        // PET_TRANSFER
+        242 => [
+            'name' => 'Pet Transfer',
+            'message' => 'You have received {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+            'url' => 'pets'
+        ],
+        // FORCED_PET_TRANSFER
+        243 => [
+            'name' => 'Forced Pet Transfer',
+            'message' => '{pet_name} (×{pet_quantity}) was transferred out of your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+            'url' => 'pets'
+        ],
+        // PET_GRANT
+        244 => [
+            'name' => 'Pet Grant',
+            'message' => 'You have received a staff grant of {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+            'url' => 'pets'
+        ],
+                // EXP_GRANT
+                245 => [
+                    'name' => 'EXP Grant',
+                    'message' => 'You have received a staff grant of {quantity} EXP from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Level Area</a>)',
+                    'url' => 'level'
+                ],
+    
+        // CHARACTER_ITEM_GRANT
+        501 => [
+            'message' => '{character_name} has received a staff grant of {item_name} (×{item_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+            'url' => 'character/{character_slug}/inventory'
+        ],
+    
+        // CHARACTER_ITEM_REMOVAL
+        502 => [
+            'name' => 'Character Item Removal',
+            'message' => '{item_name} (×{item_quantity}) was removed from {character_name} by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
+            'url' => 'character/{character_slug}/inventory'
+        ],
+    
+        // GALLERY_SUBMISSION_COLLABORATOR
+        505 => [
+            'name' => 'Gallery Submission Collaborator',
+            'message' => '<a href="{sender_url}">{sender}</a> has added you as a collaborator on a gallery submission, which needs your approval. (<a href="{url}">View Submission</a>)',
+            'url' => 'gallery/view/{submission_id}'
+        ],
+    
+        // GALLERY_COLLABORATORS_APPROVED
+        506 => [
+            'name' => 'Gallery Submission Collaborators Approved',
+            'message' => 'All of the collaborators on your submission <strong>{submission_title}</strong> (#{submission_id}) have approved it, and it is now pending staff review. (<a href="{url}">View Submission</a>)',
+            'url' => 'gallery/view/{submission_id}'
+        ],
+    
+        // GALLERY_SUBMISSION_ACCEPTED
+        507 => [
+            'name' => 'Gallery Submission Accepted',
+            'message' => 'Your submission <strong>{submission_title}</strong> (#{submission_id}) was accepted. (<a href="{url}">View Submission</a>)',
+            'url' => 'gallery/queue/{submission_id}'
+        ],
+    
+        // GALLERY_SUBMISSION_REJECTED
+        508 => [
+            'name' => 'Gallery Submission Rejected',
+            'message' => 'Your submission <strong>{submission_title}</strong> (#{submission_id}) was rejected. (<a href="{url}">View Submission</a>)',
+            'url' => 'submissions/queue/{submission_id}'
+        ],
+    
+        // GALLERY_SUBMISSION_VALUED
+        509 => [
+            'name' => 'Gallery Submission Valued',
+            'message' => 'You have been awarded {currency_quantity} {currency_name} for the gallery submission <strong>{submission_title}</strong> (#{submission_id}). (<a href="{url}">View Submission</a>)',
+            'url' => 'gallery/queue/{submission_id}'
+        ],
+    
+        // GALLERY_SUBMISSION_MOVED
+        510 => [
+            'name' => 'Gallery Submission Moved',
+            'message' => 'Your gallery submission <strong>{submission_title}</strong> (#{submission_id}) has been moved by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Submission</a>)',
+            'url' => 'gallery/view/{submission_id}'
+        ],
+    
+        // GALLERY_SUBMISSION_CHARACTER
+        511 => [
+            'name' => 'Gallery Submission Character',
+            'message' => '<a href="{sender_url}">{sender}</a> has added your character <a href="{character_url}">{character}</a> to a gallery submission. (<a href="{url}">View Submission</a>)',
+            'url' => 'gallery/view/{submission_id}'
+        ],
+    
+        // GALLERY_SUBMISSION_FAVORITE
+        512 => [
+            'name' => 'Gallery Submission Favorite',
+            'message' => '<a href="{sender_url}">{sender}</a> has added your gallery submission <strong>{submission_title}</strong> (#{submission_id}) to their favorites. (<a href="{url}">View Submission</a>)',
+            'url' => 'gallery/view/{submission_id}'
+        ],
+    
+        // GALLERY_SUBMISSION_STAFF_COMMENTS
+        513 => [
+            'name' => 'Gallery Submission Staff Comments',
+            'message' => '<a href="{sender_url}">{sender}</a> updated the staff comments on your gallery submission <strong>{submission_title}</strong> (#{submission_id}). (<a href="{url}">View Submission</a>)',
+            'url' => 'gallery/queue/{submission_id}'
+        ],
+    
+        // GALLERY_SUBMISSION_EDITED
+        514 => [
+            'name' => 'Gallery Submission Edited',
+            'message' => 'Your gallery submission <strong>{submission_title}</strong> (#{submission_id}) has been edited by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Submission</a>)',
+            'url' => 'gallery/view/{submission_id}'
+        ],
+    
+        // GALLERY_SUBMISSION_PARTICIPANT
+        515 => [
+            'name' => 'Gallery Submission Participant',
+            'message' => '<a href="{sender_url}">{sender}</a> has added you as a participant on a gallery submission. (<a href="{url}">View Submission</a>)',
+            'url' => 'gallery/view/{submission_id}'
+        ],
     // RECIPE_GRANT
     600 => [
         'name' => 'Recipe Grant',
