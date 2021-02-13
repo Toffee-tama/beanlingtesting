@@ -135,6 +135,11 @@
 </div>
 <!------------------------------------->
 
+<div class="form-group">
+    {!! Form::label('Hide Submissions (Optional)') !!} {!! add_help('Hide submissions to this prompt until the prompt ends, or forever. <strong>Hiding until the prompt ends requires a set end time.</strong>') !!}
+    {!! Form::select('hide_submissions', [0 => 'Submissions Visible After Approval', 1 => 'Hide Submissions Until Prompt Ends', 2 => 'Hide Submissions Always'], $prompt->hide_submissions, ['class' => 'form-control']) !!}
+</div>
+
 <h3>Submission Limits</h3>
 <p>Limit the number of times a user can submit. Leave blank to allow endless submissions.</p>
 <p>Set a number into number of submissions. This will be applied for all time if you leave period blank, or per time period (ex: once a month, twice a week) if selected.</p>
@@ -157,22 +162,19 @@
             {!! Form::checkbox('limit_character', 1, $prompt->limit_character, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
             {!! Form::label('limit_character', 'Per Character', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned on, they can submit once per character they own on the masterlist.') !!}
         </div>
-<div class="form-group">
-    {!! Form::label('Hide Submissions (Optional)') !!} {!! add_help('Hide submissions to this prompt until the prompt ends, or forever. <strong>Hiding until the prompt ends requires a set end time.</strong>') !!}
-    {!! Form::select('hide_submissions', [0 => 'Submissions Visible After Approval', 1 => 'Hide Submissions Until Prompt Ends', 2 => 'Hide Submissions Always'], $prompt->hide_submissions, ['class' => 'form-control']) !!}
-</div>
-
+        
 <h3>Rewards</h3>
 <p>Rewards are credited on a per-user basis. Mods are able to modify the specific rewards granted at approval time.</p>
 <p>You can add loot tables containing any kind of currencies (both user- and character-attached), but be sure to keep track of which are being distributed! Character-only currencies cannot be given to users.</p>
-@include('widgets._loot_select', ['loots' => $prompt->rewards, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+@include('widgets._loot_select', ['loots' => $prompt->rewards, 'showLootTables' => true, 'showRaffles' => true])
 
 <div class="text-right">
     {!! Form::submit($prompt->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
 </div>
 
 {!! Form::close() !!}
-@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'pets' => $pets, 'tables' => $tables, 'raffles' => $raffles, 'recipes' => $recipes, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+
+@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'raffles' => $raffles, 'showLootTables' => true, 'showRaffles' => true])
 
 @if($prompt->id)
     <h3>Preview</h3>
@@ -187,7 +189,7 @@
 
 @section('scripts')
 @parent
-@include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+@include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
 <script>
 $( document ).ready(function() {    
     $('.delete-prompt-button').on('click', function(e) {
@@ -203,7 +205,6 @@ $( document ).ready(function() {
         console.log(this.checked)
         $('.level-form-group').css('display',this.checked ? 'block' : 'none')
     })
-
     $('.level-form-group').css('display',$('.is-level-class').prop('checked') ? 'block' : 'none')
 });
     
