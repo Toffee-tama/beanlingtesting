@@ -17,7 +17,7 @@ class Submission extends Model
     protected $fillable = [
         'prompt_id', 'user_id', 'staff_id', 'url',
         'comments', 'staff_comments', 'parsed_staff_comments',
-        'status', 'data'
+        'status', 'data', 'focus_chara_id', 'bonus'
     ];
 
     /**
@@ -53,7 +53,9 @@ class Submission extends Model
     ];
 
     /**********************************************************************************************
+
         RELATIONS
+
     **********************************************************************************************/
 
     /**
@@ -88,8 +90,18 @@ class Submission extends Model
         return $this->hasMany('App\Models\Submission\SubmissionCharacter', 'submission_id');
     }
 
+    /**
+     * Get the  focus chara attached to the submission.
+     */
+    public function focus()
+    {
+        return $this->belongsTo('App\Models\Character\Character', 'focus_chara_id');
+    }
+
     /**********************************************************************************************
+
         SCOPES
+
     **********************************************************************************************/
 
     /**
@@ -150,7 +162,9 @@ class Submission extends Model
     }
 
     /**********************************************************************************************
+
         ACCESSORS
+
     **********************************************************************************************/
 
     /**
