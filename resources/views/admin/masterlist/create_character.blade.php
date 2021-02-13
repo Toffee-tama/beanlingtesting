@@ -302,6 +302,7 @@
     <div class="card mb-3 hide" id="dropOptions">
         <div class="card-body" id="groups">
             {!! Form::label('Group (Optional)') !!} {!! add_help('This is used for character drops. If no value is set, it will be randomly rolled from the species\' groups.') !!}
+            {!! Form::select('parameters', $parameters, old('parameters'), ['class' => 'form-control', 'id' => 'parameter']) !!}
         </div>
     </div>
 
@@ -326,7 +327,6 @@
             <a href="#" class="remove-feature btn btn-danger mb-2">×</a>
         </div>
     </div>
-
     @if($stats)
     <h3>Stats</h3>
     <p class="alert alert-info">If you want a character to have different stats from the default, set them here. Else, leave it as default</p>
@@ -337,7 +337,7 @@
         @endforeach
     </div>
     @endif
-
+    
     <div class="text-right">
         {!! Form::submit('Create Character', ['class' => 'btn btn-primary']) !!}
     </div>
