@@ -87,10 +87,6 @@ class SubmissionController extends Controller
 
         return view('admin.submissions.submission', [
             'submission' => $submission,
-            'inventory' => $inventory,
-            'rewardsData' => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null,
-            'itemsrow' => Item::all()->keyBy('id'),
-            'page' => 'submission',
         ] + ($submission->status == 'Pending' ? [
             'characterCurrencies' => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
             'items' => Item::orderBy('name')->pluck('name', 'id'),

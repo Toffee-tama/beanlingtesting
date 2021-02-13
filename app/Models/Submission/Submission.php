@@ -17,7 +17,7 @@ class Submission extends Model
     protected $fillable = [
         'prompt_id', 'user_id', 'staff_id', 'url',
         'comments', 'staff_comments', 'parsed_staff_comments',
-        'status', 'data', 'focus_chara_id', 'bonus'
+        'status', 'data'
     ];
 
     /**
@@ -33,75 +33,65 @@ class Submission extends Model
      * @var string
      */
     public $timestamps = true;
-
+    
     /**
      * Validation rules for submission creation.
      *
      * @var array
      */
     public static $createRules = [
-        'url' => 'nullable|url',
+        'url' => 'required',
     ];
-
+    
     /**
      * Validation rules for submission updating.
      *
      * @var array
      */
     public static $updateRules = [
-        'url' => 'nullable|url',
+        'url' => 'required',
     ];
 
     /**********************************************************************************************
-
+    
         RELATIONS
-
     **********************************************************************************************/
-
+    
     /**
      * Get the prompt this submission is for.
      */
-    public function prompt()
+    public function prompt() 
     {
         return $this->belongsTo('App\Models\Prompt\Prompt', 'prompt_id');
     }
-
+    
     /**
      * Get the user who made the submission.
      */
-    public function user()
+    public function user() 
     {
         return $this->belongsTo('App\Models\User\User', 'user_id');
     }
-
+    
     /**
      * Get the staff who processed the submission.
      */
-    public function staff()
+    public function staff() 
     {
         return $this->belongsTo('App\Models\User\User', 'staff_id');
     }
-
+    
     /**
      * Get the characters attached to the submission.
      */
-    public function characters()
+    public function characters() 
     {
         return $this->hasMany('App\Models\Submission\SubmissionCharacter', 'submission_id');
     }
 
-    /**
-     * Get the  focus chara attached to the submission.
-     */
-    public function focus()
-    {
-        return $this->belongsTo('App\Models\Character\Character', 'focus_chara_id');
-    }
-
     /**********************************************************************************************
-
+    
         SCOPES
-
     **********************************************************************************************/
 
     /**
@@ -121,21 +111,12 @@ class Submission extends Model
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeViewable($query, $user = null)
+    public function scopeViewable($query, $user)
     {
-        $forbiddenSubmissions = $this
-        ->whereHas('prompt', function($q) {
-            $q->where('hide_submissions', 1)->whereNotNull('end_at')->where('end_at', '>', Carbon::now());
-        })
-        ->orWhereHas('prompt', function($q) {
-            $q->where('hide_submissions', 2);
-        })
-        ->orWhere('status', '!=', 'Approved')->pluck('id')->toArray();
-
         if($user && $user->hasPower('manage_submissions')) return $query;
-        else return $query->where(function($query) use ($user, $forbiddenSubmissions) {
-            if($user) $query->whereNotIn('id', $forbiddenSubmissions)->orWhere('user_id', $user->id);
-            else $query->whereNotIn('id', $forbiddenSubmissions);
+        return $query->where(function($query) use ($user) {
+            if($user) $query->where('user_id', $user->id)->orWhere('status', 'Approved');
+            else $query->where('status', 'Approved');
         });
     }
 
@@ -161,10 +142,21 @@ class Submission extends Model
         return $query->orderBy('id', 'DESC');
     }
 
+    /**
+     * Scope a query to only include user's submissions.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSubmitted($query, $prompt, $user)
+    {
+        return $query->where('prompt_id', $prompt)->where('status', '!=', 'Rejected')->where('user_id', $user);
+    }
+
+
     /**********************************************************************************************
-
+    
         ACCESSORS
-
     **********************************************************************************************/
 
     /**
@@ -175,28 +167,6 @@ class Submission extends Model
     public function getDataAttribute()
     {
         return json_decode($this->attributes['data'], true);
-    }
-
-    /**
-     * Gets the inventory of the user for selection.
-     *
-     * @return array
-     */
-    public function getInventory($user)
-    {
-        return $this->data && isset($this->data['user']['user_items']) ? $this->data['user']['user_items'] : [];
-        return $inventory;
-    }
-
-    /**
-     * Gets the currencies of the given user for selection.
-     *
-     * @param  \App\Models\User\User $user
-     * @return array
-     */
-    public function getCurrencies($user)
-    {
-        return $this->data && isset($this->data['user']) && isset($this->data['user']['currencies']) ? $this->data['user']['currencies'] : [];
     }
 
     /**
@@ -226,9 +196,6 @@ class Submission extends Model
      */
     public function getRewardsAttribute()
     {
-        if(isset($this->data['rewards']))
-        $assets = parseAssetData($this->data['rewards']);
-        else
         $assets = parseAssetData($this->data);
         $rewards = [];
         foreach($assets as $type => $a)
