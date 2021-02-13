@@ -247,6 +247,7 @@ return [
             ],
         ]
     ],
+    
     'Research' => [
         'power' => 'manage_research',
         'links' => [
@@ -268,6 +269,7 @@ return [
             ],
         ]
     ],
+
     'Masterlist' => [
         'power' => 'manage_characters',
         'links' => [
