@@ -85,7 +85,7 @@ class Character extends Model
 
     /**
      * Validation rules for character creation.
-     *
+      *
      * @var array
      */
     public static $createRules = [
@@ -95,7 +95,7 @@ class Character extends Model
         'number' => 'required',
         'slug' => 'required|alpha_dash',
         'description' => 'nullable',
-        'sale_value' => 'nullable|integer',
+        'sale_value' => 'nullable',
         'image' => 'required|mimes:jpeg,jpg,gif,png|max:20000',
         'thumbnail' => 'nullable|mimes:jpeg,jpg,gif,png|max:20000',
         'owner_url' => 'url|nullable',
@@ -111,7 +111,7 @@ class Character extends Model
         'number' => 'required',
         'slug' => 'required',
         'description' => 'nullable',
-        'sale_value' => 'nullable|integer',
+        'sale_value' => 'nullable',
     ];
 
     /**
@@ -127,8 +127,8 @@ class Character extends Model
         'description' => 'nullable',
         'sale_value' => 'nullable',
         'name' => 'required',
-        'image' => 'nullable|mimes:jpeg,gif,png|max:20000',
-        'thumbnail' => 'nullable|mimes:jpeg,gif,png|max:20000',
+        'image' => 'nullable|mimes:jpeg,jpg,gif,png|max:20000',
+        'thumbnail' => 'nullable|mimes:jpeg,jpg,gif,png|max:20000',
     ];
 
     /**********************************************************************************************
