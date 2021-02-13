@@ -23,6 +23,11 @@ use App\Models\Prompt\Prompt;
 use App\Models\Shop\Shop;
 use App\Models\Shop\ShopStock;
 use App\Models\User\User;
+use App\Models\Stats\Character\CharacterLevel;
+use App\Models\Stats\User\Level;
+use App\Models\Stats\Character\CharaLevels;
+use App\Models\Stats\User\UserLevel;
+use App\Models\Stats\Character\Stat;
 
 use App\Models\Recipe\Recipe;
 
@@ -508,6 +513,51 @@ class WorldController extends Controller
 
         return view('world.recipes.recipes', [
             'recipes' => $query->paginate(20)->appends($request->query()),
+            ]);
+        }
+    /**
+     * 
+     *  LEVELS
+     * 
+     */
+    public function getLevels()
+    {
+        return view('world.level_index');
+    }
+
+    public function getLevelTypes($type)
+    {
+        if($type == 'user')
+        {
+            $levels = Level::all();
+        }
+        elseif($type == 'character')
+        {
+            $levels = CharacterLevel::all();
+        }
+        else abort(404);
+
+        return view('world.level_type_index', [
+            'levels' => $levels->paginate(20),
+            'type' => $type
+        ]);
+    }
+
+    public function getSingleLevel($type, $level)
+    {
+        if($type == 'user')
+        {
+            $levels = Level::where('level', $level)->first();
+        }
+        elseif($type == 'character')
+        {
+            $levels = CharacterLevel::where('level', $level)->first();
+        }
+        else abort(404);
+
+        return view('world.level_single', [
+            'level' => $levels,
+            'type' => $type
         ]);
     }
 
@@ -527,6 +577,17 @@ class WorldController extends Controller
             'imageUrl' => $recipe->imageUrl,
             'name' => $recipe->displayName,
             'description' => $recipe->parsed_description,
+            ]);
+        }
+     
+     /*      * STATS
+     */
+    public function getStats()
+    {
+        $stats = Stat::all();
+
+        return view('world.stats', [
+            'stats' => $stats,
         ]);
     }
 }
