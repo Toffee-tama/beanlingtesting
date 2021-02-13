@@ -99,7 +99,6 @@ return [
                 'url' => 'admin/grants/items'
             ],
             [
-<<<<<<< HEAD
                 'name' => 'Pet Grants',
                 'url' => 'admin/grants/pets'
             ],
@@ -114,10 +113,10 @@ return [
             [
                 'name' => 'Award Grants',
                 'url' => 'admin/grants/awards'
-=======
+            ],
+            [
                 'name' => 'Recipe Grants',
                 'url' => 'admin/grants/recipes'
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
             ],
         ]
     ],
@@ -213,7 +212,7 @@ return [
             [
                 'name' => 'Character Drops',
                 'url' => 'admin/data/character-drops'
-            ];
+            ],
             [
                 'name' => 'Award Categories',
                 'url' => 'admin/data/award-categories'
@@ -255,7 +254,6 @@ return [
                 'url' => 'admin/data/items'
             ],
             [
-<<<<<<< HEAD
                 'name' => 'Scavenger Hunts',
                 'url' => 'admin/data/hunts'
             ],
@@ -266,10 +264,10 @@ return [
             [
                 'name' => 'Pets',
                 'url' => 'admin/data/pets'
-=======
+            ],
+            [
                 'name' => 'Recipes',
                 'url' => 'admin/data/recipes'
->>>>>>> d6c2d037946decba62b3720114d4ce721774e437
             ],
         ]
     ],
