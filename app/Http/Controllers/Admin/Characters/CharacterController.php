@@ -130,7 +130,7 @@ class CharacterController extends Controller
     {
         $request->validate(Character::$createRules);
         $data = $request->only([
-            'user_id', 'owner_url', 'character_category_id', 'number', 'slug',
+            'user_id', 'owner_alias', 'character_category_id', 'number', 'slug',
             'description', 'is_visible', 'is_giftable', 'is_tradeable', 'is_sellable',
             'sale_value', 'transferrable_at', 'use_cropper',
             'x0', 'x1', 'y0', 'y1',
@@ -167,7 +167,7 @@ class CharacterController extends Controller
         return redirect()->back()->withInput();
     }
 
-    /**
+   /**
      * Creates an MYO slot.
      *
      * @param  \Illuminate\Http\Request       $request
@@ -178,7 +178,7 @@ class CharacterController extends Controller
     {
         $request->validate(Character::$myoRules);
         $data = $request->only([
-            'user_id', 'owner_url', 'name',
+            'user_id', 'owner_alias', 'name',
             'description', 'is_visible', 'is_giftable', 'is_tradeable', 'is_sellable',
             'sale_value', 'transferrable_at', 'use_cropper',
             'x0', 'x1', 'y0', 'y1',
@@ -203,7 +203,7 @@ class CharacterController extends Controller
             'generate_ancestors',
 
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data',
-            'image', 'thumbnail', 'stats'
+            'image', 'thumbnail'
         ]);
         if ($character = $service->createCharacter($data, Auth::user(), true)) {
             flash('MYO slot created successfully.')->success();
