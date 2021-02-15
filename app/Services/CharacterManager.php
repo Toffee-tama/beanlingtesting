@@ -866,37 +866,6 @@ class CharacterManager extends Service
         return $result;
     }
 
-    /**
-     * Updates image data.
-     *
-     * @param  array                                 $data
-     * @param  \App\Models\Character\CharacterImage  $image
-     * @param  \App\Models\User\User                 $user
-     * @return  bool
-     */
-    public function updateImageNotes($data, $image, $user)
-    {
-        DB::beginTransaction();
-
-        try {
-            $old = $image->parsed_description;
-
-            // Update the image's notes
-            $image->description = $data['description'];
-            $image->parsed_description = parse($data['description']);
-            $image->save();
-
-            // Add a log for the character
-            // This logs all the updates made to the character
-            $this->createLog($user->id, null, null, null, $image->character_id, 'Image Notes Updated', '[#'.$image->id.']', 'character', true, $old, $image->parsed_description);
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
-    }
-
        /**
      * Updates image data.
      *
@@ -927,6 +896,7 @@ class CharacterManager extends Service
         }
         return $this->rollbackReturn(false);
     }
+
 
     /**
      * Updates image credits.
@@ -2045,7 +2015,6 @@ public function updateCharacterLineage($data, $character, $user, $isAdmin = fals
             $character->owner_alias = $recipient;
             $character->user_id = null;
         }
-        }
         if ($cooldown < 0) {
             // Add the default amount from settings
             $cooldown = Settings::get('transfer_cooldown');
@@ -2169,7 +2138,7 @@ public function updateCharacterLineage($data, $character, $user, $isAdmin = fals
         return $this->rollbackReturn(false);
     }
 
-    /**
+     /**
      * Saves the image upload section of a character design update request.
      *
      * @param  array                                        $data
@@ -2210,24 +2179,22 @@ public function updateCharacterLineage($data, $character, $user, $isAdmin = fals
                 $request->update($imageData);
             }
 
-        }
+            $request->designers()->delete();
+            $request->artists()->delete();
 
-        $request->designers()->delete();
-        $request->artists()->delete();
-
-        // Check that users with the specified id(s) exist on site
-        foreach($data['designer_alias'] as $id) {
-            if(isset($id) && $id) {
-                $user = User::find($id);
-                if(!$user) throw new \Exception('One or more designers is invalid.');
+            // Check that users with the specified id(s) exist on site
+            foreach($data['designer_alias'] as $id) {
+                if(isset($id) && $id) {
+                    $user = User::find($id);
+                    if(!$user) throw new \Exception('One or more designers is invalid.');
+                }
             }
-        }
-        foreach($data['artist_alias'] as $id) {
-            if(isset($id) && $id) {
-                $user = $user = User::find($id);
-                if(!$user) throw new \Exception('One or more artists is invalid.');
+            foreach($data['artist_alias'] as $id) {
+                if(isset($id) && $id) {
+                    $user = $user = User::find($id);
+                    if(!$user) throw new \Exception('One or more artists is invalid.');
+                }
             }
-        }
 
             // Attach artists/designers
             foreach($data['designer_alias'] as $key => $id) {
