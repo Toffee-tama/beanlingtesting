@@ -2138,7 +2138,7 @@ public function updateCharacterLineage($data, $character, $user, $isAdmin = fals
         return $this->rollbackReturn(false);
     }
 
-     /**
+       /**
      * Saves the image upload section of a character design update request.
      *
      * @param  array                                        $data
