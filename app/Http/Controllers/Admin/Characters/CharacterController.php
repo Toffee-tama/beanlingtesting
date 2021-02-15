@@ -63,6 +63,7 @@ class CharacterController extends Controller
             'characterOptions' => CharacterLineageBlacklist::getAncestorOptions(),
             'rarities' => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'dropSpecies' => Species::whereIn('id', CharacterDropData::pluck('species_id')->toArray())->pluck('id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
             'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
             'isMyo' => false,
@@ -82,6 +83,7 @@ class CharacterController extends Controller
             'characterOptions' => CharacterLineageBlacklist::getAncestorOptions(),
             'rarities' => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'dropSpecies' => Species::whereIn('id', CharacterDropData::pluck('species_id')->toArray())->pluck('id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
             'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
             'isMyo' => true,
@@ -102,6 +104,20 @@ class CharacterController extends Controller
             'isMyo' => $request->input('myo')
         ]);
       }
+
+          /**
+     * Shows the edit group portion of the form.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCreateCharacterMyoGroup(Request $request) {
+        $species = $request->input('species');
+        return view('admin.masterlist._create_character_group', [
+            'parameters' => ['0' => 'Select Group'] + CharacterDropData::where('species_id', $species)->first()->parameterArray,
+            'isMyo' => $request->input('myo')
+        ]);
+    }
 
     /**
      * Creates a character.
