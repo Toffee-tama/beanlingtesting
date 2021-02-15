@@ -354,17 +354,6 @@
       $.ajax({
         type: "GET", url: "{{ url('admin/masterlist/check-subtype') }}?species="+species+"&myo="+myo, dataType: "text"
       }).done(function (res) { $("#subtypes").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
-
-      var $dropOptions = $('#dropOptions');
-      var $dropSpecieses = '<?php echo(json_encode($dropSpecies)); ?>';
-      if($dropSpecieses.includes(species)) {
-          $dropOptions.removeClass('hide');
-          $.ajax({
-            type: "GET", url: "{{ url('admin/masterlist/check-group') }}?species="+species+"&myo="+myo, dataType: "text"
-            }).done(function (res) { $("#groups").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
-        }
-      else $dropOptions.addClass('hide');
-    });
     $(document).ready(function()
     {
         $('.character-select').selectize();
