@@ -39,7 +39,7 @@ use App\Models\Stats\Character\CharacterStat;
 
 class CharacterManager extends Service
 {
-    {
+    
         /*
         |--------------------------------------------------------------------------
         | Character Manager
