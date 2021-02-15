@@ -354,6 +354,7 @@
       $.ajax({
         type: "GET", url: "{{ url('admin/masterlist/check-subtype') }}?species="+species+"&myo="+myo, dataType: "text"
       }).done(function (res) { $("#subtypes").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
+
     $(document).ready(function()
     {
         $('.character-select').selectize();
