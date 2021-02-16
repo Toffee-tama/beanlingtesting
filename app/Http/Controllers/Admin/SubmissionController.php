@@ -104,11 +104,7 @@ class SubmissionController extends Controller
             'limit' => $limit
 
         ] : []));
-<<<<<<< HEAD
     }    
-=======
-    }       
->>>>>>> 1a1fe933f8329cdb7dd3ddccbf555ecfbb15b9ec
     
     /**
      * Shows the claim index page.
@@ -160,16 +156,11 @@ class SubmissionController extends Controller
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-<<<<<<< HEAD
             'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'count' => $count,
             'limit' => $limit,
-=======
             'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
-            'pets' => Pet::orderBy('name')->pluck('name', 'id'),            
-            'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
->>>>>>> 1a1fe933f8329cdb7dd3ddccbf555ecfbb15b9ec
             'rewardsData' => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null
         ] : []));
     }

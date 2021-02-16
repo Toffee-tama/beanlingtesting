@@ -360,7 +360,6 @@
         var $rejectionContent = $('#rejectionContent');
         var $rejectionSubmit = $('#rejectionSubmit');
         
-<<<<<<< HEAD
         $(document).ready(function() {
             var $confirmationModal = $('#confirmationModal');
             var $submissionForm = $('#submissionForm');
@@ -396,32 +395,5 @@
             });
         });
     </script>
-=======
-        $approvalButton.on('click', function(e) {
-            e.preventDefault();
-            $approvalContent.removeClass('hide');
-            $rejectionContent.addClass('hide');
-            $confirmationModal.modal('show');
-        });
-        
-        $rejectionButton.on('click', function(e) {
-            e.preventDefault();
-            $rejectionContent.removeClass('hide');
-            $approvalContent.addClass('hide');
-            $confirmationModal.modal('show');
-        });
-        $approvalSubmit.on('click', function(e) {
-            e.preventDefault();
-            $submissionForm.attr('action', '{{ url()->current() }}/approve');
-            $submissionForm.submit();
-        });
-        $rejectionSubmit.on('click', function(e) {
-            e.preventDefault();
-            $submissionForm.attr('action', '{{ url()->current() }}/reject');
-            $submissionForm.submit();
-        });
-    });
-</script>
->>>>>>> 1a1fe933f8329cdb7dd3ddccbf555ecfbb15b9ec
 @endif
 @endsection
