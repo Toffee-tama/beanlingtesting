@@ -14,6 +14,7 @@ use File;
 use App\Services\CurrencyManager;
 use App\Services\InventoryManager;
 
+use Illuminate\Support\Arr;
 use App\Models\User\User;
 use App\Models\User\UserItem;
 use App\Models\Character\Character;
