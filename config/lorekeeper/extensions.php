@@ -26,7 +26,11 @@ return [
     'species_trait_index' => 1,
 
     // Character Status Badges - Juni
+<<<<<<< HEAD
     'character_status_badges' => 01,
+=======
+    'character_status_badges' => 1,
+>>>>>>> 1a1fe933f8329cdb7dd3ddccbf555ecfbb15b9ec
     
     // Character TH Profile Link - Juni
     'character_TH_profile_link' => 1,

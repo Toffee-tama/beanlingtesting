@@ -20,7 +20,6 @@ use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
 use App\Models\Gallery\GalleryFavorite;
 use App\Models\Gallery\GalleryCharacter;
-use App\Models\Item\ItemLog;
 
 use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterImage;
@@ -31,6 +30,12 @@ use App\Models\User\UserPet;
 use App\Models\Pet\Pet;
 use App\Models\Pet\PetCategory;
 use App\Models\Pet\PetLog;
+use App\Models\Item\ItemLog;
+
+use App\Models\User\UserAward;
+use App\Models\Award\Award;
+use App\Models\Award\AwardCategory;
+use App\Models\Award\AwardLog;
 
 
 use App\Http\Controllers\Controller;
@@ -69,11 +74,16 @@ class UserController extends Controller
      */
     public function getUser($name)
     {
+        $characters = $this->user->characters();
+        if(!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) $characters->visible();
+        
         return view('user.profile', [
             'user' => $this->user,
             'items' => $this->user->items()->where('count', '>', 0)->orderBy('user_items.updated_at', 'DESC')->take(4)->get(),
             'pets' => $this->user->pets()->orderBy('user_pets.updated_at', 'DESC')->take(5)->get(),
-            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get(),
+            'characters' => $characters,
+            'awards' => $this->user->awards()->orderBy('user_awards.updated_at', 'DESC')->take(4)->get()
         ]);
     }
 
@@ -85,7 +95,7 @@ class UserController extends Controller
      */
     public function getUserCharacters($name)
     {
-        $query = Character::myo(0)->visible()->where('user_id', $this->user->id);
+        $query = Character::myo(0)->where('user_id', $this->user->id);
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
 
         if($sublists = Sublist::where('show_main', 0)->get())
@@ -102,6 +112,8 @@ class UserController extends Controller
 
         $query->whereIn('id', $imageQuery->pluck('character_id'));
 
+        if(!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) $query->visible();
+
         return view('user.characters', [
             'user' => $this->user,
             'characters' => $query->orderBy('sort', 'DESC')->get(),
@@ -117,7 +129,7 @@ class UserController extends Controller
      */
     public function getUserSublist($name, $key)
     {
-        $query = Character::myo(0)->visible()->where('user_id', $this->user->id);
+        $query = Character::myo(0)->where('user_id', $this->user->id);
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
 
         $sublist = Sublist::where('key', $key)->first();
@@ -129,6 +141,8 @@ class UserController extends Controller
         if($subSpecies) $imageQuery->whereIn('species_id', $subSpecies);
 
         $query->whereIn('id', $imageQuery->pluck('character_id'));
+
+        if(!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) $query->visible();
 
         return view('user.sublist', [
             'user' => $this->user,
@@ -146,9 +160,12 @@ class UserController extends Controller
      */
     public function getUserMyoSlots($name)
     {
+        $myo = $this->user->myoSlots();
+        if(!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) $myo->visible();
+
         return view('user.myo_slots', [
             'user' => $this->user,
-            'myos' => $this->user->myoSlots()->visible()->get(),
+            'myos' => $myo->get(),
             'sublists' => Sublist::orderBy('sort', 'DESC')->get()
         ]);
     }
@@ -206,6 +223,39 @@ class UserController extends Controller
             'logs' => $this->user->getPetLogs()
         ]);
     }
+    
+    /**
+     * Shows a user's inventory.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserAwardCase($name)
+    {
+        $categories = AwardCategory::orderBy('sort', 'DESC')->get();
+        $awards = count($categories) ? 
+            $this->user->awards()
+                ->where('count', '>', 0)
+                ->orderByRaw('FIELD(award_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
+                ->orderBy('name')
+                ->orderBy('updated_at')
+                ->get()
+                ->groupBy(['award_category_id', 'id']) :
+            $this->user->awards()
+                ->where('count', '>', 0)
+                ->orderBy('name')
+                ->orderBy('updated_at')
+                ->get()
+                ->groupBy(['award_category_id', 'id']);
+        return view('user.awardcase', [
+            'user' => $this->user,
+            'categories' => $categories->keyBy('id'),
+            'awards' => $awards,
+            'userOptions' => User::where('id', '!=', $this->user->id)->orderBy('name')->pluck('name', 'id')->toArray(),
+            'user' => $this->user,
+            'logs' => $this->user->getAwardLogs()
+        ]);
+    }
 
     /**
      * Shows a user's profile.
@@ -227,6 +277,23 @@ class UserController extends Controller
     }
 
     /**
+     * Shows a user's profile.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserLevel($name)
+    {
+        return view('user.level', [
+            'user' => $this->user,
+            'exps' => $this->user->getExpLogs(),
+            'levels' => $this->user->getLevelLogs(),
+            'stats' => $this->user->getStatLogs(),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
      * Shows a user's currency logs.
      *
      * @param  string  $name
@@ -239,6 +306,21 @@ class UserController extends Controller
             'user' => $this->user,
             'logs' => $this->user->getCurrencyLogs(0),
             'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Shows a user's currency logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserResearchLogs($name)
+    {
+        $user = $this->user;
+        return view('user.currency_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getResearchLogs(0)
         ]);
     }
 
@@ -274,6 +356,69 @@ class UserController extends Controller
     }
 
     /**
+     * Shows a user's item logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserExpLogs($name)
+    {
+        $user = $this->user;
+        return view('user.exp_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getExpLogs(0),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Shows a user's item logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserlevelLogs($name)
+    {
+        $user = $this->user;
+        return view('user.level_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getLevelLogs(0),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Shows a user's item logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserStatLogs($name)
+    {
+        $user = $this->user;
+        return view('user.stat_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getStatLogs(0),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+    
+    /**
+     * Shows a user's award logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserAwardLogs($name)
+    {
+        $user = $this->user;
+        return view('user.award_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getAwardLogs(0)
+        ]);
+    }
+
+    /**
      * Shows a user's character ownership logs.
      *
      * @param  string  $name
@@ -299,6 +444,22 @@ class UserController extends Controller
         return view('user.submission_logs', [
             'user' => $this->user,
             'logs' => $this->user->getSubmissions(Auth::check() ? Auth::user() : null),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Shows a user's recipe logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserRecipeLogs($name)
+    {
+        $user = $this->user;
+        return view('user.recipe_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getRecipeLogs(0),
             'sublists' => Sublist::orderBy('sort', 'DESC')->get()
         ]);
     }

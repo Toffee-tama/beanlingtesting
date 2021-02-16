@@ -165,21 +165,29 @@ public function getCharacterLinks($slug)
             'Acquaintence',
             'Best Friends',
             'Boss and Employee',
+            'Child',            
             'Co-workers',
             'Crushing',
             'Enemy',
             'Family',
+            'Foster Parent',            
             'Friends',
             'Frenemies',
             'It\'s Complicated',
             'Life Partners',
+            'Master',            
             'On-and-Off',
+            'Parent',            
             'Partners in Crime',
             'Past Relationship',
             'Polyamorous Relationship',
             'Rival',
             'Roomate',
+            'Servant',            
             'Significant Others',
+            'Student',
+            'Teacher',
+
         ];
 
         return view('character.links', [
@@ -345,6 +353,23 @@ public function getCharacterLinks($slug)
         ] : []));
     }
 
+    /**
+     * Shows a character's levels
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterLevel($name)
+    {
+        return view('character.stats.level', [
+            'character' => $this->character,
+            'exps' => $this->character->getExpLogs(),
+            'levels' => $this->character->getLevelLogs(),
+            'stats' => $this->character->getStatLogs(),
+            'counts' => $this->character->getCountLogs(),
+        ]);
+    }
+    
     /**
      * Transfers currency between the user and character.
      *

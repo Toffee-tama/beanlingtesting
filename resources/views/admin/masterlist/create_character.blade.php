@@ -37,8 +37,8 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('Owner URL (Optional)') !!}
-                {!! Form::text('owner_url', old('owner_url'), ['class' => 'form-control']) !!}
+                {!! Form::label('Owner Alias (Optional)') !!}
+                {!! Form::text('owner_alias', old('owner_alias'), ['class' => 'form-control']) !!}
             </div>
         </div>
     </div>
@@ -161,7 +161,7 @@
         </div>
     </div>
 @endif
-    <div class="card mb-3" id="thumbnailUpload">
+<div class="card mb-3" id="thumbnailUpload">
         <div class="card-body">
             {!! Form::label('Thumbnail Image') !!} {!! add_help('This image is shown on the masterlist page.') !!}
             <div>{!! Form::file('thumbnail') !!}</div>
@@ -169,19 +169,19 @@
         </div>
     </div>
     <p class="alert alert-info">
-        This section is for crediting the image creators. The first box is for the designer or artist's on-site username (if any). The second is for a link to the designer or artist if they don't have an account on the site.
+        This section is for crediting the image creators. The first box is for the designer's deviantART name (if any). If the designer has an account on the site, it will link to their site profile; if not, it will link to their dA page. The second is for a custom URL if they don't use dA. Both are optional - you can fill in the alias and ignore the URL, or vice versa. If you fill in both, it will link to the given URL, but use the alias field as the link name.
     </p>
     <div class="form-group">
         {!! Form::label('Designer(s)') !!}
         <div id="designerList">
             <div class="mb-2 d-flex">
-                {!! Form::select('designer_id[]', $userOptions, null, ['class'=> 'form-control mr-2 selectize', 'placeholder' => 'Select a Designer']) !!}
+                {!! Form::text('designer_alias[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Designer Alias']) !!}
                 {!! Form::text('designer_url[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Designer URL']) !!}
                 <a href="#" class="add-designer btn btn-link" data-toggle="tooltip" title="Add another designer">+</a>
             </div>
         </div>
         <div class="designer-row hide mb-2">
-            {!! Form::select('designer_id[]', $userOptions, null, ['class'=> 'form-control mr-2 designer-select', 'placeholder' => 'Select a Designer']) !!}
+            {!! Form::text('designer_alias[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Designer Alias']) !!}
             {!! Form::text('designer_url[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Designer URL']) !!}
             <a href="#" class="add-designer btn btn-link" data-toggle="tooltip" title="Add another designer">+</a>
         </div>
@@ -190,13 +190,13 @@
         {!! Form::label('Artist(s)') !!}
         <div id="artistList">
             <div class="mb-2 d-flex">
-                {!! Form::select('artist_id[]', $userOptions, null, ['class'=> 'form-control mr-2 selectize', 'placeholder' => 'Select an Artist']) !!}
+                {!! Form::text('artist_alias[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Artist Alias']) !!}
                 {!! Form::text('artist_url[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Artist URL']) !!}
                 <a href="#" class="add-artist btn btn-link" data-toggle="tooltip" title="Add another artist">+</a>
             </div>
         </div>
         <div class="artist-row hide mb-2">
-            {!! Form::select('artist_id[]', $userOptions, null, ['class'=> 'form-control mr-2 artist-select', 'placeholder' => 'Select an Artist']) !!}
+            {!! Form::text('artist_alias[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Artist Alias']) !!}
             {!! Form::text('artist_url[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Artist URL']) !!}
             <a href="#" class="add-artist btn btn-link mb-2" data-toggle="tooltip" title="Add another artist">+</a>
         </div>
@@ -299,13 +299,6 @@
         {!! Form::select('species_id', $specieses, old('species_id'), ['class' => 'form-control', 'id' => 'species']) !!}
     </div>
 
-    <div class="card mb-3 hide" id="dropOptions">
-        <div class="card-body" id="groups">
-            {!! Form::label('Group (Optional)') !!} {!! add_help('This is used for character drops. If no value is set, it will be randomly rolled from the species\' groups.') !!}
-            {!! Form::select('parameters', $parameters, old('parameters'), ['class' => 'form-control', 'id' => 'parameter']) !!}
-        </div>
-    </div>
-
     <div class="form-group" id="subtypes">
         {!! Form::label('Subtype (Optional)') !!} @if($isMyo) {!! add_help('This will lock the slot into a particular subtype. Leave it blank if you would like to give the user a choice, or not select a subtype. The subtype must match the species selected above, and if no species is specified, the subtype will not be applied.') !!} @endif
         {!! Form::select('subtype_id', $subtypes, old('subtype_id'), ['class' => 'form-control disabled', 'id' => 'subtype']) !!}
@@ -327,7 +320,17 @@
             <a href="#" class="remove-feature btn btn-danger mb-2">×</a>
         </div>
     </div>
-
+    @if($stats)
+    <h3>Stats</h3>
+    <p class="alert alert-info">If you want a character to have different stats from the default, set them here. Else, leave it as default</p>
+    <div class="form-group">
+        @foreach($stats as $stat)
+            {!! Form::label($stat->name) !!}
+            {!! Form::number('stats['.$stat->id.']', $stat->default, ['class' => 'form-control m-1',]) !!}
+        @endforeach
+    </div>
+    @endif
+    
     <div class="text-right">
         {!! Form::submit('Create Character', ['class' => 'btn btn-primary']) !!}
     </div>
@@ -352,16 +355,6 @@
         type: "GET", url: "{{ url('admin/masterlist/check-subtype') }}?species="+species+"&myo="+myo, dataType: "text"
       }).done(function (res) { $("#subtypes").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
 
-      var $dropOptions = $('#dropOptions');
-      var $dropSpecieses = '<?php echo(json_encode($dropSpecies)); ?>';
-      if($dropSpecieses.includes(species)) {
-          $dropOptions.removeClass('hide');
-          $.ajax({
-            type: "GET", url: "{{ url('admin/masterlist/check-group') }}?species="+species+"&myo="+myo, dataType: "text"
-            }).done(function (res) { $("#groups").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
-        }
-      else $dropOptions.addClass('hide');
-    });
     $(document).ready(function()
     {
         $('.character-select').selectize();

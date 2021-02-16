@@ -8,6 +8,7 @@
 <h1>Prompts</h1>
 
 <p>This is a list of prompts users can submit to.</p>
+<p>If you want to see this list using the vanilla Lorekeeper style, <a href="/admin/data/prompts/old" class="font-weight-bold">go here.</a></p>
 
 <div class="text-right mb-3">
     <a class="btn btn-primary" href="{{ url('admin/data/prompt-categories') }}"><i class="fas fa-folder"></i> Prompt Categories</a>

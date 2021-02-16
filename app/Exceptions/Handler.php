@@ -25,6 +25,7 @@ class Handler extends ExceptionHandler
     protected $dontFlash = [
         'password',
         'password_confirmation',
+        '_token'
     ];
 
     /**
@@ -53,6 +54,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        return parent::render($request, $exception);
+    if ($exception instanceof Illuminate\Session\TokenMismatchException) {
+        Artisan::call('cache:clear');
+        Artisan::call('config:cache');
+        return Redirect::back();
+    }
+    return parent::render($request, $exception);
     }
 }
