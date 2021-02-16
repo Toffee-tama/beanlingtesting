@@ -289,26 +289,26 @@ class CharacterManager extends Service
             foreach($data['designer_url'] as $key=>$url) {
                 $recipient = checkAlias($url, false);
                 if(is_object($recipient)) {
-                    $data['designer_id'][$key] = $recipient->id;
+                    $data['designer_alias'][$key] = $recipient->id;
                     $data['designer_url'][$key] = null;
                 }
             }
             foreach($data['artist_url'] as $key=>$url) {
                 $recipient = checkAlias($url, false);
                 if(is_object($recipient)) {
-                    $data['artist_id'][$key] = $recipient->id;
+                    $data['artist_alias'][$key] = $recipient->id;
                     $data['artist_url'][$key] = null;
                 }
             }
 
             // Check that users with the specified id(s) exist on site
-            foreach($data['designer_id'] as $id) {
+            foreach($data['designer_alias'] as $id) {
                 if(isset($id) && $id) {
                     $user = User::find($id);
                     if(!$user) throw new \Exception('One or more designers is invalid.');
                 }
             }
-            foreach($data['artist_id'] as $id) {
+            foreach($data['artist_alias'] as $id) {
                 if(isset($id) && $id) {
                     $user = $user = User::find($id);
                     if(!$user) throw new \Exception('One or more artists is invalid.');
@@ -316,7 +316,7 @@ class CharacterManager extends Service
             }
 
             // Attach artists/designers
-            foreach($data['designer_id'] as $key => $id) {
+            foreach($data['designer_alias'] as $key => $id) {
                 if($id || $data['designer_url'][$key])
                     DB::table('character_image_creators')->insert([
                         'character_image_id' => $image->id,
@@ -325,7 +325,7 @@ class CharacterManager extends Service
                         'user_id' => $id
                     ]);
             }
-            foreach($data['artist_id'] as $key => $id) {
+            foreach($data['artist_alias'] as $key => $id) {
                 if($id || $data['artist_url'][$key])
                     DB::table('character_image_creators')->insert([
                         'character_image_id' => $image->id,
