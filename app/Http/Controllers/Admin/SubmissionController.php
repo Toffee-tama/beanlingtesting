@@ -66,6 +66,7 @@ class SubmissionController extends Controller
     public function getSubmission($id)
     {
         $submission = Submission::whereNotNull('prompt_id')->where('id', $id)->first();
+        $inventory = isset($submission->data['user']) ? parseAssetData($submission->data['user']) : null;
         $prompt = Prompt::where('id', $submission->prompt_id)->first();
         if(!$submission) abort(404);
 
@@ -75,7 +76,7 @@ class SubmissionController extends Controller
         $count['Week'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfWeek())->count();
         $count['Month'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfMonth())->count();
         $count['Year'] = Submission::submitted($prompt->id, $submission->user_id)->where('created_at', '>=', now()->startOfYear())->count();
-
+        
         if($prompt->limit_character) {
             $limit = $prompt->limit * Character::visible()->where('is_myo_slot', 0)->where('user_id', $submission->user_id)->count();
         } else {
@@ -84,17 +85,23 @@ class SubmissionController extends Controller
 
         return view('admin.submissions.submission', [
             'submission' => $submission,
+            'inventory' => $inventory,
+            'rewardsData' => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null,
+            'itemsrow' => Item::all()->keyBy('id'),
+            'page' => 'submission',
         ] + ($submission->status == 'Pending' ? [
             'characterCurrencies' => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
             'items' => Item::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
-            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
-            'count' => $count,
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'count' => Submission::where('prompt_id', $submission->prompt_id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
+            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'prompt' => $prompt,
             'limit' => $limit
+
         ] : []));
-    }   
+    }    
     
     /**
      * Shows the claim index page.
@@ -137,22 +144,22 @@ class SubmissionController extends Controller
         if(!$submission) abort(404);
         return view('admin.submissions.submission', [
             'submission' => $submission,
-             'inventory' => $inventory,
-            'rewardsData' => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null,
+            'inventory' => $inventory,
             'itemsrow' => Item::all()->keyBy('id'),
-            'page' => 'submission',
+            'awardsrow' => Award::all()->keyBy('id'),
         ] + ($submission->status == 'Pending' ? [
             'characterCurrencies' => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
             'items' => Item::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
-            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
-             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
+            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'count' => $count,
-            'prompt' => $prompt,
-            'limit' => $limit
+            'limit' => $limit,
+            'rewardsData' => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null
         ] : []));
-    }  
+    }
 
     /**
      * Creates a new submission.

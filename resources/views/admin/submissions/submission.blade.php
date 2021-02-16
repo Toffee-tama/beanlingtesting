@@ -244,11 +244,9 @@
         $(document).ready(function() {
             var $confirmationModal = $('#confirmationModal');
             var $submissionForm = $('#submissionForm');
-
             var $approvalButton = $('#approvalButton');
             var $approvalContent = $('#approvalContent');
             var $approvalSubmit = $('#approvalSubmit');
-
             var $rejectionButton = $('#rejectionButton');
             var $rejectionContent = $('#rejectionContent');
             var $rejectionSubmit = $('#rejectionSubmit');
@@ -266,20 +264,17 @@
                 $approvalContent.addClass('hide');
                 $confirmationModal.modal('show');
             });
-
             $approvalSubmit.on('click', function(e) {
                 e.preventDefault();
                 $submissionForm.attr('action', '{{ url()->current() }}/approve');
                 $submissionForm.submit();
             });
-
             $rejectionSubmit.on('click', function(e) {
                 e.preventDefault();
                 $submissionForm.attr('action', '{{ url()->current() }}/reject');
                 $submissionForm.submit();
             });
         });
-
     </script>
 @endif
 @endsection
