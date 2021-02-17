@@ -72,272 +72,272 @@
 
     {!! Form::open(['url' => url()->current(), 'id' => 'submissionForm']) !!}
 
-@if($submission->prompt_id)
-<div class="row">
-    <div class="col-6">
-        <h2>Rewards</h2>
-        @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true])
-    </div>
-    <div class="col-6">
-        <h3>Stat & Level Rewards</h3>
-        @if(!$submission->focus_chara_id && $submission->prompt->expreward->chara_exp || !$submission->focus_chara_id && $submission->prompt->expreward->chara_points)
-        <div class="alert alert-danger">This prompt has character rewards but the user has not added a focus character. If this is a mistake, please decline.</div>
-        @endif
-        <div class="card m-1">
-            <div class="row m-2">
-                <div class="col">
-                    <h5>User Rewards</h5>
-                    @if(!$submission->prompt->expreward->user_exp && !$submission->prompt->expreward->user_points)
-                    No user rewards.
-                    @else
-                    {{ $submission->prompt->expreward->user_exp ? $submission->prompt->expreward->user_exp : 0  }} user EXP
-                        <br>
-                    {{ $submission->prompt->expreward->user_points ? $submission->prompt->expreward->user_points : 0  }} user points
-                    @endif
+    @if($submission->prompt_id)
+    <div class="row">
+        <div class="col-6">
+            <h2>Rewards</h2>
+            @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true])
+        </div>
+        <div class="col-6">
+            <h3>Stat & Level Rewards</h3>
+            @if(!$submission->focus_chara_id && $submission->prompt->expreward->chara_exp || !$submission->focus_chara_id && $submission->prompt->expreward->chara_points)
+            <div class="alert alert-danger">This prompt has character rewards but the user has not added a focus character. If this is a mistake, please decline.</div>
+            @endif
+            <div class="card m-1">
+                <div class="row m-2">
+                    <div class="col">
+                        <h5>User Rewards</h5>
+                        @if(!$submission->prompt->expreward->user_exp && !$submission->prompt->expreward->user_points)
+                        No user rewards.
+                        @else
+                        {{ $submission->prompt->expreward->user_exp ? $submission->prompt->expreward->user_exp : 0  }} user EXP
+                            <br>
+                        {{ $submission->prompt->expreward->user_points ? $submission->prompt->expreward->user_points : 0  }} user points
+                        @endif
+                    </div>
+                    <div class="col">
+                        <h5>Character Rewards</h5>
+                        @if(!$submission->prompt->expreward->chara_exp && !$submission->prompt->expreward->chara_points)
+                        No character rewards.
+                        @else
+                        {{ $submission->prompt->expreward->chara_exp ? $submission->prompt->expreward->chara_exp : 0  }} character EXP
+                            <br>
+                        {{ $submission->prompt->expreward->chara_points ? $submission->prompt->expreward->chara_points : 0  }} character points
+                        @endif
+                    </div>
                 </div>
-                <div class="col">
-                    <h5>Character Rewards</h5>
-                    @if(!$submission->prompt->expreward->chara_exp && !$submission->prompt->expreward->chara_points)
-                    No character rewards.
-                    @else
-                    {{ $submission->prompt->expreward->chara_exp ? $submission->prompt->expreward->chara_exp : 0  }} character EXP
-                        <br>
-                    {{ $submission->prompt->expreward->chara_points ? $submission->prompt->expreward->chara_points : 0  }} character points
-                    @endif
-                </div>
+                <div class="alert alert-warning">Only input values here if the user is supposed to get more than the amount listed above.</div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                {!! Form::label('bonus_user_exp', 'Bonus User Exp Reward', ['class' => 'form-control-label ml-3']) !!}
+                                {!! Form::number('bonus_user_exp', null, ['class' => 'form-control ml-1',]) !!}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                {!! Form::label('bonus_user_points', 'Bonus User Stat Point Reward', ['class' => 'form-control-label ml-3']) !!}
+                                {!! Form::number('bonus_user_points', null, ['class' => 'form-control mr-1',]) !!}
+                            </div>
+                        </div>
+                    </div>
             </div>
-            <div class="alert alert-warning">Only input values here if the user is supposed to get more than the amount listed above.</div>
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            {!! Form::label('bonus_user_exp', 'Bonus User Exp Reward', ['class' => 'form-control-label ml-3']) !!}
-                            {!! Form::number('bonus_user_exp', null, ['class' => 'form-control ml-1',]) !!}
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            {!! Form::label('bonus_user_points', 'Bonus User Stat Point Reward', ['class' => 'form-control-label ml-3']) !!}
-                            {!! Form::number('bonus_user_points', null, ['class' => 'form-control mr-1',]) !!}
-                        </div>
-                    </div>
-                </div>
         </div>
     </div>
-</div>
-    @if($submission->prompt_id)
-    <div class="mb-3">
-        @include('home._prompt', ['prompt' => $submission->prompt, 'staffView' => true])
-    </div>
-    @endif
-@else
-    <h2>Rewards</h2>
-    @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true])
-    @if($submission->prompt_id)
+        @if($submission->prompt_id)
         <div class="mb-3">
             @include('home._prompt', ['prompt' => $submission->prompt, 'staffView' => true])
         </div>
-    @endif
-@endif
-    <h2>Characters</h2>
-@if($submission->prompt_id)
-    @if($submission->focus_chara_id)
-    <h5>Focus Character</h5>
-    <div class="submission-character-row mb-2">
-        <div class="submission-character-thumbnail"><a href="{{ $submission->focus->url }}"><img src="{{ $submission->focus->image->thumbnailUrl }}" class="img-thumbnail" /></a></div>
+        @endif
+    @else
+        <h2>Rewards</h2>
+        @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true])
         @if($submission->prompt_id)
-        <div class="submission-character-info card ml-2">
-            <div class="card-body">
-                <div class="submission-character-info-content">
-                    <h3 class="mb-2 submission-character-info-header"><a href="{{ $submission->focus->url }}">{{ $submission->focus->fullName }}</a></h3>
-                    <div class="submission-character-info-body">
-                    <table class="table table-sm mb-0">
-                        <thead>
-                            <tr>
-                                <th>Reward</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ $submission->prompt->chara_exp ? $submission->prompt->chara_exp : 0 }} EXP
-                                <br>
-                                {{ $submission->prompt->chara_points ? $submission->prompt->chara_points : 0  }} Stat Point
-                                <p class="text-muted mt-1">(This is pre-defined by the prompt, you may add bonuses below)</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
+            <div class="mb-3">
+                @include('home._prompt', ['prompt' => $submission->prompt, 'staffView' => true])
             </div>
-            @endif
-        </div>
-    </div>
-    <div class="alert alert-warning">Only input values here if the character in the submission is supposed to get more than the above value points</div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {!! Form::label('bonus_exp', 'Bonus Character Exp Reward', ['class' => 'form-control-label ml-3']) !!}
-                {!! Form::number('bonus_exp', null, ['class' => 'form-control',]) !!}
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {!! Form::label('bonus_points', 'Bonus Character Stat Point Reward', ['class' => 'form-control-label ml-3']) !!}
-                {!! Form::number('bonus_points', null, ['class' => 'form-control',]) !!}
-            </div>
-        </div>
-    </div>
-    <hr>
+        @endif
     @endif
-@endif
-    <div id="characters" class="mb-3">
-        @foreach($submission->characters as $character)
-            @include('widgets._character_select_entry', ['characterCurrencies' => $characterCurrencies, 'character' => $character])
-        @endforeach
-    </div>
-    <div class="text-right mb-3">
-        <a href="#" class="btn btn-outline-info" id="addCharacter">Add Character</a>
-    </div>
-
-    @if(isset($inventory['user_items']))
-    <h2>Add-Ons</h2>
-    <p>These items have been removed from the {{ $submission->prompt_id ? 'submitter' : 'claimant' }}'s inventory and will be refunded if the request is rejected or consumed if it is approved.</p>
-        <table class="table table-sm">
-            <thead class="thead-light">
-                    <tr class="d-flex">
-                        <th class="col-2">Item</th>
-                        <th class="col-4">Source</th>
-                        <th class="col-4">Notes</th>
-                        <th class="col-2">Quantity</th>
-                    </tr>
-            </thead>
-            <tbody>
-                @foreach($inventory['user_items'] as $itemRow)
-                    <tr class="d-flex">
-                        <td class="col-2">@if(isset($itemsrow[$itemRow['asset']->item_id]->image_url)) <img class="small-icon" src="{{ $itemsrow[$itemRow['asset']->item_id]->image_url }}"> @endif {!! $itemsrow[$itemRow['asset']->item_id]->name !!}
-                        <td class="col-4">{!! array_key_exists('data', $itemRow['asset']->data) ? ($itemRow['asset']->data['data'] ? $itemRow['asset']->data['data'] : 'N/A') : 'N/A' !!}</td>
-                        <td class="col-4">{!! array_key_exists('notes', $itemRow['asset']->data) ? ($itemRow['asset']->data['notes'] ? $itemRow['asset']->data['notes'] : 'N/A') : 'N/A' !!}</td>
-                        <td class="col-2">{!! $itemRow['quantity'] !!}
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
-
-    @if(isset($inventory['currencies']))
-        <h3>{!! $submission->user->displayName !!}'s Bank</h3>
-        <table class="table table-sm mb-3">
-            <thead>
-                <tr>
-                    <th width="70%">Currency</th>
-                    <th width="30%">Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($inventory['currencies'] as $currency)
-                    <tr>
-                        <td>{!! $currency['asset']->name !!}</td>
-                        <td>{{ $currency['quantity'] }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
-
-    <div class="form-group">
-        {!! Form::label('staff_comments', 'Staff Comments (Optional)') !!}
-        {!! Form::textarea('staff_comments', $submission->staffComments, ['class' => 'form-control wysiwyg']) !!}
-    </div>
-
-    <div class="text-right">
-        <a href="#" class="btn btn-danger mr-2" id="rejectionButton">Reject</a>
-        <a href="#" class="btn btn-success" id="approvalButton">Approve</a>
-    </div>
-
-{!! Form::close() !!}
-
-<div id="characterComponents" class="hide">
-    <div class="submission-character mb-3 card">
-        <div class="card-body">
-            <div class="text-right"><a href="#" class="remove-character text-muted"><i class="fas fa-times"></i></a></div>
-            <div class="row">
-                <div class="col-md-2 align-items-stretch d-flex">
-                    <div class="d-flex text-center align-items-center">
-                        <div class="character-image-blank">Enter character code.</div>
-                        <div class="character-image-loaded hide"></div>
-                    </div>
-                </div>
-                <div class="col-md-10">
-                    <a href="#" class="float-right fas fa-close"></a>
-                    <div class="form-group">
-                        {!! Form::label('slug[]', 'Character Code') !!}
-                        {!! Form::text('slug[]', null, ['class' => 'form-control character-code']) !!}
-                    </div>
-                    <div class="character-rewards hide">
-                        <h4>Character Rewards</h4>
-                        <table class="table table-sm">
+        <h2>Characters</h2>
+    @if($submission->prompt_id)
+        @if($submission->focus_chara_id)
+        <h5>Focus Character</h5>
+        <div class="submission-character-row mb-2">
+            <div class="submission-character-thumbnail"><a href="{{ $submission->focus->url }}"><img src="{{ $submission->focus->image->thumbnailUrl }}" class="img-thumbnail" /></a></div>
+            @if($submission->prompt_id)
+            <div class="submission-character-info card ml-2">
+                <div class="card-body">
+                    <div class="submission-character-info-content">
+                        <h3 class="mb-2 submission-character-info-header"><a href="{{ $submission->focus->url }}">{{ $submission->focus->fullName }}</a></h3>
+                        <div class="submission-character-info-body">
+                        <table class="table table-sm mb-0">
                             <thead>
                                 <tr>
-                                    <th width="70%">Reward</th>
-                                    <th width="30%">Amount</th>
+                                    <th>Reward</th>
                                 </tr>
                             </thead>
-                            <tbody class="character-rewards">
+                            <tbody>
+                                <tr>
+                                    <td>{{ $submission->prompt->chara_exp ? $submission->prompt->chara_exp : 0 }} EXP
+                                    <br>
+                                    {{ $submission->prompt->chara_points ? $submission->prompt->chara_points : 0  }} Stat Point
+                                    <p class="text-muted mt-1">(This is pre-defined by the prompt, you may add bonuses below)</p>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
-                        <div class="text-right">
-                            <a href="#" class="btn btn-outline-primary btn-sm add-reward">Add Reward</a>
+                        </div>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+        <div class="alert alert-warning">Only input values here if the character in the submission is supposed to get more than the above value points</div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {!! Form::label('bonus_exp', 'Bonus Character Exp Reward', ['class' => 'form-control-label ml-3']) !!}
+                    {!! Form::number('bonus_exp', null, ['class' => 'form-control',]) !!}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {!! Form::label('bonus_points', 'Bonus Character Stat Point Reward', ['class' => 'form-control-label ml-3']) !!}
+                    {!! Form::number('bonus_points', null, ['class' => 'form-control',]) !!}
+                </div>
+            </div>
+        </div>
+        <hr>
+        @endif
+    @endif
+        <div id="characters" class="mb-3">
+            @foreach($submission->characters as $character)
+                @include('widgets._character_select_entry', ['characterCurrencies' => $characterCurrencies, 'character' => $character])
+            @endforeach
+        </div>
+        <div class="text-right mb-3">
+            <a href="#" class="btn btn-outline-info" id="addCharacter">Add Character</a>
+        </div>
+
+        @if(isset($inventory['user_items']))
+        <h2>Add-Ons</h2>
+        <p>These items have been removed from the {{ $submission->prompt_id ? 'submitter' : 'claimant' }}'s inventory and will be refunded if the request is rejected or consumed if it is approved.</p>
+            <table class="table table-sm">
+                <thead class="thead-light">
+                        <tr class="d-flex">
+                            <th class="col-2">Item</th>
+                            <th class="col-4">Source</th>
+                            <th class="col-4">Notes</th>
+                            <th class="col-2">Quantity</th>
+                        </tr>
+                </thead>
+                <tbody>
+                    @foreach($inventory['user_items'] as $itemRow)
+                        <tr class="d-flex">
+                            <td class="col-2">@if(isset($itemsrow[$itemRow['asset']->item_id]->image_url)) <img class="small-icon" src="{{ $itemsrow[$itemRow['asset']->item_id]->image_url }}"> @endif {!! $itemsrow[$itemRow['asset']->item_id]->name !!}
+                            <td class="col-4">{!! array_key_exists('data', $itemRow['asset']->data) ? ($itemRow['asset']->data['data'] ? $itemRow['asset']->data['data'] : 'N/A') : 'N/A' !!}</td>
+                            <td class="col-4">{!! array_key_exists('notes', $itemRow['asset']->data) ? ($itemRow['asset']->data['notes'] ? $itemRow['asset']->data['notes'] : 'N/A') : 'N/A' !!}</td>
+                            <td class="col-2">{!! $itemRow['quantity'] !!}
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+
+        @if(isset($inventory['currencies']))
+            <h3>{!! $submission->user->displayName !!}'s Bank</h3>
+            <table class="table table-sm mb-3">
+                <thead>
+                    <tr>
+                        <th width="70%">Currency</th>
+                        <th width="30%">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($inventory['currencies'] as $currency)
+                        <tr>
+                            <td>{!! $currency['asset']->name !!}</td>
+                            <td>{{ $currency['quantity'] }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+
+		<div class="form-group">
+            {!! Form::label('staff_comments', 'Staff Comments (Optional)') !!}
+			{!! Form::textarea('staff_comments', $submission->staffComments, ['class' => 'form-control wysiwyg']) !!}
+        </div>
+
+        <div class="text-right">
+            <a href="#" class="btn btn-danger mr-2" id="rejectionButton">Reject</a>
+            <a href="#" class="btn btn-success" id="approvalButton">Approve</a>
+        </div>
+
+    {!! Form::close() !!}
+
+    <div id="characterComponents" class="hide">
+        <div class="submission-character mb-3 card">
+            <div class="card-body">
+                <div class="text-right"><a href="#" class="remove-character text-muted"><i class="fas fa-times"></i></a></div>
+                <div class="row">
+                    <div class="col-md-2 align-items-stretch d-flex">
+                        <div class="d-flex text-center align-items-center">
+                            <div class="character-image-blank">Enter character code.</div>
+                            <div class="character-image-loaded hide"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <a href="#" class="float-right fas fa-close"></a>
+                        <div class="form-group">
+                            {!! Form::label('slug[]', 'Character Code') !!}
+                            {!! Form::text('slug[]', null, ['class' => 'form-control character-code']) !!}
+                        </div>
+                        <div class="character-rewards hide">
+                            <h4>Character Rewards</h4>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th width="70%">Reward</th>
+                                        <th width="30%">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="character-rewards">
+                                </tbody>
+                            </table>
+                            <div class="text-right">
+                                <a href="#" class="btn btn-outline-primary btn-sm add-reward">Add Reward</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <table>
+            <tr class="character-reward-row">
+                <td>
+                    {!! Form::select('character_currency_id[]', $characterCurrencies, 0, ['class' => 'form-control currency-id']) !!}
+                </td>
+                <td class="d-flex align-items-center">
+                    {!! Form::text('character_quantity[]', 0, ['class' => 'form-control mr-2 quantity']) !!}
+                    <a href="#" class="remove-reward d-block"><i class="fas fa-times text-muted"></i></a>
+                </td>
+            </tr>
+        </table>
     </div>
-    <table>
-        <tr class="character-reward-row">
-            <td>
-                {!! Form::select('character_currency_id[]', $characterCurrencies, 0, ['class' => 'form-control currency-id']) !!}
-            </td>
-            <td class="d-flex align-items-center">
-                {!! Form::text('character_quantity[]', 0, ['class' => 'form-control mr-2 quantity']) !!}
-                <a href="#" class="remove-reward d-block"><i class="fas fa-times text-muted"></i></a>
-            </td>
-        </tr>
-    </table>
-</div>
-@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => true, 'showRaffles' => true])
+    @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => true, 'showRaffles' => true])
 
-<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content hide" id="approvalContent">
-            <div class="modal-header">
-                <span class="modal-title h5 mb-0">Confirm Approval</span>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>This will approve the {{ $submission->prompt_id ? 'submission' : 'claim' }} and distribute the above rewards to the user.</p>
-                <div class="text-right">
-                    <a href="#" id="approvalSubmit" class="btn btn-success">Approve</a>
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content hide" id="approvalContent">
+                <div class="modal-header">
+                    <span class="modal-title h5 mb-0">Confirm Approval</span>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>This will approve the {{ $submission->prompt_id ? 'submission' : 'claim' }} and distribute the above rewards to the user.</p>
+                    <div class="text-right">
+                        <a href="#" id="approvalSubmit" class="btn btn-success">Approve</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="modal-content hide" id="rejectionContent">
-            <div class="modal-header">
-                <span class="modal-title h5 mb-0">Confirm Rejection</span>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>This will reject the {{ $submission->prompt_id ? 'submission' : 'claim' }}.</p>
-                <div class="text-right">
-                    <a href="#" id="rejectionSubmit" class="btn btn-danger">Reject</a>
+            <div class="modal-content hide" id="rejectionContent">
+                <div class="modal-header">
+                    <span class="modal-title h5 mb-0">Confirm Rejection</span>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>This will reject the {{ $submission->prompt_id ? 'submission' : 'claim' }}.</p>
+                    <div class="text-right">
+                        <a href="#" id="rejectionSubmit" class="btn btn-danger">Reject</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @else
-<div class="alert alert-danger">This {{ $submission->prompt_id ? 'submission' : 'claim' }} has already been processed.</div>
-@include('home._submission_content', ['submission' => $submission])
+    <div class="alert alert-danger">This {{ $submission->prompt_id ? 'submission' : 'claim' }} has already been processed.</div>
+    @include('home._submission_content', ['submission' => $submission])
 @endif
 
 @endsection
@@ -345,20 +345,10 @@
 @section('scripts')
 @parent 
 @if($submission->status == 'Pending')
-@include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
-@include('js._character_select_js')
+    @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
+    @include('js._character_select_js')
 
-<script>
-    
-    $(document).ready(function() {
-        var $confirmationModal = $('#confirmationModal');
-        var $submissionForm = $('#submissionForm');
-        var $approvalButton = $('#approvalButton');
-        var $approvalContent = $('#approvalContent');
-        var $approvalSubmit = $('#approvalSubmit');
-        var $rejectionButton = $('#rejectionButton');
-        var $rejectionContent = $('#rejectionContent');
-        var $rejectionSubmit = $('#rejectionSubmit');
+    <script>
         
         $(document).ready(function() {
             var $confirmationModal = $('#confirmationModal');
