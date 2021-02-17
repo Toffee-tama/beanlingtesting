@@ -241,7 +241,6 @@ class PromptController extends Controller
     public function getEditPrompt($id)
     {
         $prompt = Prompt::find($id);
-        
         if(!$prompt) abort(404);
         return view('admin.prompts.create_edit_prompt', [
             'prompt' => $prompt,
@@ -251,8 +250,8 @@ class PromptController extends Controller
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
-            'limit_periods' => [null => 'None', 'Hour' => 'Hour', 'Day' => 'Day', 'Week' => 'Week', 'Month' => 'Month', 'Year' => 'Year'],
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'limit_periods' => [null => 'None', 'Hour' => 'Hour', 'Day' => 'Day', 'Week' => 'Week', 'Month' => 'Month', 'Year' => 'Year'],
             'recipes'=> Recipe::orderBy('name')->pluck('name', 'id')
         ]);
     }
