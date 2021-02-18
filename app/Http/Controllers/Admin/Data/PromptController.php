@@ -182,8 +182,6 @@ class PromptController extends Controller
         ]);
     }
 
-
-
         /**
          * Shows the prompt category index using the original code.
          *
@@ -208,9 +206,6 @@ class PromptController extends Controller
             ]);
         }
 
-
-
-
     /**
      * Shows the create prompt page.
      *
@@ -222,13 +217,10 @@ class PromptController extends Controller
             'prompt' => new Prompt,
             'categories' => ['none' => 'No category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'items' => Item::orderBy('name')->pluck('name', 'id'),
-            'awards' => Award::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
-            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-            'limit_periods' => [null => 'None', 'Hour' => 'Hour', 'Day' => 'Day', 'Week' => 'Week', 'Month' => 'Month', 'Year' => 'Year'],
-            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id')
+            'limit_periods' => [null => 'None', 'Hour' => 'Hour', 'Day' => 'Day', 'Week' => 'Week', 'Month' => 'Month', 'Year' => 'Year']
         ]);
     }
 
@@ -246,13 +238,10 @@ class PromptController extends Controller
             'prompt' => $prompt,
             'categories' => ['none' => 'No category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'items' => Item::orderBy('name')->pluck('name', 'id'),
-            'awards' => Award::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
-            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-            'limit_periods' => [null => 'None', 'Hour' => 'Hour', 'Day' => 'Day', 'Week' => 'Week', 'Month' => 'Month', 'Year' => 'Year'],
-            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id')
+            'limit_periods' => [null => 'None', 'Hour' => 'Hour', 'Day' => 'Day', 'Week' => 'Week', 'Month' => 'Month', 'Year' => 'Year']
         ]);
     }
 
@@ -269,8 +258,8 @@ class PromptController extends Controller
         $id ? $request->validate(Prompt::$updateRules) : $request->validate(Prompt::$createRules);
         $data = $request->only([
             'name', 'prompt_category_id', 'summary', 'description', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'is_active', 'rewardable_type',
-             'rewardable_id', 'quantity', 'image', 'remove_image', 'limit', 'limit_period', 'limit_character', 'prefix', 'hide_submissions',
-             'chara_exp', 'chara_points', 'user_exp', 'user_points', 'level_req', 'level_check'
+             'rewardable_id', 'quantity', 'image', 'remove_image', 'prefix', 'hide_submissions',
+             'chara_exp', 'chara_points', 'user_exp', 'user_points', 'level_req', 'level_check', 'limit', 'limit_period', 'limit_character'
         ]);
         if($id && $service->updatePrompt(Prompt::find($id), $data, Auth::user())) {
             flash('Prompt updated successfully.')->success();
