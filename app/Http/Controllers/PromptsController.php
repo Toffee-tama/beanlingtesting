@@ -3,19 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Settings;
 
 use App\Models\Currency\Currency;
 use App\Models\Item\ItemCategory;
 use App\Models\Item\Item;
 use App\Models\Prompt\PromptCategory;
 use App\Models\Prompt\Prompt;
-use App\Models\User\UserCurrency;
-use App\Models\SitePage;
 
 class PromptsController extends Controller
 {
-       /*
+    /*
     |--------------------------------------------------------------------------
     | Prompts Controller
     |--------------------------------------------------------------------------
