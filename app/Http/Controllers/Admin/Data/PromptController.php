@@ -13,7 +13,6 @@ use App\Models\Award\Award;
 use App\Models\Currency\Currency;
 use App\Models\Loot\LootTable;
 use App\Models\Pet\Pet;
-use App\Models\Raffle\Raffle;
 use App\Models\Recipe\Recipe;
 
 use App\Services\PromptService;
@@ -155,7 +154,7 @@ class PromptController extends Controller
 
     **********************************************************************************************/
 
-   /**
+    /**
      * Shows the prompt category index.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -163,17 +162,48 @@ class PromptController extends Controller
      */
     public function getPromptIndex(Request $request)
     {
+
         $query = Prompt::query();
+
         $data = $request->only(['prompt_category_id', 'name']);
         if(isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none')
             $query->where('prompt_category_id', $data['prompt_category_id']);
         if(isset($data['name']))
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
+
         return view('admin.prompts.prompts', [
             'prompts' => $query->paginate(20)->appends($request->query()),
-            'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
+            'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+
+            'promptCategories' => PromptCategory::orderBy('sort', 'DESC')->get()->prepend([ "id" => 0 ]),
+            'pickPrompts' => $query->get()->groupBy('prompt_category_id'),
+            'count' => Prompt::all()
         ]);
     }
+
+        /**
+         * Shows the prompt category index using the original code.
+         *
+         * @param  \Illuminate\Http\Request  $request
+         * @return \Illuminate\Contracts\Support\Renderable
+         */
+        public function getPromptIndexOld(Request $request)
+        {
+
+            $query = Prompt::query();
+
+            $data = $request->only(['prompt_category_id', 'name']);
+
+            if(isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none')
+                $query->where('prompt_category_id', $data['prompt_category_id']);
+            if(isset($data['name']))
+                $query->where('name', 'LIKE', '%'.$data['name'].'%');
+
+            return view('admin.prompts.prompts_old', [
+                'prompts' => $query->paginate(20)->appends($request->query()),
+                'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
+            ]);
+        }
 
     /**
      * Shows the create prompt page.
@@ -188,7 +218,7 @@ class PromptController extends Controller
             'items' => Item::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
-            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'limit_periods' => [null => 'None', 'Hour' => 'Hour', 'Day' => 'Day', 'Week' => 'Week', 'Month' => 'Month', 'Year' => 'Year']
         ]);
     }
 
@@ -208,7 +238,7 @@ class PromptController extends Controller
             'items' => Item::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
-            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'limit_periods' => [null => 'None', 'Hour' => 'Hour', 'Day' => 'Day', 'Week' => 'Week', 'Month' => 'Month', 'Year' => 'Year']
         ]);
     }
 
@@ -226,7 +256,7 @@ class PromptController extends Controller
         $data = $request->only([
             'name', 'prompt_category_id', 'summary', 'description', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'is_active', 'rewardable_type',
              'rewardable_id', 'quantity', 'image', 'remove_image', 'prefix', 'hide_submissions',
-             'chara_exp', 'chara_points', 'user_exp', 'user_points', 'level_req', 'level_check'
+             'chara_exp', 'chara_points', 'user_exp', 'user_points', 'level_req', 'level_check', 'limit', 'limit_period', 'limit_character'
         ]);
         if($id && $service->updatePrompt(Prompt::find($id), $data, Auth::user())) {
             flash('Prompt updated successfully.')->success();
