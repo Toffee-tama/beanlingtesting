@@ -5,7 +5,7 @@
 @section('home-content')
 @if($submission->prompt_id)
     {!! breadcrumbs(['Admin Panel' => 'admin', 'Prompt Queue' => 'admin/submissions/pending', 'Submission (#' . $submission->id . ')' => $submission->viewUrl]) !!}
-@else 
+@else
     {!! breadcrumbs(['Admin Panel' => 'admin', 'Claim Queue' => 'admin/claims/pending', 'Claim (#' . $submission->id . ')' => $submission->viewUrl]) !!}
 @endif
 
@@ -59,18 +59,18 @@
     <div class="row">
         <div class="col-6">
             <h2>Rewards</h2>
-            @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true])
+            @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
         </div>
         <div class="col-6">
             <h3>Stat & Level Rewards</h3>
-            @if(!$submission->focus_chara_id && $submission->prompt->expreward->chara_exp || !$submission->focus_chara_id && $submission->prompt->expreward->chara_points)
+            @if($submission->prompt->expreward && (!$submission->focus_chara_id && $submission->prompt->expreward->chara_exp || !$submission->focus_chara_id && $submission->prompt->expreward->chara_points))
             <div class="alert alert-danger">This prompt has character rewards but the user has not added a focus character. If this is a mistake, please decline.</div>
             @endif
             <div class="card m-1">
                 <div class="row m-2">
                     <div class="col">
                         <h5>User Rewards</h5>
-                        @if(!$submission->prompt->expreward->user_exp && !$submission->prompt->expreward->user_points)
+                        @if(!$submission->prompt->expreward || (!$submission->prompt->expreward->user_exp && !$submission->prompt->expreward->user_points))
                         No user rewards.
                         @else
                         {{ $submission->prompt->expreward->user_exp ? $submission->prompt->expreward->user_exp : 0  }} user EXP
@@ -80,7 +80,7 @@
                     </div>
                     <div class="col">
                         <h5>Character Rewards</h5>
-                        @if(!$submission->prompt->expreward->chara_exp && !$submission->prompt->expreward->chara_points)
+                        @if(!$submission->prompt->expreward || (!$submission->prompt->expreward->chara_exp && !$submission->prompt->expreward->chara_points))
                         No character rewards.
                         @else
                         {{ $submission->prompt->expreward->chara_exp ? $submission->prompt->expreward->chara_exp : 0  }} character EXP
@@ -114,7 +114,7 @@
         @endif
     @else
         <h2>Rewards</h2>
-        @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true])
+        @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
         @if($submission->prompt_id)
             <div class="mb-3">
                 @include('home._prompt', ['prompt' => $submission->prompt, 'staffView' => true])
@@ -141,7 +141,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{{ $submission->prompt->chara_exp ? $submission->prompt->chara_exp : 0 }} EXP
+                                    <td>{{ $submission->prompt->expreward && $submission->prompt->expreward->chara_exp ? $submission->prompt->chara_exp : 0 }} EXP
                                     <br>
                                     {{ $submission->prompt->chara_points ? $submission->prompt->chara_points : 0  }} Stat Point
                                     <p class="text-muted mt-1">(This is pre-defined by the prompt, you may add bonuses below)</p>
@@ -288,7 +288,7 @@
             </tr>
         </table>
     </div>
-    @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => true, 'showRaffles' => true])
+    @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -326,47 +326,52 @@
 @endsection
 
 @section('scripts')
-@parent 
+@parent
 @if($submission->status == 'Pending')
-    @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
+    @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
     @include('js._character_select_js')
 
     <script>
-        
+
         $(document).ready(function() {
             var $confirmationModal = $('#confirmationModal');
             var $submissionForm = $('#submissionForm');
+
             var $approvalButton = $('#approvalButton');
             var $approvalContent = $('#approvalContent');
             var $approvalSubmit = $('#approvalSubmit');
+
             var $rejectionButton = $('#rejectionButton');
             var $rejectionContent = $('#rejectionContent');
             var $rejectionSubmit = $('#rejectionSubmit');
-            
+
             $approvalButton.on('click', function(e) {
                 e.preventDefault();
                 $approvalContent.removeClass('hide');
                 $rejectionContent.addClass('hide');
                 $confirmationModal.modal('show');
             });
-            
+
             $rejectionButton.on('click', function(e) {
                 e.preventDefault();
                 $rejectionContent.removeClass('hide');
                 $approvalContent.addClass('hide');
                 $confirmationModal.modal('show');
             });
+
             $approvalSubmit.on('click', function(e) {
                 e.preventDefault();
                 $submissionForm.attr('action', '{{ url()->current() }}/approve');
                 $submissionForm.submit();
             });
+
             $rejectionSubmit.on('click', function(e) {
                 e.preventDefault();
                 $submissionForm.attr('action', '{{ url()->current() }}/reject');
                 $submissionForm.submit();
             });
         });
+
     </script>
 @endif
 @endsection
