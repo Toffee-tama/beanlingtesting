@@ -78,8 +78,6 @@ class RegisterController extends Controller
                         if(!$invitation) $fail('Invalid code entered.');
                     }
                 }
-            ],
-            'g-recaptcha-response' => 'required|recaptchav3:register,0.5'
         ]);
     }
 
