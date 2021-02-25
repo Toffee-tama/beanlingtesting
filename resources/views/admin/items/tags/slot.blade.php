@@ -52,19 +52,42 @@
 <h3>Traits</h3>
 
 <div class="form-group">
-    {!! Form::label('Species') !!} {!! add_help('This will lock the slot into a particular species. Leave it blank if you would like to give the user a choice.') !!}
-    {!! Form::select('species_id', $specieses, $tag->getData()['species_id'], ['class' => 'form-control', 'id' => 'species']) !!}
+    {!! Form::label('Species') !!} @if($isMyo) {!! add_help('This will lock the slot into a particular species. Leave it blank if you would like to give the user a choice.') !!} @endif
+    {!! Form::select('species_id', $specieses, old('species_id'), ['class' => 'form-control', 'id' => 'species']) !!}
+</div>
+
+<div class="form-group" id="subtypes">
+    {!! Form::label('Subtype (Optional)') !!} @if($isMyo) {!! add_help('This will lock the slot into a particular subtype. Leave it blank if you would like to give the user a choice, or not select a subtype. The subtype must match the species selected above, and if no species is specified, the subtype will not be applied.') !!} @endif
+    {!! Form::select('subtype_id', $subtypes, old('subtype_id'), ['class' => 'form-control disabled', 'id' => 'subtype']) !!}
 </div>
 
 <div class="form-group">
-    {!! Form::label('Subtype (Optional)') !!} {!! add_help('This will lock the slot into a particular subtype. Leave it blank if you would like to give the user a choice, or not select a subtype. The subtype must match the species selected above, and if no species is specified, the subtype will not be applied.') !!}
-    {!! Form::select('subtype_id', $subtypes, $tag->getData()['subtype_id'], ['class' => 'form-control', 'id' => 'subtype']) !!}
+    {!! Form::label('Character Rarity') !!} @if($isMyo) {!! add_help('This will lock the slot into a particular rarity. Leave it blank if you would like to give the user more choices.') !!} @endif
+    {!! Form::select('rarity_id', $rarities, old('rarity_id'), ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group">
-    {!! Form::label('Character Rarity') !!} {!! add_help('This will lock the slot into a particular rarity. Leave it blank if you would like to give the user more choices.') !!}
-    {!! Form::select('rarity_id', $rarities, $tag->getData()['rarity_id'], ['class' => 'form-control']) !!}
+    {!! Form::label('Traits') !!} @if($isMyo) {!! add_help('These traits will be listed as required traits for the slot. The user will still be able to add on more traits, but not be able to remove these. This is allowed to conflict with the rarity above; you may add traits above the character\'s specified rarity.') !!} @endif
+    <div id="featureList">
+    </div>
+    <div><a href="#" class="btn btn-primary" id="add-feature">Add Trait</a></div>
+    <div class="feature-row hide mb-2">
+        {!! Form::select('feature_id[]', $features, null, ['class' => 'form-control mr-2 feature-select', 'placeholder' => 'Select Trait']) !!}
+        {!! Form::text('feature_data[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Extra Info (Optional)']) !!}
+        <a href="#" class="remove-feature btn btn-danger mb-2">×</a>
+    </div>
 </div>
+@if($stats)
+<h3>Stats</h3>
+<p class="alert alert-info">If you want a character to have different stats from the default, set them here. Else, leave it as default</p>
+<div class="form-group">
+    @foreach($stats as $stat)
+        {!! Form::label($stat->name) !!}
+        {!! Form::number('stats['.$stat->id.']', $stat->default, ['class' => 'form-control m-1',]) !!}
+    @endforeach
+</div>
+@endif
+
 
 @section('scripts')
 @parent
