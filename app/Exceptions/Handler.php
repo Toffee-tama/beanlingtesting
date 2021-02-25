@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use Throwable;
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 
@@ -25,7 +25,6 @@ class Handler extends ExceptionHandler
     protected $dontFlash = [
         'password',
         'password_confirmation',
-        '_token'
     ];
 
     /**
@@ -34,7 +33,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
-    public function report(Throwable $exception)
+    public function report(Exception $exception)
     {
         if ($exception instanceof ValidationException) {
             foreach ($exception->validator->errors()->all() as $message) {
@@ -52,13 +51,8 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Exception $exception)
     {
-    if ($exception instanceof Illuminate\Session\TokenMismatchException) {
-        Artisan::call('cache:clear');
-        Artisan::call('config:cache');
-        return Redirect::back();
-    }
-    return parent::render($request, $exception);
+        return parent::render($request, $exception);
     }
 }
