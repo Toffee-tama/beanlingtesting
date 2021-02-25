@@ -49,4 +49,3 @@
 {!! $logs->render() !!}
 
 @endsection
-
