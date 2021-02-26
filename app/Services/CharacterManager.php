@@ -5,6 +5,7 @@ use App\Services\Service;
 use Carbon\Carbon;
 
 use DB;
+use Auth;
 use Config;
 use Image;
 use Notifications;
