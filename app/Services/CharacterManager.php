@@ -1856,42 +1856,7 @@ class CharacterManager extends Service
                     {
                         $this->moveCharacter($transfer->character, $transfer->recipient, 'User Transfer', $cooldown);
 
-                        // Find all of the children of this character
-                        if($childrenArray =  CharacterLink::where('parent_id', $transfer->character->id)->get()->pluck('child_id')->toArray())
-                        {
-                            //get ALL the children
-                            foreach($childrenArray as $child) {
-                                if(!isset($children))
-                                {
-                                    $children = Character::where('id', $child)->get();
-                                } else {
-                                    $children = $children->merge(Character::where('id', $child)->get());
-                                }
-                            }
-                            //get all the children of children
-                            $search = 5;
-                            while($search >= 0)
-                            {
-                                foreach($children as $child)
-                                {
-                                    $grandchildren = null;
-                                    if ($grandchildren = CharacterLink::where('parent_id', $child->id)->get()->pluck('child_id')->toArray()) {
-                                        foreach($grandchildren as $grandchild) {
-                                            $children = $children->merge(Character::where('id', $grandchild)->get());
-                                        }
-                                    }
-                                }
-                                $search -= 1;
-                            }
-                        } else $children = false;
-
-                        // Move all children of this character
-                        if($children) {
-                            foreach($children as $child)
-                            {
-                                $this->moveCharacter($child, $transfer->recipient, 'Parent ' . $transfer->character->slug . ' transferred to ' . $transfer->recipient->name, $cooldown);
-                            }
-                        }
+                      
                     }
                     if(!Settings::get('open_transfers_queue'))
                         $transfer->data = json_encode([
@@ -1991,43 +1956,7 @@ class CharacterManager extends Service
                 if($transfer->status == 'Accepted') {
                     $this->moveCharacter($transfer->character, $transfer->recipient, 'User Transfer', isset($data['cooldown']) ? $data['cooldown'] : -1);
 
-                    // Find all of the children of this character
-                    if($childrenArray =  CharacterLink::where('parent_id', $transfer->character->id)->get()->pluck('child_id')->toArray())
-                    {
-                        //get ALL the children
-                        foreach($childrenArray as $child) {
-                            if(!isset($children))
-                            {
-                                $children = Character::where('id', $child)->get();
-                            } else {
-                                $children = $children->merge(Character::where('id', $child)->get());
-                            }
-                        }
-                        //get all the children of children
-                        $search = 5;
-                        while($search >= 0)
-                        {
-                            foreach($children as $child)
-                            {
-                                $grandchildren = null;
-                                if ($grandchildren = CharacterLink::where('parent_id', $child->id)->get()->pluck('child_id')->toArray()) {
-                                    foreach($grandchildren as $grandchild) {
-                                        $children = $children->merge(Character::where('id', $grandchild)->get());
-                                    }
-                                }
-                            }
-                            $search -= 1;
-                        }
-                    } else $children = false;
-                    
-                    // Move all children of this character
-                    if($children) {
-                        foreach($children as $child)
-                        {
-                            $this->moveCharacter($child, $transfer->recipient, 'Parent ' . $transfer->character->slug . ' transferred to ' . $transfer->recipient->name, isset($data['cooldown']) ? $data['cooldown'] : -1);
-                        }
-                    }
-                    
+                   
 
                     // Notify both parties of the successful transfer
                     Notifications::create('CHARACTER_TRANSFER_APPROVED', $transfer->sender, [
