@@ -26,7 +26,6 @@ use App\Models\Character\CharacterTransfer;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterBookmark;
 use App\Models\Character\CharacterLineage;
-use App\Models\Character\CharacterLink;
 use App\Models\User\UserCharacterLog;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
@@ -93,7 +92,7 @@ class CharacterManager extends Service
         try {
             if(!$isMyo && Character::where('slug', $data['slug'])->exists()) throw new \Exception("Please enter a unique character code.");
 
-            if(!(isset($data['user_id']) && $data['user_id']) && !(isset($data['owner_alias']) && $data['owner_alias']) && !(isset($data['parent_id']) && $data['parent_id'])) 
+            if(!(isset($data['user_id']) && $data['user_id']) && !(isset($data['owner_alias']) && $data['owner_alias']))
                 throw new \Exception("Please select an owner.");
             if(!$isMyo)
             {
@@ -142,15 +141,6 @@ class CharacterManager extends Service
             // Create character lineage
             $lineage = $this->handleCharacterLineage($data, $character, $isMyo);
 
-            // Create character link
-            if(isset($data['parent_id']) && $data['parent_id'])
-            {
-                CharacterLink::create([
-                    'parent_id' => $data['parent_id'],
-                    'child_id' => $character->id
-                ]);
-            }
-            
             // Create character image
             $data['is_valid'] = true; // New image of new characters are always valid
             $image = $this->handleCharacterImage($data, $character, $isMyo);
@@ -1773,8 +1763,6 @@ class CharacterManager extends Service
             }
 
             $sender = $character->user;
-            
-            // Move the character
             $this->moveCharacter($character, $recipient, 'Transferred by ' . $user->displayName . (isset($data['reason']) ? ': ' . $data['reason'] : ''), isset($data['cooldown']) ? $data['cooldown'] : -1);
 
             // Find all of the children of this character

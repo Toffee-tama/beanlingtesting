@@ -642,17 +642,6 @@ public function getCharacterLinks($slug)
 
         if($service->createTransfer($request->only(['recipient_id', 'user_reason']), $this->character, Auth::user())) {
             flash('Transfer created successfully.')->success();
-        
-        $parent = CharacterLink::where('child_id', $this->character->id)->first();
-        $child = CharacterLink::where('parent_id', $this->character->id)->first();
-        if($parent && $child) $mutual = CharacterLink::where('child_id', $parent->parent->id)->where('parent_id', $this->character->id)->first();
-        if($parent && !isset($mutual)) {
-            flash('This character is bound and cannot be transfered. You must transfer the character it is bound to.')->error();
-            return redirect()->back();
-        }
-        if($service->createTransfer($request->only(['recipient_id']), $this->character, Auth::user())) {
-            flash('Transfer request created successfully.')->success();
-            if($child) flash('This character has attachments that will be transferred with it.')->warning();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

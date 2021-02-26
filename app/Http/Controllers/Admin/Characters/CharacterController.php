@@ -69,7 +69,6 @@ class CharacterController extends Controller
             'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
             'isMyo' => false,
             'stats' => Stat::orderBy('name')->get(),
-            'characterOptions' => [null => 'Unbound'] + Character::visible()->myo(0)->orderBy('slug','ASC')->get()->pluck('fullName','id')->toArray()
         ]);
     }
 
@@ -90,7 +89,6 @@ class CharacterController extends Controller
             'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
             'isMyo' => true,
             'stats' => Stat::orderBy('name')->get(),
-            'characterOptions' => [null => 'Unbound'] + Character::visible()->myo(0)->orderBy('slug','ASC')->get()->pluck('fullName','id')->toArray()
         ]);
     }
 
@@ -158,7 +156,7 @@ class CharacterController extends Controller
             'generate_ancestors',
 
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data',
-            'image', 'thumbnail', 'image_description', 'stats', 'parent_id'
+            'image', 'thumbnail', 'image_description', 'stats'
         ]);
         if ($character = $service->createCharacter($data, Auth::user())) {
             flash('Character created successfully.')->success();
@@ -565,15 +563,6 @@ class CharacterController extends Controller
         if(!$this->character) abort(404);
 
         if($service->adminTransfer($request->only(['recipient_id', 'recipient_url', 'cooldown', 'reason']), $this->character, Auth::user())) {
-        
-        $parent = CharacterLink::where('child_id', $this->character->id)->first();
-        $child = CharacterLink::where('parent_id', $this->character->id)->first();
-        if($parent && $child) $mutual = CharacterLink::where('child_id', $parent->parent->id)->where('parent_id', $this->character->id)->first();
-        if($parent && !isset($mutual)) {
-            flash('This character is bound and cannot be transfered. You must transfer the character it is bound to.')->error();
-            return redirect()->back();
-        }
-        if($service->adminTransfer($request->only(['recipient_id', 'recipient_alias', 'cooldown', 'reason']), $this->character, Auth::user())) {
             flash('Character transferred successfully.')->success();
             if($child) flash("This character's attachments have been transferred with it.")->warning();
         }
