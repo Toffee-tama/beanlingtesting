@@ -281,6 +281,7 @@ public function getCharacterLinks($slug)
         return redirect()->back();
     }
 
+
     /**
      * Shows a character's images.
      *

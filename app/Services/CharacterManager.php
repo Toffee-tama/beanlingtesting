@@ -1424,10 +1424,12 @@ class CharacterManager extends Service
                 if($character->is_trading != isset($data['is_trading'])) $notifyTrading = true;
                 if(isset($data['is_gift_art_allowed']) && $character->is_gift_art_allowed != $data['is_gift_art_allowed']) $notifyGiftArt = true;
                 if(isset($data['is_gift_writing_allowed']) && $character->is_gift_writing_allowed != $data['is_gift_writing_allowed']) $notifyGiftWriting = true;
+                if(!isset($data['is_links_open'])) $data['is_links_open'] = 0;
 
                 $character->is_gift_art_allowed = isset($data['is_gift_art_allowed']) && $data['is_gift_art_allowed'] <= 2 ? $data['is_gift_art_allowed'] : 0;
                 $character->is_gift_writing_allowed = isset($data['is_gift_writing_allowed']) && $data['is_gift_writing_allowed'] <= 2 ? $data['is_gift_writing_allowed'] : 0;
                 $character->is_trading = isset($data['is_trading']);
+                $character->is_links_open = $data['is_links_open'];
                 $character->save();
             }
 
@@ -1606,6 +1608,71 @@ class CharacterManager extends Service
         return $this->rollbackReturn(false);
     }
 
+     /**
+     * Updates a character's profile.
+     *
+     * @param  array                            $data
+     * @param  \App\Models\Character\Character  $character
+     * @param  \App\Models\User\User            $user
+     * @param  bool                             $isAdmin
+     * @return  bool
+     */
+    public function updateCharacterLinks($data, $character, $user, $isAdmin)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            $service = new LinkService;
+
+            $isOwner = ($character->user_id == Auth::user()->id);
+
+            if($character->is_links_open == 0) throw new \Exception("One or more character's links are closed to requests.");
+
+            if($isAdmin !== true && !$isOwner)
+            {
+                throw new \Exception("You cannot edit this character.");
+            }
+
+            foreach($data['slug'] as $slug) {
+                $link = Character::where('slug', $slug)->first();
+                $requested = User::find($link->user_id);
+
+                $chara1 = $character->id;
+                $chara2 = $link->id;
+
+                if($link->is_links_open == 0) throw new \Exception("One or more character's links are closed to requests.");
+
+                if($user->id == $requested->id ) {
+                    // Create a relation with the character 
+                    if($service->createLink($chara1, $chara2, true)) {
+                        flash('Link created succesfully!')->success();
+                    }
+                    else {
+                        throw new \Exception("An error occured creating the link.");
+                    }
+                }
+                else {
+                    // send a notification of the request to the other user. They can accept or deny.
+                    // If denied the row is deleted, if accepted it updates the ids
+                    // create 'unapproved' link
+                        if($service->createLink($chara1, $chara2, false)) {
+                            flash('Link request created succesfully!')->success();
+                        }
+                        else {
+                            throw new \Exception("An error occured requesting the link.");
+                        }
+                }
+
+            }
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) { 
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+    
     /**
      * Deletes a character.
      *
