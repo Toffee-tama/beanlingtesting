@@ -28,7 +28,7 @@
 
 {!! Form::close() !!}
 
-@include('widgets._link_select_entry')
+@include('widgets._link_select')
 
 @endsection
 @section('scripts')
