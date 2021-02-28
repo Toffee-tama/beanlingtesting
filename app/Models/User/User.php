@@ -551,7 +551,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $query = PetLog::with('sender')->with('recipient')->with('pet')->where(function($query) use ($user) {
             $query->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Staff Removal']);
         })->orWhere(function($query) use ($user) {
-            $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
+            $query->where('recipient_id', $user->id);
         })->orderBy('id', 'DESC');
         if($limit) return $query->take($limit)->get();
         else return $query->paginate(30);
