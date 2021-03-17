@@ -29,7 +29,7 @@ class DeviantArtService extends Service
 
         $this->options = [
             'client_id'      => 12428,
-            'client_secret'  => env('DEVIANTART_CLIENT_SECRET'),
+            'client_secret'  => 725163e031a839a3761533b6ea2f54bd,
             'redirect_uri'   => url('link'), 
 
             // Scopes are space-separated
