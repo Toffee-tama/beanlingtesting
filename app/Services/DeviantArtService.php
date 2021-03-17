@@ -28,7 +28,7 @@ class DeviantArtService extends Service
         ];
 
         $this->options = [
-            'client_id'      => env('DEVIANTART_CLIENT_ID'),
+            'client_id'      => 12428,
             'client_secret'  => env('DEVIANTART_CLIENT_SECRET'),
             'redirect_uri'   => url('link'), 
 
