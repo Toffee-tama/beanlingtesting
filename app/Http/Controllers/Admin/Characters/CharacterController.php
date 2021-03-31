@@ -10,6 +10,7 @@ use Settings;
 
 use App\Models\Character\Character;
 use App\Models\Character\CharacterCategory;
+use App\Models\Character\CharacterLineageBlacklist;
 use App\Models\Rarity;
 use App\Models\User\User;
 use App\Models\Species\Species;
@@ -58,6 +59,7 @@ class CharacterController extends Controller
         return view('admin.masterlist.create_character', [
             'categories' => CharacterCategory::orderBy('sort')->get(),
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'characterOptions' => CharacterLineageBlacklist::getAncestorOptions(),
             'rarities' => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
@@ -75,6 +77,7 @@ class CharacterController extends Controller
     {
         return view('admin.masterlist.create_character', [
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'characterOptions' => CharacterLineageBlacklist::getAncestorOptions(),
             'rarities' => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
@@ -114,6 +117,24 @@ class CharacterController extends Controller
             'x0', 'x1', 'y0', 'y1',
             'designer_id', 'designer_url',
             'artist_id', 'artist_url',
+
+            // hello darkness my old friend //
+            'sire_id',           'sire_name',
+            'sire_sire_id',      'sire_sire_name',
+            'sire_sire_sire_id', 'sire_sire_sire_name',
+            'sire_sire_dam_id',  'sire_sire_dam_name',
+            'sire_dam_id',       'sire_dam_name',
+            'sire_dam_sire_id',  'sire_dam_sire_name',
+            'sire_dam_dam_id',   'sire_dam_dam_name',
+            'dam_id',            'dam_name',
+            'dam_sire_id',       'dam_sire_name',
+            'dam_sire_sire_id',  'dam_sire_sire_name',
+            'dam_sire_dam_id',   'dam_sire_dam_name',
+            'dam_dam_id',        'dam_dam_name',
+            'dam_dam_sire_id',   'dam_dam_sire_name',
+            'dam_dam_dam_id',    'dam_dam_dam_name',
+            'generate_ancestors',
+
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data',
             'image', 'thumbnail', 'image_description'
         ]);
@@ -144,6 +165,24 @@ class CharacterController extends Controller
             'x0', 'x1', 'y0', 'y1',
             'designer_id', 'designer_url',
             'artist_id', 'artist_url',
+
+            // i've come to speak with you again //
+            'sire_id',           'sire_name',
+            'sire_sire_id',      'sire_sire_name',
+            'sire_sire_sire_id', 'sire_sire_sire_name',
+            'sire_sire_dam_id',  'sire_sire_dam_name',
+            'sire_dam_id',       'sire_dam_name',
+            'sire_dam_sire_id',  'sire_dam_sire_name',
+            'sire_dam_dam_id',   'sire_dam_dam_name',
+            'dam_id',            'dam_name',
+            'dam_sire_id',       'dam_sire_name',
+            'dam_sire_sire_id',  'dam_sire_sire_name',
+            'dam_sire_dam_id',   'dam_sire_dam_name',
+            'dam_dam_id',        'dam_dam_name',
+            'dam_dam_sire_id',   'dam_dam_sire_name',
+            'dam_dam_dam_id',    'dam_dam_dam_name',
+            'generate_ancestors',
+
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data',
             'image', 'thumbnail'
         ]);
