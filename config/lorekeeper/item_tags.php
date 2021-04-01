@@ -30,4 +30,10 @@ return [
         'text_color' => '#ffffff',
         'background_color' => '#58507D'
     ],
+    
+    'coupon' => [
+        'name' => 'Coupon',
+        'text_color' => '#ffffff',
+        'background_color' => '#ff5ca8'
+    ],
 ];
