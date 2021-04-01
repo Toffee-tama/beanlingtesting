@@ -61,4 +61,14 @@ return [
     ],
     
 
+
+    'event_tools' => [
+        'key' => 'event_tools',
+        'wiki_key' => 'event_tools',
+        'creators' => json_encode([
+            'Mercury' => 'https://github.com/itinerare/',
+        ]),
+        'version' => '1.0.0',
+    ]
+
 ];

@@ -146,6 +146,7 @@ Route::group(['prefix' => 'research', 'namespace' => 'Research'], function() {
     Route::get('/', 'ResearchController@getIndex');
     Route::get('/{id}', 'ResearchController@getResearch')->where(['id' => '[0-9]+']);
 });
+Route::get('event-tracking', 'PromptsController@getEventTracking');
 
 /**************************************************************************************************
     Site Pages
