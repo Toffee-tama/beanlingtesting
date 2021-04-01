@@ -137,6 +137,7 @@ return [
             ],
         ]
     ],
+
     'Data' => [
         'power' => 'edit_data',
         'links' => [
@@ -206,6 +207,29 @@ return [
             ],
         ]
     ],
+
+    'Research' => [
+        'power' => 'manage_research',
+        'links' => [
+            [
+                'name' => 'Research Trees',
+                'url' => 'admin/data/trees'
+            ],
+            [
+                'name' => 'Research Branches',
+                'url' => 'admin/data/research'
+            ],
+            [
+                'name' => 'Research Grants',
+                'url' => 'admin/grants/research'
+            ],
+            [
+                'name' => 'User Research Log',
+                'url' => 'admin/data/research/users'
+            ],
+        ]
+    ],
+
     'Raffles' => [
         'power' => 'manage_raffles',
         'links' => [
