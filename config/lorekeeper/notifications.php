@@ -335,6 +335,7 @@ return [
         'message' => 'Your report (#{report_id}) was closed by <a href="{staff_url}">{staff_name}</a>. (<a href="{url}">View Report</a>)',
         'url' => 'reports/view/{report_id}'
     ],
+
     // Comment made on user's model
     // COMMENT_MADE
     239 => [
@@ -342,6 +343,7 @@ return [
         'message' => '<a href="{sender_url}">{sender}</a> has made a comment on {post_type}. <a href="{comment_url}">See Context.</a>',
         'url' => ''
     ],
+
     // Comment recieved reply
     // COMMENT_REPLY
     240 => [
@@ -349,36 +351,42 @@ return [
         'message' => '<a href="{sender_url}">{sender}</a> has made a reply to your comment. <a href="comment/{comment_url}">See Reply.</a>',
         'url' => ''
     ],
+
     // EXP GRANT
     245 => [
         'name' => 'EXP Grant',
         'message' => 'You have received a staff grant of {quantity} EXP from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Level Area</a>)',
         'url' => 'level'
     ],
+
         // PET_REMOVAL
     241 => [
         'name' => 'Pet Removal',
         'message' => '{pet_name} (×{pet_quantity}) was removed from your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'pets'
     ],
+
     // PET_TRANSFER
     242 => [
         'name' => 'Pet Transfer',
         'message' => 'You have received {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'pets'
     ],
+
     // FORCED_PET_TRANSFER
     243 => [
         'name' => 'Forced Pet Transfer',
         'message' => '{pet_name} (×{pet_quantity}) was transferred out of your inventory by <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'pets'
     ],
+
     // PET_GRANT
     244 => [
         'name' => 'Pet Grant',
         'message' => 'You have received a staff grant of {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'pets'
     ],
+
     // CHARACTER_ITEM_GRANT
     501 => [
         'name' => 'Character Item Grant',
@@ -482,5 +490,5 @@ return [
         'name' => 'Gallery Submission Valued',
         'message' => 'You have been awarded {currency_quantity} {currency_name} and {currency_quantity_alt} {currency_name_alt} for the gallery submission <strong>{submission_title}</strong> (#{submission_id}). (<a href="{url}">View Submission</a>)',
         'url' => 'gallery/queue/{submission_id}'
-    ],
+    ]
 ];
