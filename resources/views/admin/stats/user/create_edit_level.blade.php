@@ -53,7 +53,7 @@
 
 {!! Form::close() !!}
 
-@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'recipes' => $recipes, 'raffles' => $raffles, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'raffles' => $raffles, 'recipe' => $recipes, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 @include('widgets._level_limit_row', ['items' => $items, 'currencies' => $currencies])
 @endsection
 
