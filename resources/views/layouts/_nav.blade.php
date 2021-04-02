@@ -36,18 +36,21 @@
                             <a class="dropdown-item" href="{{ url('characters/myos') }}">
                                 My MYO Slots
                             </a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url('inventory') }}">
                                 Inventory
                             </a>
                             <a class="dropdown-item" href="{{ url('bank') }}">
                                 Bank
                             </a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url('research/unlocked') }}">
                                 My Research
                                 </a>
                             <a class="dropdown-item" href="{{ url('level') }}">
                                 Level Area
                             </a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url('designs') }}">
                                 My Design Approvals
                             </a>
@@ -64,12 +67,20 @@
                             Activities
                         </a>
                         <div class="dropdown-menu" aria-labelledby="browseDropdown">
-					    <a class="dropdown-item" href="{{ url('info/achievements') }}">
-                            Achievements
+					                        				<a class="dropdown-item" href="{{ url('info/growingyourbean') }}">
+                            Growing your Beanling
                         </a>
+                                               <div class="dropdown-divider"></div> 
+                                               <a class="dropdown-item" href="{{ url('info/achievements') }}">
+                            Achievements
+                        </a>		
                         <a class="dropdown-item" href="{{ url('crafting') }}">
                             Crafting
                             </a>
+                                                    <a class="dropdown-item" href="{{ url('research-trees') }}">
+                            Research
+                        </a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url('info/guilds') }}">
                             Guilds
                         </a>
@@ -79,12 +90,8 @@
                         <a class="dropdown-item" href="{{ url('prompts/prompts') }}">
                             Prompts
                         </a>
-						<a class="dropdown-item" href="{{ url('info/growingyourbean') }}">
-                            Growing your Beanling
-                        </a>
-                        <a class="dropdown-item" href="{{ url('research-trees') }}">
-                            Research
-                        </a>
+
+
                     </div>
                     </li>
                 @endif
@@ -97,6 +104,7 @@
                         <a class="dropdown-item" href="{{ url('info/newplayerguide') }}">
                             New Player Guide
                         </a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url('world') }}">
                             Encyclopedia
                         </a>
@@ -112,28 +120,12 @@
                         <a class="dropdown-item" href="{{ url('info/NPCs') }}">
                             NPCs
                         </a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url('info/discord') }}">
                             Discord
                         </a>
                     </div>
                 </li>
-            </ul>
-            <li class="nav-item dropdown">
-                        <a id="queueDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Shops
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="browseDropdown">
-					    <a class="dropdown-item" href="{{ url('shops') }}">
-                            Shop Bazaar
-                        </a>
-                        <a class="dropdown-item" href="{{ url('https://teespring.com/stores/beanlingpatch') }}">
-                            Merchandise Store
-                            </a>
-                        <a class="dropdown-item" href="{{ url('https://beanlingpatch.my-online.store/') }}">
-                            Cash Purchase Store
-                        </a>
-                    </div>
-                    </li>
                 <li class="nav-item dropdown">
                     <a id="browseDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                         Browse
@@ -149,20 +141,40 @@
                         <a class="dropdown-item" href="{{ url('myos') }}">
                             MYO Slot Masterlist
                         </a>
+                        <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ url('gallery') }}">
                     Art Gallery
-                    </a>
+                    </a>  
+                                                                  <a class="dropdown-item" href="{{ url('adoptions') }}">
+                            Adoption Center
+                        </a>
+                    <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url('reports/bug-reports') }}">
                             Bug Reports
-                        </a>
-                                                <a class="dropdown-item" href="{{ url('adoptions') }}">
-                            Adoption Center
                         </a>
                         <a class="dropdown-item" href="{{ url('info/FAQ') }}">
                             FAQ
                         </a>
                     </div>
                 </li>
+                <li class="nav-item dropdown">
+                        <a id="queueDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            Shops
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="browseDropdown">
+					    <a class="dropdown-item" href="{{ url('shops') }}">
+                            Shop Bazaar
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url('https://teespring.com/stores/beanlingpatch') }}">
+                            Merchandise Store
+                            </a>
+                        <a class="dropdown-item" href="{{ url('https://beanlingpatch.my-online.store/') }}">
+                            Cash Purchase Store
+                        </a>
+                    </div>
+                    </li>
+                    </ul>
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
