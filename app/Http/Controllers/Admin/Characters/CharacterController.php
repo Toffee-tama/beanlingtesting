@@ -21,6 +21,7 @@ use App\Models\Character\CharacterTransfer;
 use App\Models\Trade;
 use App\Models\User\UserItem;
 use App\Models\Character\CharacterDropData;
+use App\Models\Stats\Character\Stat;
 
 use App\Services\CharacterManager;
 use App\Services\CurrencyManager;
@@ -69,7 +70,8 @@ class CharacterController extends Controller
             'subtypes' => ['0' => 'Pick a Species First'],
             'features' => Feature::getFeaturesByCategory(),
             'parameters' => ['0' => 'Pick a Species First'],
-            'isMyo' => false
+            'isMyo' => false,
+            'stats' => Stat::orderBy('name')->get(),
         ]);
     }
 
@@ -89,7 +91,8 @@ class CharacterController extends Controller
             'subtypes' => ['0' => 'Pick a Species First'],
             'features' => Feature::getFeaturesByCategory(),
             'parameters' => ['0' => 'Pick a Species First'],
-            'isMyo' => true
+            'isMyo' => true,
+            'stats' => Stat::orderBy('name')->get(),
         ]);
     }
 
@@ -157,7 +160,7 @@ class CharacterController extends Controller
             'generate_ancestors',
 
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data', 'title_id', 'title_data',
-            'image', 'thumbnail', 'image_description', 'parameters'
+            'image', 'thumbnail', 'image_description', 'parameters', 'stats'
         ]);
         if ($character = $service->createCharacter($data, Auth::user())) {
             flash('Character created successfully.')->success();
@@ -205,7 +208,7 @@ class CharacterController extends Controller
             'generate_ancestors',
 
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data',
-            'image', 'thumbnail', 'parameters'
+            'image', 'thumbnail', 'parameters', 'stats'
         ]);
         if ($character = $service->createCharacter($data, Auth::user(), true)) {
             flash('MYO slot created successfully.')->success();

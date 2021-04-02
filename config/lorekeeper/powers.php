@@ -62,6 +62,15 @@ return [
     'staff' => [
       'name' => 'Staff Member',
       'description' => 'This is any staff member.'
+    ],
+
+    'edit_stats' => [
+        'name' => 'Edit Stats',
+        'description' => 'Allow rank to edit stats.'
+    ],
+    'edit_levels' => [
+        'name' => 'Edit Levels',
+        'description' => 'Allow rank to edit levels.'
     ]
 
 ];

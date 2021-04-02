@@ -166,4 +166,5 @@ class Notification extends Model
     const GALLERY_SUBMISSION_VALUED_MULT    = 516;
     const SURRENDER_APPROVED              = 218;
     const SURRENDER_REJECTED              = 219;
+    const EXP_GRANT                       = 245;
 }

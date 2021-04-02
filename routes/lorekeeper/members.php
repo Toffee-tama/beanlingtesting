@@ -62,6 +62,12 @@ Route::group(['prefix' => 'bank', 'namespace' => 'Users'], function() {
     Route::post('transfer', 'BankController@postTransfer');
 });
 
+Route::group(['prefix' => 'level', 'namespace' => 'Users'], function() {
+    Route::get('/', 'LevelController@getIndex');
+    Route::post('up', 'LevelController@postLevel');
+    Route::post('transfer', 'LevelController@postTransfer');
+});
+
 Route::group(['prefix' => 'trades', 'namespace' => 'Users'], function() {
     Route::get('listings', 'TradeController@getListingIndex');
     Route::get('listings/expired', 'TradeController@getExpiredListings');
@@ -118,6 +124,15 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/profile/edit', 'CharacterController@postEditCharacterProfile');
 
     Route::post('{slug}/drops', 'CharacterController@postClaimCharacterDrops');
+    Route::get('{slug}/level-area', 'LevelController@getIndex');
+    Route::get('{slug}/stats-area', 'LevelController@getStatsIndex');
+    Route::post('{slug}/level-area/up', 'LevelController@postLevel');
+    Route::post('{slug}/stats-area/{id}', 'LevelController@postStat');
+    Route::post('{slug}/stats-area/admin/{id}', 'LevelController@postAdminStat');
+    Route::post('{slug}/stats-area/edit/{id}', 'LevelController@postEditStat');
+    # EXP
+    Route::post('{slug}/level-area/exp-grant', 'LevelController@postExpGrant');
+    Route::post('{slug}/level-area/stat-grant', 'LevelController@postStatGrant');
 });
 
 Route::get('links/accept/{id}', 'LinkController@getAcceptLink');
@@ -135,6 +150,13 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
     Route::post('{id}/approval', 'MyoController@postCharacterApproval');
     Route::get('{id}/approval', 'MyoController@getCharacterApproval');
 });
+
+Route::group(['prefix' => 'level', 'namespace' => 'Users'], function() {
+    Route::get('/', 'LevelController@getIndex');
+
+});
+
+
 
 /**************************************************************************************************
     Submissions

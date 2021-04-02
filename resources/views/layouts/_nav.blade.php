@@ -45,6 +45,9 @@
                             </a>
                             <a class="dropdown-item" href="{{ url('research/unlocked') }}">
                                 My Research
+                                </a>
+                            <a class="dropdown-item" href="{{ url('level') }}">
+                                Level Area
                             </a>
                         </div>
                     </li>

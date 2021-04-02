@@ -206,7 +206,15 @@ class PromptService extends Service
 
             if(!isset($data['hide_submissions']) && !$data['hide_submissions']) $data['hide_submissions'] = 0;
 
-            $prompt = Prompt::create(Arr::only($data, ['prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix', 'hide_submissions', 'limit', 'limit_period', 'limit_character']));
+            $prompt = Prompt::create(Arr::only($data, ['prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix', 'hide_submissions', 'level_req', 'limit', 'limit_period', 'limit_character']));
+            
+            $prompt->expreward()->create([
+                'prompt_id' => $prompt->id,
+                'user_exp'  => $data['user_exp'],
+                'user_points'  => $data['user_points'],
+                'chara_exp'  => $data['chara_exp'],
+                'chara_points'  => $data['chara_points'],
+            ]);
 
             if ($image) $this->handleImage($image, $prompt->imagePath, $prompt->imageFileName);
 
@@ -250,7 +258,25 @@ class PromptService extends Service
 
             if(!isset($data['hide_submissions']) && !$data['hide_submissions']) $data['hide_submissions'] = 0;
 
-            $prompt->update(Arr::only($data, ['prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix', 'hide_submissions', 'limit', 'limit_period', 'limit_character']));
+            $prompt->update(Arr::only($data, ['prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix', 'hide_submissions', 'level_req', 'limit', 'limit_period', 'limit_character']));
+
+            if($prompt->expreward) {
+                $prompt->expreward()->update([
+                    'user_exp'  => $data['user_exp'],
+                    'user_points'  => $data['user_points'],
+                    'chara_exp'  => $data['chara_exp'],
+                    'chara_points'  => $data['chara_points'],
+                ]);
+            }
+            else {
+                $prompt->expreward()->create([
+                    'prompt_id' => $prompt->id,
+                    'user_exp'  => $data['user_exp'],
+                    'user_points'  => $data['user_points'],
+                    'chara_exp'  => $data['chara_exp'],
+                    'chara_points'  => $data['chara_points'],
+                ]);
+            }
 
             if ($prompt) $this->handleImage($image, $prompt->imagePath, $prompt->imageFileName);
 
@@ -277,6 +303,7 @@ class PromptService extends Service
         if(!isset($data['hide_before_start'])) $data['hide_before_start'] = 0;
         if(!isset($data['hide_after_end'])) $data['hide_after_end'] = 0;
         if(!isset($data['is_active'])) $data['is_active'] = 0;
+        if(!isset($data['level_check'])) $data['level_req'] = null;
 
         if(!isset($data['limit_character'])) $data['limit_character'] = null;
 
@@ -332,6 +359,7 @@ class PromptService extends Service
             if(Submission::where('prompt_id', $prompt->id)->exists()) throw new \Exception("A submission under this prompt exists. Deleting the prompt will break the submission page - consider setting the prompt to be not active instead.");
 
             $prompt->rewards()->delete();
+            $prompt->expreward()->delete();
             if($prompt->has_image) $this->deleteImage($prompt->imagePath, $prompt->imageFileName);
             $prompt->delete();
 

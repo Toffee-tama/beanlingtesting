@@ -349,7 +349,12 @@ return [
         'message' => '<a href="{sender_url}">{sender}</a> has made a reply to your comment. <a href="comment/{comment_url}">See Reply.</a>',
         'url' => ''
     ],
-
+    // EXP GRANT
+    245 => [
+        'name' => 'EXP Grant',
+        'message' => 'You have received a staff grant of {quantity} EXP from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Level Area</a>)',
+        'url' => 'level'
+    ],
     // CHARACTER_ITEM_GRANT
     501 => [
         'name' => 'Character Item Grant',
