@@ -68,7 +68,6 @@ class CharacterController extends Controller
             'dropSpecies' => Species::whereIn('id', CharacterDropData::pluck('species_id')->toArray())->pluck('id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
             'features' => Feature::getFeaturesByCategory(),
-            'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
             'parameters' => ['0' => 'Pick a Species First'],
             'isMyo' => false
         ]);
@@ -89,7 +88,6 @@ class CharacterController extends Controller
             'dropSpecies' => Species::whereIn('id', CharacterDropData::pluck('species_id')->toArray())->pluck('id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
             'features' => Feature::getFeaturesByCategory(),
-            'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
             'parameters' => ['0' => 'Pick a Species First'],
             'isMyo' => true
         ]);
