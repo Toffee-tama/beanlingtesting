@@ -384,6 +384,21 @@ Route::group(['prefix' => 'sales', 'middleware' => 'power:edit_pages'], function
     Route::post('edit/{id?}', 'SalesController@postCreateEditSales');
     Route::post('delete/{id}', 'SalesController@postDeleteSales');
 });
+# BULLETINS
+Route::group(['prefix' => 'bulletins', 'middleware' => 'power:edit_pages'], function() {
+    Route::get('create', 'BulletinsController@getCreateBulletins');
+    Route::get('edit/{id}', 'BulletinsController@getEditBulletins');
+    Route::get('delete/{id}', 'BulletinsController@getDeleteBulletins');
+    Route::post('create', 'BulletinsController@postCreateEditBulletins');
+    Route::post('edit/{id?}', 'BulletinsController@postCreateEditBulletins');
+    Route::post('delete/{id}', 'NewsController@postDeleteNews');
+});
+Route::group(['prefix' => 'bulletins'], function() {
+    Route::get('/', 'BulletinsController@getIndex');
+    Route::get('all', 'BulletinsController@getAllIndex');
+    Route::get('{id}.{slug?}', 'BulletinsController@getBulletins');
+    Route::get('{id}.', 'BulletinsController@getBulletins');
+});
 
 # SITE SETTINGS
 Route::group(['prefix' => 'settings', 'middleware' => 'power:edit_site_settings'], function() {
