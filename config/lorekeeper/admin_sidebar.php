@@ -118,6 +118,10 @@ return [
                 'name' => 'EXP Grants',
                 'url' => 'admin/grants/exp'
             ],
+            [
+                'name' => 'Pet Grants',
+                'url' => 'admin/grants/pets'
+            ],
         ]
     ],
     'Masterlist' => [
@@ -309,6 +313,10 @@ return [
             [
                 'name' => 'Concepts',
                 'url' => 'admin/world/concepts'
+            ],
+            [
+                'name' => 'Pets',
+                'url' => 'admin/data/pets'
             ],
         ]
     ],

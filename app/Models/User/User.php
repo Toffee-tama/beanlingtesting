@@ -18,6 +18,7 @@ use App\Models\Item\ItemLog;
 use App\Models\Stats\ExpLog;
 use App\Models\Stats\StatTransferLog;
 use App\Models\Stats\LevelLog;
+use App\Models\Pet\PetLog;
 use App\Models\Shop\ShopLog;
 use App\Models\Research\Research;
 use App\Models\Research\ResearchLog;
@@ -233,6 +234,15 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany('App\Models\Research\Research', 'user_research')->withPivot('updated_at', 'id')->whereNull('user_research.deleted_at');
     }
+
+    /**
+     * Get the user's pets.
+     */
+    public function pets()
+    {
+        return $this->belongsToMany('App\Models\Pet\Pet', 'user_pets')->withPivot('data', 'updated_at', 'id')->whereNull('user_pets.deleted_at');
+    }
+
 
     /**********************************************************************************************
 
@@ -658,6 +668,23 @@ public function getLevelLogs($limit = 10)
         if($limit) return $query->take($limit)->get();
         else return $query->paginate(30);
     }
+        /**
+     * Get the user's pet logs.
+     *
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+     */
+public function getPetLogs($limit = 10)
+{
+    $user = $this;
+    $query = PetLog::with('sender')->with('recipient')->with('pet')->where(function($query) use ($user) {
+        $query->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Staff Removal']);
+    })->orWhere(function($query) use ($user) {
+        $query->where('recipient_id', $user->id);
+    })->orderBy('id', 'DESC');
+    if($limit) return $query->take($limit)->get();
+    else return $query->paginate(30);
+}
 
     /**
      * Get the user's shop purchase logs.

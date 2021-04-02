@@ -167,4 +167,8 @@ class Notification extends Model
     const SURRENDER_APPROVED              = 218;
     const SURRENDER_REJECTED              = 219;
     const EXP_GRANT                       = 245;
+    const PET_REMOVAL                     = 241;
+    const PET_TRANSFER                    = 242;
+    const FORCED_PET_TRANSFER             = 243;
+    const PET_GRANT                       = 244;
 }
