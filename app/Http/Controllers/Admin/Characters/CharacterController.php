@@ -22,6 +22,7 @@ use App\Models\Trade;
 use App\Models\User\UserItem;
 use App\Models\Character\CharacterDropData;
 use App\Models\Stats\Character\Stat;
+
 use App\Services\CharacterManager;
 use App\Services\CurrencyManager;
 use App\Services\TradeManager;
@@ -102,14 +103,14 @@ class CharacterController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateCharacterMyoSubtype(Request $request) {
-        $species = $request->input('species');
-        return view('admin.masterlist._create_character_subtype', [
-            'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'isMyo' => $request->input('myo')
-        ]);
-      }
+      $species = $request->input('species');
+      return view('admin.masterlist._create_character_subtype', [
+          'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+          'isMyo' => $request->input('myo')
+      ]);
+    }
 
-          /**
+    /**
      * Shows the edit group portion of the form.
      *
      * @param  Request  $request
@@ -134,7 +135,7 @@ class CharacterController extends Controller
     {
         $request->validate(Character::$createRules);
         $data = $request->only([
-            'user_id', 'owner_alias', 'character_category_id', 'number', 'slug',
+            'user_id', 'owner_url', 'character_category_id', 'number', 'slug',
             'description', 'is_visible', 'is_giftable', 'is_tradeable', 'is_sellable',
             'sale_value', 'transferrable_at', 'use_cropper',
             'x0', 'x1', 'y0', 'y1',
@@ -171,7 +172,7 @@ class CharacterController extends Controller
         return redirect()->back()->withInput();
     }
 
-   /**
+    /**
      * Creates an MYO slot.
      *
      * @param  \Illuminate\Http\Request       $request
@@ -182,7 +183,7 @@ class CharacterController extends Controller
     {
         $request->validate(Character::$myoRules);
         $data = $request->only([
-            'user_id', 'owner_alias', 'name',
+            'user_id', 'owner_url', 'name',
             'description', 'is_visible', 'is_giftable', 'is_tradeable', 'is_sellable',
             'sale_value', 'transferrable_at', 'use_cropper',
             'x0', 'x1', 'y0', 'y1',
@@ -701,6 +702,7 @@ class CharacterController extends Controller
                 }
             }
         }
+
         return view('admin.masterlist.character_trades', [
             'trades' => $trades->orderBy('id', 'DESC')->paginate(20),
             'tradesQueue' => Settings::get('open_transfers_queue'),
