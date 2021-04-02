@@ -9,7 +9,6 @@
 {!! $newses->render() !!}
     @foreach($newses as $news)
         @include('news._news', ['news' => $news, 'page' => FALSE])
-        @include('news._newses', ['news' => $news])
     @endforeach
 {!! $newses->render() !!}
 @else
