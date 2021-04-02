@@ -42,15 +42,6 @@
         @endforeach
       </div>
     <table class="table table-sm page-table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Posted At</th>
-                <th>Last Edited</th>
-                <th></th>
-            </tr>
-        </thead>
-
     </table>
     {!! $newses->render() !!}
 
