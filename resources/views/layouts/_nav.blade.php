@@ -89,51 +89,6 @@
                     </li>
                 @endif
                 <li class="nav-item dropdown">
-                    <a id="browseDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Browse
-                    </a>
-
-                    <div class="dropdown-menu" aria-labelledby="browseDropdown">
-                        <a class="dropdown-item" href="{{ url('users') }}">
-                            Users
-                        </a>
-                        <a class="dropdown-item" href="{{ url('masterlist') }}">
-                            Character Masterlist
-                        </a>
-                        <a class="dropdown-item" href="{{ url('myos') }}">
-                            MYO Slot Masterlist
-                        </a>
-                    <a class="dropdown-item" href="{{ url('gallery') }}">
-                    Art Gallery
-                    </a>
-                        <a class="dropdown-item" href="{{ url('reports/bug-reports') }}">
-                            Bug Reports
-                        </a>
-                                                <a class="dropdown-item" href="{{ url('adoptions') }}">
-                            Adoption Center
-                        </a>
-                        <a class="dropdown-item" href="{{ url('info/FAQ') }}">
-                            FAQ
-                        </a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                        <a id="queueDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Shops
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="browseDropdown">
-					    <a class="dropdown-item" href="{{ url('shops') }}">
-                            Shop Bazaar
-                        </a>
-                        <a class="dropdown-item" href="{{ url('https://teespring.com/stores/beanlingpatch') }}">
-                            Merchandise Store
-                            </a>
-                        <a class="dropdown-item" href="{{ url('https://beanlingpatch.my-online.store/') }}">
-                            Cash Purchase Store
-                        </a>
-                    </div>
-                    </li>
-                <li class="nav-item dropdown">
                     <a id="loreDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                         World
                     </a>
@@ -163,6 +118,51 @@
                     </div>
                 </li>
             </ul>
+            <li class="nav-item dropdown">
+                        <a id="queueDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            Shops
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="browseDropdown">
+					    <a class="dropdown-item" href="{{ url('shops') }}">
+                            Shop Bazaar
+                        </a>
+                        <a class="dropdown-item" href="{{ url('https://teespring.com/stores/beanlingpatch') }}">
+                            Merchandise Store
+                            </a>
+                        <a class="dropdown-item" href="{{ url('https://beanlingpatch.my-online.store/') }}">
+                            Cash Purchase Store
+                        </a>
+                    </div>
+                    </li>
+                <li class="nav-item dropdown">
+                    <a id="browseDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        Browse
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="browseDropdown">
+                        <a class="dropdown-item" href="{{ url('users') }}">
+                            Users
+                        </a>
+                        <a class="dropdown-item" href="{{ url('masterlist') }}">
+                            Character Masterlist
+                        </a>
+                        <a class="dropdown-item" href="{{ url('myos') }}">
+                            MYO Slot Masterlist
+                        </a>
+                    <a class="dropdown-item" href="{{ url('gallery') }}">
+                    Art Gallery
+                    </a>
+                        <a class="dropdown-item" href="{{ url('reports/bug-reports') }}">
+                            Bug Reports
+                        </a>
+                                                <a class="dropdown-item" href="{{ url('adoptions') }}">
+                            Adoption Center
+                        </a>
+                        <a class="dropdown-item" href="{{ url('info/FAQ') }}">
+                            FAQ
+                        </a>
+                    </div>
+                </li>
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
