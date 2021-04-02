@@ -1733,7 +1733,6 @@ class CharacterManager extends Service
                 $recipient = checkAlias($data['recipient_url']);
             }
             else throw new \Exception("Please enter a recipient for the transfer.");
-
             // If the character is in an active transfer, cancel it
             $transfer = CharacterTransfer::active()->where('character_id', $character->id)->first();
             if($transfer) {

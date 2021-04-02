@@ -162,4 +162,6 @@ class Notification extends Model
     const GALLERY_SUBMISSION_PARTICIPANT    = 515;
     const RECIPE_GRANT                      = 600; // Draginraptor - Crafting
     const GALLERY_SUBMISSION_VALUED_MULT    = 516;
+    const SURRENDER_APPROVED              = 218;
+    const SURRENDER_REJECTED              = 219;
 }
