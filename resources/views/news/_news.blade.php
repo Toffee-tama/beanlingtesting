@@ -22,9 +22,4 @@
     @endif
 </div>
       </div>
-      <div class="card-body">
-          <div class="parsed-text" id="newspost_{!! $news->id !!}">
-              {!! $news->parsed_text !!}
-          </div>
-      </div>
   </div>
