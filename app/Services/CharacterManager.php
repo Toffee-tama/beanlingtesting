@@ -24,15 +24,18 @@ use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterFeature;
 use App\Models\Character\CharacterImage;
 use App\Models\Character\CharacterTransfer;
+use App\Models\Character\CharacterDrop;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterBookmark;
 use App\Models\Character\CharacterLineage;
 use App\Models\User\UserCharacterLog;
+use App\Models\Character\CharacterTitle;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\Rarity;
 use App\Models\Currency\Currency;
 use App\Models\Feature\Feature;
+
 use App\Models\Stats\Character\CharacterStat;
 
 class CharacterManager extends Service
@@ -93,7 +96,7 @@ class CharacterManager extends Service
         try {
             if(!$isMyo && Character::where('slug', $data['slug'])->exists()) throw new \Exception("Please enter a unique character code.");
 
-            if(!(isset($data['user_id']) && $data['user_id']) && !(isset($data['owner_alias']) && $data['owner_alias']))
+            if(!(isset($data['user_id']) && $data['user_id']) && !(isset($data['owner_url']) && $data['owner_url']))
                 throw new \Exception("Please select an owner.");
             if(!$isMyo)
             {
@@ -109,30 +112,17 @@ class CharacterManager extends Service
             else $data['subtype_id'] = null;
 
             // Get owner info
-            $recipient = null;
+            $url = null;
             $recipientId = null;
-            $alias = null;
-            if(isset($data['parent_id']) && $data['parent_id'])
-            {
-                // Find the new parent of the character
-                $parent = Character::where('id', $data['parent_id'])->first();
-                //find new owner based on parent
-                $recipient = User::find($parent->user_id);
-                if(!$recipient) $recipient = Character::where('id', $data['parent_id'])->first()->owner_alias;
-                //we dont want the child to be tradeable/transferrable...
-                $data['is_sellable'] = null;
-                $data['is_tradeable'] = null;
-                $data['is_giftable'] = null;
-            }
-            elseif(isset($data['user_id']) && $data['user_id']) $recipient = User::find($data['user_id']);
-            elseif(isset($data['owner_alias']) && $data['owner_alias']) $recipient = User::where('alias', $data['owner_alias'])->first();
+            if(isset($data['user_id']) && $data['user_id']) $recipient = User::find($data['user_id']);
+            elseif(isset($data['owner_url']) && $data['owner_url']) $recipient = checkAlias($data['owner_url']);
 
-            if($recipient) {
+            if(is_object($recipient)) {
                 $recipientId = $recipient->id;
                 $data['user_id'] = $recipient->id;
             }
             else {
-                $alias = $data['owner_alias'];
+                $url = $recipient;
             }
 
             // Create character
@@ -150,43 +140,48 @@ class CharacterManager extends Service
             // Update the character's image ID
             $character->character_image_id = $image->id;
             $character->save();
-                       
-            // Create character stats
-                        $character->level()->create([
-                            'character_id' => $character->id
-                        ]);
-                        
-                        if(isset($data['stats']))
-                        {
-                            foreach($data['stats'] as $key=>$stat)
-                            {
-                                CharacterStat::create([
-                                    'character_id' => $character->id,
-                                    'stat_id' => $key,
-                                    'count' => $stat,
-                                ]);
-                            }
-                        }
 
+            // Create drop information for the character, if relevant
+            if($character->image->species && $character->image->species->dropData) {
+                $drop = new CharacterDrop;
+                if($drop->createDrop($character->id, isset($data['parameters']) && $data['parameters'] ? $data['parameters'] : null)) throw new \Exception('Failed to create character drop.');
+            }
+
+            // Create character stats
+            $character->level()->create([
+                'character_id' => $character->id
+            ]);
+            
+            if(isset($data['stats']))
+            {
+                foreach($data['stats'] as $key=>$stat)
+                {
+                    CharacterStat::create([
+                        'character_id' => $character->id,
+                        'stat_id' => $key,
+                        'count' => $stat,
+                    ]);
+                }
+            }
+            
             // Add a log for the character
             // This logs all the updates made to the character
-            $this->createLog($user->id, null, $recipientId, $alias, $character->id, $isMyo ? 'MYO Slot Created' : 'Character Created', 'Initial upload', 'character');
+            $this->createLog($user->id, null, $recipientId, $url, $character->id, $isMyo ? 'MYO Slot Created' : 'Character Created', 'Initial upload', 'character');
 
             // Add a log for the user
             // This logs ownership of the character
-            $this->createLog($user->id, null, $recipientId, $alias, $character->id, $isMyo ? 'MYO Slot Created' : 'Character Created', 'Initial upload', 'user');
+            $this->createLog($user->id, null, $recipientId, $url, $character->id, $isMyo ? 'MYO Slot Created' : 'Character Created', 'Initial upload', 'user');
 
             // Update the user's FTO status and character count
-            if($recipient) {
+            if(is_object($recipient)) {
                 if(!$isMyo) {
                     $recipient->settings->is_fto = 0; // MYO slots don't affect the FTO status - YMMV
                 }
                 $recipient->settings->save();
             }
 
-
             // If the recipient has an account, send them a notification
-            if($recipient && $user->id != $recipient->id) {
+            if(is_object($recipient) && $user->id != $recipient->id) {
                 Notifications::create($isMyo ? 'MYO_GRANT' : 'CHARACTER_UPLOAD', $recipient, [
                     'character_url' => $character->url,
                 ] + ($isMyo ?
@@ -270,7 +265,6 @@ class CharacterManager extends Service
                 $data['subtype_id'] = isset($data['subtype_id']) && $data['subtype_id'] ? $data['subtype_id'] : null;
                 $data['rarity_id'] = (isset($data['rarity_id']) && $data['rarity_id']) ? $data['rarity_id'] : null;
 
-
                 // Use default images for MYO slots without an image provided
                 if(!isset($data['image']))
                 {
@@ -283,7 +277,7 @@ class CharacterManager extends Service
             }
             $imageData = Arr::only($data, [
                 'species_id', 'subtype_id', 'rarity_id', 'use_cropper',
-                'x0', 'x1', 'y0', 'y1',
+                'x0', 'x1', 'y0', 'y1', 'title_id', 'title_data'
             ]);
             $imageData['use_cropper'] = isset($data['use_cropper']) ;
             $imageData['description'] = isset($data['image_description']) ? $data['image_description'] : null;
@@ -295,6 +289,8 @@ class CharacterManager extends Service
             $imageData['is_visible'] = isset($data['is_visible']);
             $imageData['extension'] = (Config::get('lorekeeper.settings.masterlist_image_format') ? Config::get('lorekeeper.settings.masterlist_image_format') : (isset($data['extension']) ? $data['extension'] : $data['image']->getClientOriginalExtension()));
             $imageData['character_id'] = $character->id;
+            $imageData['title_id'] = isset($data['title_id']) && $data['title_id'] ? ($data['title_id'] != 'custom' ? $data['title_id'] : null) : null;
+            $imageData['title_data'] = isset($data['title_data']) && $data['title_data'] && isset($data['title_data']['full']) ? json_encode($data['title_data']) : null;
 
             $image = CharacterImage::create($imageData);
 
@@ -302,26 +298,26 @@ class CharacterManager extends Service
             foreach($data['designer_url'] as $key=>$url) {
                 $recipient = checkAlias($url, false);
                 if(is_object($recipient)) {
-                    $data['designer_alias'][$key] = $recipient->id;
+                    $data['designer_id'][$key] = $recipient->id;
                     $data['designer_url'][$key] = null;
                 }
             }
             foreach($data['artist_url'] as $key=>$url) {
                 $recipient = checkAlias($url, false);
                 if(is_object($recipient)) {
-                    $data['artist_alias'][$key] = $recipient->id;
+                    $data['artist_id'][$key] = $recipient->id;
                     $data['artist_url'][$key] = null;
                 }
             }
 
             // Check that users with the specified id(s) exist on site
-            foreach($data['designer_alias'] as $id) {
+            foreach($data['designer_id'] as $id) {
                 if(isset($id) && $id) {
                     $user = User::find($id);
                     if(!$user) throw new \Exception('One or more designers is invalid.');
                 }
             }
-            foreach($data['artist_alias'] as $id) {
+            foreach($data['artist_id'] as $id) {
                 if(isset($id) && $id) {
                     $user = $user = User::find($id);
                     if(!$user) throw new \Exception('One or more artists is invalid.');
@@ -329,7 +325,7 @@ class CharacterManager extends Service
             }
 
             // Attach artists/designers
-            foreach($data['designer_alias'] as $key => $id) {
+            foreach($data['designer_id'] as $key => $id) {
                 if($id || $data['designer_url'][$key])
                     DB::table('character_image_creators')->insert([
                         'character_image_id' => $image->id,
@@ -338,7 +334,7 @@ class CharacterManager extends Service
                         'user_id' => $id
                     ]);
             }
-            foreach($data['artist_alias'] as $key => $id) {
+            foreach($data['artist_id'] as $key => $id) {
                 if($id || $data['artist_url'][$key])
                     DB::table('character_image_creators')->insert([
                         'character_image_id' => $image->id,
@@ -373,7 +369,7 @@ class CharacterManager extends Service
 
     }
 
-      /**
+    /**
      * Handles character lineage data.
      *
      * @param  array                            $data
@@ -856,6 +852,7 @@ class CharacterManager extends Service
             $old['species'] = $image->species_id ? $image->species->displayName : null;
             $old['subtype'] = $image->subtype_id ? $image->subtype->displayName : null;
             $old['rarity'] = $image->rarity_id ? $image->rarity->displayName : null;
+            $old['title'] = $image->title_id ? $image->title->displayName : ($image->title_data ? $image->title_data : null);
 
             // Clear old features
             $image->features()->delete();
@@ -871,6 +868,8 @@ class CharacterManager extends Service
             $image->species_id = $data['species_id'];
             $image->subtype_id = $data['subtype_id'] ?: null;
             $image->rarity_id = $data['rarity_id'];
+            $image->title_id = isset($data['title_id']) && $data['title_id'] ? ($data['title_id'] != 'custom' ? $data['title_id'] : null) : null;
+            $image->title_data = isset($data['title_data']) && isset($data['title_data']['full']) ? json_encode($data['title_data']) : null;
             $image->save();
 
             $new = [];
@@ -878,6 +877,7 @@ class CharacterManager extends Service
             $new['species'] = $image->species_id ? $image->species->displayName : null;
             $new['subtype'] = $image->subtype_id ? $image->subtype->displayName : null;
             $new['rarity'] = $image->rarity_id ? $image->rarity->displayName : null;
+            $new['title'] = $image->title_id ? $image->title->displayName : ($image->title_data ? $image->title_data : null);
 
             // Character also keeps track of these features
             $image->character->rarity_id = $image->rarity_id;
@@ -1450,6 +1450,12 @@ class CharacterManager extends Service
             if(!$character->is_myo_slot) $character->name = $data['name'];
             $character->save();
 
+            // Update the character's location and/or faction
+            if(isset($data['location']) && $data['location']) $character->home_id = $data['location'];
+            // Update the character's location
+            if(isset($data['faction']) && $data['faction']) $character->faction_id = $data['faction'];
+            $character->save();
+
             if(!$character->is_myo_slot && Config::get('lorekeeper.extensions.character_TH_profile_link')) $character->profile->link = $data['link'];
             $character->profile->save();
 
@@ -1477,6 +1483,7 @@ class CharacterManager extends Service
         }
         return $this->rollbackReturn(false);
     }
+
     /**
      * Updates a character's lineage.
      *
@@ -1620,72 +1627,73 @@ class CharacterManager extends Service
         }
         return $this->rollbackReturn(false);
     }
+    /**
+          * Updates a character's profile.
 
-     /**
-     * Updates a character's profile.
-     *
-     * @param  array                            $data
-     * @param  \App\Models\Character\Character  $character
-     * @param  \App\Models\User\User            $user
-     * @param  bool                             $isAdmin
-     * @return  bool
-     */
-    public function updateCharacterLinks($data, $character, $user, $isAdmin)
-    {
-        DB::beginTransaction();
+          *
+          * @param  array                            $data
+          * @param  \App\Models\Character\Character  $character
+          * @param  \App\Models\User\User            $user
+          * @param  bool                             $isAdmin
+          * @return  bool
+          */
 
-        try {
-
-            $service = new LinkService;
-
-            $isOwner = ($character->user_id == Auth::user()->id);
-
-            if($character->is_links_open == 0) throw new \Exception("One or more character's links are closed to requests.");
-
-            if($isAdmin !== true && !$isOwner)
-            {
-                throw new \Exception("You cannot edit this character.");
-            }
-
-            foreach($data['slug'] as $slug) {
-                $link = Character::where('slug', $slug)->first();
-                $requested = User::find($link->user_id);
-
-                $chara1 = $character->id;
-                $chara2 = $link->id;
-
-                if($link->is_links_open == 0) throw new \Exception("One or more character's links are closed to requests.");
-
-                if($user->id == $requested->id ) {
-                    // Create a relation with the character 
-                    if($service->createLink($chara1, $chara2, true)) {
-                        flash('Link created succesfully!')->success();
-                    }
-                    else {
-                        throw new \Exception("An error occured creating the link.");
-                    }
-                }
-                else {
-                    // send a notification of the request to the other user. They can accept or deny.
-                    // If denied the row is deleted, if accepted it updates the ids
-                    // create 'unapproved' link
-                        if($service->createLink($chara1, $chara2, false)) {
-                            flash('Link request created succesfully!')->success();
-                        }
-                        else {
-                            throw new \Exception("An error occured requesting the link.");
-                        }
-                }
-
-            }
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
-    }
-    
+         public function updateCharacterLinks($data, $character, $user, $isAdmin)
+         {
+             DB::beginTransaction();
+     
+             try {
+     
+                 $service = new LinkService;
+     
+                 $isOwner = ($character->user_id == Auth::user()->id);
+     
+                 if($character->is_links_open == 0) throw new \Exception("One or more character's links are closed to requests.");
+     
+                 if($isAdmin !== true && !$isOwner)
+                 {
+                     throw new \Exception("You cannot edit this character.");
+                 }
+     
+                 foreach($data['slug'] as $slug) {
+                     $link = Character::where('slug', $slug)->first();
+                     $requested = User::find($link->user_id);
+     
+                     $chara1 = $character->id;
+                     $chara2 = $link->id;
+     
+                     if($link->is_links_open == 0) throw new \Exception("One or more character's links are closed to requests.");
+     
+                     if($user->id == $requested->id ) {
+                         // Create a relation with the character 
+                         if($service->createLink($chara1, $chara2, true)) {
+                             flash('Link created succesfully!')->success();
+                         }
+                         else {
+                             throw new \Exception("An error occured creating the link.");
+                         }
+                     }
+                     else {
+                         // send a notification of the request to the other user. They can accept or deny.
+                         // If denied the row is deleted, if accepted it updates the ids
+                         // create 'unapproved' link
+                             if($service->createLink($chara1, $chara2, false)) {
+                                 flash('Link request created succesfully!')->success();
+                             }
+                             else {
+                                 throw new \Exception("An error occured requesting the link.");
+                             }
+                     }
+     
+                 }
+     
+                 return $this->commitReturn(true);
+             } catch(\Exception $e) { 
+                 $this->setError('error', $e->getMessage());
+             }
+             return $this->rollbackReturn(false);
+         }
+     
     /**
      * Deletes a character.
      *
@@ -1765,7 +1773,7 @@ class CharacterManager extends Service
             $queueOpen = Settings::get('open_transfers_queue');
 
             CharacterTransfer::create([
-                'user_reason' => $data['user_reason'],  # pulls from this characters user_reason collum
+                'user_reason' => $data['user_reason'],  # pulls from this characters user_reason column
                 'character_id' => $character->id,
                 'sender_id' => $user->id,
                 'recipient_id' => $recipient->id,
@@ -1813,7 +1821,6 @@ class CharacterManager extends Service
                 $recipient = checkAlias($data['recipient_url']);
             }
             else throw new \Exception("Please enter a recipient for the transfer.");
-
             // If the character is in an active transfer, cancel it
             $transfer = CharacterTransfer::active()->where('character_id', $character->id)->first();
             if($transfer) {
@@ -1831,8 +1838,9 @@ class CharacterManager extends Service
             }
 
             $sender = $character->user;
+
             $this->moveCharacter($character, $recipient, 'Transferred by ' . $user->displayName . (isset($data['reason']) ? ': ' . $data['reason'] : ''), isset($data['cooldown']) ? $data['cooldown'] : -1);
-            
+
             // Add notifications for the old and new owners
             if($sender) {
                 Notifications::create('CHARACTER_SENT', $sender, [
@@ -1884,11 +1892,7 @@ class CharacterManager extends Service
                 if ($transfer->is_approved) {
                     //check the cooldown saved
                     if(isset($transfer->data['cooldown'])) $cooldown = $transfer->data['cooldown'];
-                    {
-                        $this->moveCharacter($transfer->character, $transfer->recipient, 'User Transfer', $cooldown);
-
-                      
-                    }
+                    $this->moveCharacter($transfer->character, $transfer->recipient, 'User Transfer', $cooldown);
                     if(!Settings::get('open_transfers_queue'))
                         $transfer->data = json_encode([
                             'cooldown' => $cooldown,
@@ -1986,8 +1990,6 @@ class CharacterManager extends Service
                 // Process the character move if the recipient has already accepted the transfer
                 if($transfer->status == 'Accepted') {
                     $this->moveCharacter($transfer->character, $transfer->recipient, 'User Transfer', isset($data['cooldown']) ? $data['cooldown'] : -1);
-
-                   
 
                     // Notify both parties of the successful transfer
                     Notifications::create('CHARACTER_TRANSFER_APPROVED', $transfer->sender, [
@@ -2115,7 +2117,7 @@ class CharacterManager extends Service
 
         // Add a log for the ownership change
         $this->createLog(
-is_object($sender) ? $sender->id : null,
+            is_object($sender) ? $sender->id : null,
             is_object($sender) ? null : $sender,
             $recipient && is_object($recipient) ? $recipient->id : null,
             $recipient && is_object($recipient) ? $recipient->url : ($recipient ? : null),
@@ -2410,12 +2412,14 @@ is_object($sender) ? $sender->id : null,
 
             $rarity = ($request->character->is_myo_slot && $request->character->image->rarity_id) ? $request->character->image->rarity : Rarity::find($data['rarity_id']);
             $species = ($request->character->is_myo_slot && $request->character->image->species_id) ? $request->character->image->species : Species::find($data['species_id']);
+            if(isset($data['title_id'])) $title = ($request->character->is_myo_slot && $request->character->image->title_id) ? $request->character->image->title : CharacterTitle::find($data['title_id']);
             if(isset($data['subtype_id']) && $data['subtype_id'])
                 $subtype = ($request->character->is_myo_slot && $request->character->image->subtype_id) ? $request->character->image->subtype : Subtype::find($data['subtype_id']);
             else $subtype = null;
             if(!$rarity) throw new \Exception("Invalid rarity selected.");
             if(!$species) throw new \Exception("Invalid species selected.");
             if($subtype && $subtype->species_id != $species->id) throw new \Exception("Subtype does not match the species.");
+            if(isset($title) && !$title) throw new \Exception("Invalid title selected.");
 
             // Clear old features
             $request->features()->delete();
@@ -2443,6 +2447,8 @@ is_object($sender) ? $sender->id : null,
             $request->rarity_id = $rarity->id;
             $request->subtype_id = $subtype ? $subtype->id : null;
             $request->has_features = 1;
+            $request->title_id = isset($data['title_id']) && $data['title_id'] ? ($data['title_id'] != 'custom' ? $data['title_id'] : null) : null;
+            $request->title_data = isset($data['title_data']) && isset($data['title_data']['full']) ? json_encode($data['title_data']) : null;
             $request->save();
 
             return $this->commitReturn(true);
@@ -2564,6 +2570,8 @@ is_object($sender) ? $sender->id : null,
                 'subtype_id' => ($request->character->is_myo_slot && isset($request->character->image->subtype_id)) ? $request->character->image->subtype_id : $request->subtype_id,
                 'rarity_id' => $request->rarity_id,
                 'sort' => 0,
+                'title_id' => isset($request->title_id) && $request->title_id ? $request->title_id : null,
+                'title_data' => isset($request->title_data) ? $request->title_data : null
             ]);
 
             // Shift the image credits over to the new image

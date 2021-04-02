@@ -18,7 +18,7 @@
 
     @if(count($research->subrequisites))
         <p class="mb-0">
-            <strong>Required by:</strong> 
+            <strong>Required by:</strong>
             @foreach($research->subrequisites as $subrequisite)
                 <span class="mr-1">{!! $subrequisite->displayName !!}</span>
             @endforeach
@@ -31,7 +31,7 @@
 
     @if(count($research->children))
         <p class="mb-0">
-            <strong>Children:</strong> 
+            <strong>Children:</strong>
             @foreach($research->children as $child)
                 <span class="mr-1">{!! $child->displayName !!}</span>
             @endforeach
@@ -48,23 +48,23 @@
 
 
 @auth
-    
+
     @if(!$research->is_active)
         <h5 class="text-center">
             <a  class="btn btn-outline-danger mt-3 purchase-research-button disabled">
                 <strong>{{ $research->name }} is not currently available for purchase</strong>
             </a>
         </h5>
-    @elseif(Auth::user()->researches->contains($research))
+    @elseif(Auth::user()->hasResearch($research->id))
         <h5 class="text-center">
             <a  class="btn btn-outline-danger mt-3 purchase-research-button disabled">
                 <strong>You already have {{ $research->name }}!</strong>
             </a>
         </h5>
-    @elseif($research->prerequisite && !Auth::user()->researches->contains($research->prerequisite))
-    
+    @elseif($research->prerequisite && !Auth::user()->hasResearch($research->prerequisite->id))
+
         <h5 class="text-center mt-3 mb-0 pb-0 font-weight-bold text-danger"> {{ $research->name }} requires {{ $research->prerequisite->name }}</h5>
-        
+
         <h5 class="text-center">
             <a href="{{ $research->prerequisite->url }}" class="btn btn-danger mt-3">Go to {{ $research->prerequisite->name }}</a>
         </h5>
@@ -83,10 +83,43 @@
         </h5>
     @endif
 
+    @if(count($research->rewards))
+        <div class="col-6 mx-auto"><div class="card p-3">
+            <h5 class="text-center">Rewards</h5>
+            <p class="text-center">
+                After you buy this research, you can claim the following rewards:
+            </p>
+            <div class="row no-gutters">
+                @foreach($research->rewards as $reward)
+                    <div class="col-4 text-center">
+                        {!! $reward->quantity !!} {!! $reward->reward->displayName !!}
+                    </div>
+                @endforeach
+            </div>
+            @if(Auth::check() && Auth::user()->hasResearch($research->id))
+                @if(App\Models\User\UserResearch::where('user_id',Auth::user()->id)->where('research_id',$research->id)->first()->rewards_claimed)
+                    <h5 class="text-center">
+                        <a  class="btn btn-outline-secondary mt-3 purchase-research-button disabled">
+                            You have already claimed these rewards!
+                        </a>
+                    </h5>
+                @else
+                    {!! Form::open(['url' => 'research/claim-rewards/'.$research->id]) !!}
+                        <h5 class="text-center">
+                            {!! Form::submit('Claim Rewards', ['class' => 'btn btn-success mt-3 ']) !!}
+                        </h5>
+                    {!! Form::close() !!}
+
+                @endif
+            @endif
+
+        </div></div>
+    @endif
+
 
 @endauth
 @guest
-    <p class="text-center mt-5"><em>Log in to purchase for {{ $research->price }} {{ $research->tree->currency->name }}.</em></p>
+    <p class="text-center mt-5 text-italic">Log in to purchase for {{ $research->price }} {{ $research->tree->currency->name }}.</p>
 @endguest
 
 
@@ -100,8 +133,7 @@ $( document ).ready(function() {
         e.preventDefault();
         loadModal("{{ url('research/purchase/') }}/{{ $research->id }}", 'Purchase Research');
     });
-
 });
-    
+
 </script>
 @endsection

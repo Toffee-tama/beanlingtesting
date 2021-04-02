@@ -13,6 +13,44 @@
 <h1>
 <img src="/images/avatars/{{ $user->avatar }}" style="width:125px; height:125px; float:left; border-radius:50%; margin-right:25px;">
     {!! $user->displayName !!}
+
+    <small><small><a href="{{ url('reports/new?url=') . $user->url }}"><i class="fas fa-exclamation-triangle fa-xs" data-toggle="tooltip" title="Click here to report this user." style="opacity: 50%;"></i></a></small></small>
+
+ <h1>
+
+   <!-- If you install the user icon extension: the icon goes here:
+
+  <img src="/images/avatars/{{ $user->avatar }}" style="width:125px; height:125px; float:left; border-radius:50%; margin-right:25px;">
+
+  -->
+
+
+ @if($user->settings->is_fto)
+         <span class="badge badge-success float-right" data-toggle="tooltip" title="This user has not owned any characters from this world before.">FTO</span>
+ @endif
+
+ <div class="row">
+   <div style="padding-right: 10px;">{!! $user->displayName !!}</div>
+
+   <div class="ulinks" style="padding-top:7px">
+
+   @if($user->profile->disc)
+     <span class="float-left" style="font-size: 1.1rem; padding-left: 10px; opacity: 0.4;" data-toggle="tooltip" title=" {!! $user->profile->disc !!} "><i class="fab fa-discord"></i></span>
+   @endif
+   @if($user->profile->house)
+     <span class="float-left" style="font-size: 1.1rem; padding-left: 10px; opacity: 0.4;" data-toggle="tooltip" title=" {!! $user->profile->house !!}&#64;toyhou.se "><a href="https://toyhou.se/{!! $user->profile->house !!}"><i class="fas fa-home"></i></a></span>
+   @endif
+   @if($user->profile->arch)
+     <span class="float-left" style="font-size: 1.1rem; padding-left: 10px; opacity: 0.4;" data-toggle="tooltip" title=" {!! $user->profile->arch !!}&#64;twitter"><a href="https://archiveofourown.org/users/{!! $user->profile->arch !!}"><i class="fas fa-file-alt"></i></a></span>
+   @endif
+   @if($user->profile->insta)
+     <span class="float-left" style="font-size: 1.1rem; padding-left: 10px; opacity: 0.4;" data-toggle="tooltip" title=" {!! $user->profile->insta !!}&#64;instagram "><a href="https://www.instagram.com/{!! $user->profile->insta !!}"><i class="fab fa-instagram"></i></a></span>
+   @endif
+
+ </div>
+ </div>
+
+ </h1>
     
     <small><small><a href="{{ url('reports/new?url=') . $user->url }}"><i class="fas fa-exclamation-triangle fa-xs" data-toggle="tooltip" title="Click here to report this user." style="opacity: 50%;"></i></a></small></small>
     <span class="badge badge-info float-right text-white mx-1" data-toggle="tooltip" title="Current user level. Checkout the level area for more info.">Lvl: {{ $user->level->current_level }}</span>
@@ -33,6 +71,19 @@
         <div class="col-md-2 col-4"><h5>Joined</h5></div>
         <div class="col-md-10 col-8">{!! format_date($user->created_at, false) !!} ({{ $user->created_at->diffForHumans() }})</div>
     </div>
+
+    @if($user_enabled && isset($user->home_id))
+    <div class="row">
+        <div class="col-md-2 col-4"><h5>Home</h5></div>
+        <div class="col-md-10 col-8">{!! $user->home ? $user->home->fullDisplayName : '-Deleted Location-' !!}</div>
+    </div>
+    @endif
+    @if($user_enabled && isset($user->faction_id))
+    <div class="row">
+        <div class="col-md-2 col-4"><h5>Faction</h5></div>
+        <div class="col-md-10 col-8">{!! $user->faction ? $user->faction->fullDisplayName : '-Deleted Faction-' !!}</div>
+    </div>
+    @endif
 </div>
 
 <div class="card mb-3">
@@ -69,7 +120,7 @@
                             </div>
                         @endforeach
                     </div>
-                @else 
+                @else
                     <div>No items owned.</div>
                 @endif
             </div>
@@ -151,5 +202,5 @@
 
 @comments(['model' => $user->profile,
         'perPage' => 5
-    ])  
+    ])
 @endsection

@@ -16,17 +16,24 @@
 <h3>Basic Information</h3>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="form-group">
             {!! Form::label('Title') !!}
             {!! Form::text('title', $page->title, ['class' => 'form-control']) !!}
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="form-group">
             {!! Form::label('Key') !!} {!! add_help('This is a unique name used to form the URL of the page. Only alphanumeric characters, dash and underscore (no spaces) can be used.') !!}
             {!! Form::text('key', $page->key, ['class' => 'form-control']) !!}
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            {!! Form::label('Page Category (Optional)') !!}
+            {!! Form::select('page_category_id', $categories, $page->page_category_id, ['class' => 'form-control']) !!}
         </div>
     </div>
 </div>
@@ -52,6 +59,11 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::checkbox('admin_only', 1, $page->id ? $page->admin_only : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+    {!! Form::label('admin_only', 'Staff Only', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, only ranked users can view it.') !!}
+</div>
+
 <div class="text-right">
     {!! Form::submit($page->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
 </div>
@@ -63,12 +75,12 @@
 @section('scripts')
 @parent
 <script>
-$( document ).ready(function() {    
+$( document ).ready(function() {
     $('.delete-page-button').on('click', function(e) {
         e.preventDefault();
         loadModal("{{ url('admin/pages/delete') }}/{{ $page->id }}", 'Delete Page');
     });
 });
-    
+
 </script>
 @endsection

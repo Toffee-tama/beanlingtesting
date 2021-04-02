@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use Auth;
 use DB;
+use Closure;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\SitePage;
+use App\Models\SitePageCategory;
+use App\Models\SitePageSection;
 
 class PageController extends Controller
 {
@@ -30,9 +33,21 @@ class PageController extends Controller
     public function getPage($key)
     {
         $page = SitePage::where('key', $key)->where('is_visible', 1)->first();
+
         if(!$page) abort(404);
+
+        if ($page->admin_only && (auth()->user() == null || !auth()->user()->isStaff)) {
+            flash('You do not have the permission to access this page.')->error();
+            return redirect('/');
+        }
         return view('pages.page', ['page' => $page]);
     }
+
+    /**********************************************************************************************
+    
+        PAGE CATEGORIES
+
+    **********************************************************************************************/
     
 
     /**
@@ -48,4 +63,20 @@ class PageController extends Controller
         ]);
     }
     
+    /**
+     * Shows the world lore page.
+     *
+     * @param  string  $key
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPageSection($key)
+    {
+        $section = SitePageSection::where('key', $key)->first();
+        if(!$section) abort(404);
+        return view('pages.page_sections', [
+            'sections' => SitePageSection::orderBy('sort', 'DESC')->get(),
+            'section' => $section,
+            'categories' => SitePageCategory::orderBy('sort', 'DESC')->get()
+        ]);
+    }
 }

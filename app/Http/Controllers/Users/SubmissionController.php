@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 
 use DB;
 use Auth;
+use Config;
 use Settings;
+use Carbon\Carbon;
 use App\Models\User\User;
 use App\Models\User\UserItem;
 use App\Models\Character\Character;
@@ -16,7 +18,9 @@ use App\Models\Item\ItemCategory;
 use App\Models\Currency\Currency;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
+use App\Models\Recipe\Recipe;
 use App\Models\Prompt\Prompt;
+use App\Models\Pet\Pet;
 
 use App\Services\SubmissionManager;
 
@@ -34,7 +38,9 @@ class SubmissionController extends Controller
     */
 
     /**********************************************************************************************
+
         PROMPT SUBMISSIONS
+
     **********************************************************************************************/
 
     /**
@@ -89,7 +95,7 @@ class SubmissionController extends Controller
         $inventory = UserItem::with('item')->whereNull('deleted_at')->where('count', '>', '0')->where('user_id', Auth::user()->id)->get();
         return view('home.create_submission', [
             'closed' => $closed,
-            'isClaim' => false
+            'isClaim' => false,
         ] + ($closed ? [] : [
             'submission' => new Submission,
             'prompts' => Prompt::active()->sortAlphabetical()->pluck('name', 'id')->toArray(),
@@ -97,9 +103,12 @@ class SubmissionController extends Controller
             'categories' => ItemCategory::orderBy('sort', 'DESC')->get(),
             'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
             'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
+            'character_items' => Item::whereIn('item_category_id', ItemCategory::where('is_character_owned',1)->pluck('id')->toArray() )->orderBy('name')->released()->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'inventory' => $inventory,
-            'page' => 'submission'
+            'page' => 'submission',
+            'expanded_rewards' => Config::get('lorekeeper.extensions.character_reward_expansion.expanded')
         ]));
     }
 
@@ -129,9 +138,23 @@ class SubmissionController extends Controller
         $prompt = Prompt::active()->where('id', $id)->first();
         if(!$prompt) return response(404);
 
+        $count['all'] = Submission::submitted($id, Auth::user()->id)->count();
+        $count['Hour'] = Submission::submitted($id, Auth::user()->id)->where('created_at', '>=', now()->startOfHour())->count();
+        $count['Day'] = Submission::submitted($id, Auth::user()->id)->where('created_at', '>=', now()->startOfDay())->count();
+        $count['Week'] = Submission::submitted($id, Auth::user()->id)->where('created_at', '>=', now()->startOfWeek())->count();
+        $count['Month'] = Submission::submitted($id, Auth::user()->id)->where('created_at', '>=', now()->startOfMonth())->count();
+        $count['Year'] = Submission::submitted($id, Auth::user()->id)->where('created_at', '>=', now()->startOfYear())->count();
+
+        if($prompt->limit_character) {
+            $limit = $prompt->limit * Character::visible()->where('is_myo_slot', 0)->where('user_id', Auth::user()->id)->count();
+        } else {
+            $limit = $prompt->limit;
+        }
+
         return view('home._prompt', [
             'prompt' => $prompt,
-            'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', Auth::user()->id)->count()
+            'count' => $count,
+            'limit' => $limit
         ]);
     }
 
@@ -145,7 +168,7 @@ class SubmissionController extends Controller
     public function postNewSubmission(Request $request, SubmissionManager $service)
     {
         $request->validate(Submission::$createRules);
-        if($service->createSubmission($request->only(['url', 'prompt_id', 'comments', 'slug', 'character_quantity', 'character_currency_id', 'rewardable_type', 'rewardable_id', 'quantity', 'stack_id', 'stack_quantity', 'currency_id', 'currency_quantity','focus_chara']), Auth::user())) {
+        if($service->createSubmission($request->only(['url', 'prompt_id', 'comments', 'slug', 'character_quantity', 'character_currency_id',  'character_rewardable_type', 'character_rewardable_id', 'character_rewardable_quantity', 'rewardable_type', 'rewardable_id', 'quantity', 'stack_id', 'stack_quantity', 'currency_id', 'currency_quantity','focus_chara']), Auth::user())) {
             flash('Prompt submitted successfully.')->success();
         }
         else {
@@ -155,7 +178,9 @@ class SubmissionController extends Controller
     }
 
     /**********************************************************************************************
+
         CLAIMS
+
     **********************************************************************************************/
 
     /**
@@ -210,7 +235,7 @@ class SubmissionController extends Controller
         $inventory = UserItem::with('item')->whereNull('deleted_at')->where('count', '>', '0')->where('user_id', Auth::user()->id)->get();
         return view('home.create_submission', [
             'closed' => $closed,
-            'isClaim' => true
+            'isClaim' => true,
         ] + ($closed ? [] : [
             'submission' => new Submission,
             'characterCurrencies' => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
@@ -219,8 +244,11 @@ class SubmissionController extends Controller
             'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
             'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-            'page' => 'submission'
+           'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),            
+           'page' => 'submission',
+            'expanded_rewards' => Config::get('lorekeeper.extensions.character_reward_expansion.expanded')
         ]));
     }
 
@@ -234,7 +262,7 @@ class SubmissionController extends Controller
     public function postNewClaim(Request $request, SubmissionManager $service)
     {
         $request->validate(Submission::$createRules);
-        if($service->createSubmission($request->only(['url', 'comments', 'stack_id', 'stack_quantity', 'slug', 'character_quantity', 'character_currency_id', 'rewardable_type', 'rewardable_id', 'quantity', 'currency_id', 'currency_quantity']), Auth::user(), true)) {
+        if($service->createSubmission($request->only(['url', 'comments', 'stack_id', 'stack_quantity', 'slug', 'character_rewardable_type', 'character_rewardable_id', 'character_rewardable_quantity', 'rewardable_type','rewardable_id', 'quantity', 'currency_id', 'currency_quantity']), Auth::user(), true)) {
             flash('Claim submitted successfully.')->success();
         }
         else {

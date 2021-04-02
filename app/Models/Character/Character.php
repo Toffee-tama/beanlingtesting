@@ -4,6 +4,7 @@ namespace App\Models\Character;
 
 use Config;
 use DB;
+use Settings;
 use Carbon\Carbon;
 use Notifications;
 use App\Models\Model;
@@ -15,9 +16,9 @@ use App\Models\Character\Character;
 use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Character\CharacterBookmark;
-use App\Models\Character\CharacterRelation;
 use App\Models\Character\CharacterLineage;
 use App\Models\Character\CharacterLineageBlacklist;
+use App\Models\Character\CharacterRelation;
 
 use App\Models\Character\CharacterCurrency;
 use App\Models\Currency\Currency;
@@ -52,7 +53,7 @@ class Character extends Model
         'is_sellable', 'is_tradeable', 'is_giftable',
         'sale_value', 'transferrable_at', 'is_visible',
         'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'sort',
-        'is_myo_slot', 'name', 'trade_id', 'is_links_open', 'owner_url'
+        'is_myo_slot', 'name', 'trade_id', 'is_links_open', 'owner_url', 'home_id', 'home_changed', 'faction_id', 'faction_changed'
     ];
 
     /**
@@ -74,7 +75,7 @@ class Character extends Model
      *
      * @var array
      */
-    public $dates = ['transferrable_at'];
+    protected $dates = ['transferrable_at','home_changed', 'faction_changed'];
 
     /**
      * Accessors to append to the model.
@@ -85,7 +86,7 @@ class Character extends Model
 
     /**
      * Validation rules for character creation.
-      *
+     *
      * @var array
      */
     public static $createRules = [
@@ -96,8 +97,8 @@ class Character extends Model
         'slug' => 'required|alpha_dash',
         'description' => 'nullable',
         'sale_value' => 'nullable',
-        'image' => 'required|mimes:jpeg,jpg,gif,png|max:20000',
-        'thumbnail' => 'nullable|mimes:jpeg,jpg,gif,png|max:20000',
+        'image' => 'required|mimes:jpeg,gif,png|max:20000',
+        'thumbnail' => 'nullable|mimes:jpeg,gif,png|max:20000',
         'owner_url' => 'url|nullable',
     ];
 
@@ -127,8 +128,8 @@ class Character extends Model
         'description' => 'nullable',
         'sale_value' => 'nullable',
         'name' => 'required',
-        'image' => 'nullable|mimes:jpeg,jpg,gif,png|max:20000',
-        'thumbnail' => 'nullable|mimes:jpeg,jpg,gif,png|max:20000',
+        'image' => 'nullable|mimes:jpeg,gif,png|max:20000',
+        'thumbnail' => 'nullable|mimes:jpeg,gif,png|max:20000',
     ];
 
     /**********************************************************************************************
@@ -210,6 +211,22 @@ class Character extends Model
     }
 
     /**
+     * Get the trade this character is attached to.
+     */
+    public function home()
+    {
+        return $this->belongsTo('App\Models\WorldExpansion\Location', 'home_id');
+    }
+
+    /**
+     * Get the faction this character is attached to.
+     */
+    public function faction()
+    {
+        return $this->belongsTo('App\Models\WorldExpansion\Faction', 'faction_id');
+    }
+
+    /**
      * Get the rarity of this character.
      */
     public function rarity()
@@ -239,7 +256,13 @@ class Character extends Model
     }
 
     /**
-     * Get the character's character drop data.
+     * Get the lineage of the character.
+     */
+    public function lineage()
+    {
+        return $this->hasOne('App\Models\Character\CharacterLineage', 'character_id');
+    }
+    /* * Get the character's character drop data.
      */
     public function drops()
     {
@@ -254,19 +277,12 @@ class Character extends Model
         }
         return $this->hasOne('App\Models\Character\CharacterDrop', 'character_id');
     }
-    /**
+    /*
     * Get the links for this character
     */
     public function links()
     {
        return $this->hasMany('App\Models\Character\CharacterRelation', 'chara_1')->where('status', 'Approved');
-    }
-    /**
-     *  Get the lineage of the character.
-     */
-    public function lineage()
-    {
-        return $this->hasOne('App\Models\Character\CharacterLineage', 'character_id');
     }
 
     /**********************************************************************************************
@@ -420,6 +436,63 @@ class Character extends Model
         return 'Character';
     }
 
+    public function getHomeSettingAttribute()
+    {
+        return intval(Settings::get('WE_character_locations'));
+    }
+
+    public function getLocationAttribute()
+    {
+        $setting = $this->homeSetting;
+
+
+        switch($setting) {
+            case 1:
+                if(!$this->user) return null;
+                elseif(!$this->user->home) return null;
+                else return $this->user->home->fullDisplayName;
+
+            case 2:
+                if(!$this->home) return null;
+                else return $this->home->fullDisplayName;
+
+            case 3:
+                if(!$this->home) return null;
+                else return $this->home->fullDisplayName;
+
+            default:
+                return null;
+        }
+    }
+
+    public function getFactionSettingAttribute()
+    {
+        return intval(Settings::get('WE_character_factions'));
+    }
+
+    public function getCurrentFactionAttribute()
+    {
+        $setting = $this->factionSetting;
+
+        switch($setting) {
+            case 1:
+                if(!$this->user) return null;
+                elseif(!$this->user->faction) return null;
+                else return $this->user->faction->fullDisplayName;
+
+            case 2:
+                if(!$this->faction) return null;
+                else return $this->faction->fullDisplayName;
+
+            case 3:
+                if(!$this->faction) return null;
+                else return $this->faction->fullDisplayName;
+
+            default:
+                return null;
+        }
+    }
+
     /**********************************************************************************************
 
         OTHER FUNCTIONS
@@ -475,7 +548,7 @@ class Character extends Model
         return $currencies;
     }
 
-       /**
+    /**
      * Get the character's exp logs.
      *
      * @param  int  $limit
@@ -615,7 +688,7 @@ class Character extends Model
         return $query->paginate(30);
     }
 
-      /**
+    /**
      * Get submissions that the character has been included in.
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator

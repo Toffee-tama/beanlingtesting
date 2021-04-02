@@ -25,7 +25,10 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
     Route::post('profile', 'AccountController@postProfile');
     Route::post('password', 'AccountController@postPassword');
     Route::post('email', 'AccountController@postEmail');
+    Route::post('location', 'AccountController@postLocation');
+    Route::post('faction', 'AccountController@postFaction');
     Route::post('avatar', 'AccountController@postAvatar');
+    Route::post('socials', 'AccountController@postLinks');
 
     Route::get('bookmarks', 'BookmarkController@getBookmarks');
     Route::get('bookmarks/create', 'BookmarkController@getCreateBookmark');
@@ -53,12 +56,6 @@ Route::group(['prefix' => 'pets', 'namespace' => 'Users'], function() {
     Route::post('detach/{id}', 'PetController@postDetach');
 
     Route::get('selector', 'PetController@getSelector');
-});  
-Route::group(['prefix' => 'awardcase', 'namespace' => 'Users'], function() {
-    Route::get('/', 'AwardCaseController@getIndex');
-    Route::post('edit', 'AwardCaseController@postEdit');
-
-    Route::get('selector', 'AwardCaseController@getSelector');
 });
 
 Route::group(['prefix' => 'characters', 'namespace' => 'Users'], function() {
@@ -118,16 +115,15 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::get('{slug}/profile/edit', 'CharacterController@getEditCharacterProfile');
     Route::post('{slug}/profile/edit', 'CharacterController@postEditCharacterProfile');
 
-    Route::post('{slug}/inventory/edit', 'CharacterController@postInventoryEdit');
     Route::get('{slug}/links/edit', 'CharacterController@getEditCharacterLinks');
     Route::post('{slug}/links/edit', 'CharacterController@postEditCharacterLinks');
 
     Route::post('{slug}/links/info/{id}', 'CharacterController@postEditCharacterLinkInfo');
     Route::post('{slug}/links/delete/{id}', 'CharacterController@postDeleteCharacterLink');
+    
+    Route::post('{slug}/inventory/edit', 'CharacterController@postInventoryEdit');
 
     Route::post('{slug}/bank/transfer', 'CharacterController@postCurrencyTransfer');
-    Route::post('{slug}/inventory/edit', 'CharacterController@postInventoryEdit');
-    
     Route::get('{slug}/transfer', 'CharacterController@getTransfer');
     Route::post('{slug}/transfer', 'CharacterController@postTransfer');
     Route::post('{slug}/transfer/{id}/cancel', 'CharacterController@postCancelTransfer');
@@ -145,17 +141,14 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/stats-area/{id}', 'LevelController@postStat');
     Route::post('{slug}/stats-area/admin/{id}', 'LevelController@postAdminStat');
     Route::post('{slug}/stats-area/edit/{id}', 'LevelController@postEditStat');
-
     # EXP
     Route::post('{slug}/level-area/exp-grant', 'LevelController@postExpGrant');
     Route::post('{slug}/level-area/stat-grant', 'LevelController@postStatGrant');
-
-// LINKS
-Route::get('links/accept/{id}', 'LinkController@getAcceptLink');
-Route::get('links/reject/{id}', 'LinkController@getRejectLink');
 });
 
-// MYO
+Route::get('links/accept/{id}', 'LinkController@getAcceptLink');
+Route::get('links/reject/{id}', 'LinkController@getRejectLink');
+// LINKS
 
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
     Route::get('{id}/profile/edit', 'MyoController@getEditCharacterProfile');
@@ -171,6 +164,7 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function() {
 
 Route::group(['prefix' => 'level', 'namespace' => 'Users'], function() {
     Route::get('/', 'LevelController@getIndex');
+
 });
 
 
@@ -251,6 +245,21 @@ Route::group(['prefix' => 'shops'], function() {
     Route::get('history', 'ShopController@getPurchaseHistory');
 });
 
+
+
+/**************************************************************************************************
+    Research
+**************************************************************************************************/
+
+Route::group(['prefix' => 'research', 'namespace' => 'Research'], function() {
+    Route::get('/purchase/{id}', 'ResearchController@getPurchaseResearch');
+    Route::post('/purchase/{id}', 'ResearchController@postPurchaseResearch');
+    Route::post('/claim-rewards/{id}', 'ResearchController@postClaimRewards');
+    Route::get('/history', 'ResearchController@getResearchHistory');
+    Route::get('/unlocked', 'TreeController@getUserTree');
+});
+
+
 /**************************************************************************************************
     Scavenger Hunts
 **************************************************************************************************/
@@ -261,6 +270,7 @@ Route::group(['prefix' => 'hunts'], function() {
     Route::post('targets/claim', 'HuntController@postClaimTarget');
 });
 
+/**************************************************************************************************
 /**************************************************************************************************
     Adoptions
 **************************************************************************************************/
@@ -295,16 +305,4 @@ Route::group(['prefix' => 'comments', 'namespace' => 'Comments'], function() {
 Route::group(['prefix' => 'advent-calendars'], function() {
     Route::get('{id}', 'AdventController@getAdvent');
     Route::post('{id}', 'AdventController@postClaimPrize');
-});
-
-
-/**************************************************************************************************
-    Research
-**************************************************************************************************/
-
-Route::group(['prefix' => 'research', 'namespace' => 'Research'], function() {
-    Route::get('/purchase/{id}', 'ResearchController@getPurchaseResearch');
-    Route::post('/purchase/{id}', 'ResearchController@postPurchaseResearch');
-    Route::get('history', 'ResearchController@getResearchHistory');
-    Route::get('unlocked', 'TreeController@getUserTree');
 });

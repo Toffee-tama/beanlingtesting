@@ -9,10 +9,10 @@ use Config;
 use Settings;
 
 use App\Models\Character\Character;
-use App\Models\Character\CharacterLink;
 use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterLineageBlacklist;
 use App\Models\Rarity;
+use App\Models\Character\CharacterTitle;
 use App\Models\User\User;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
@@ -63,10 +63,12 @@ class CharacterController extends Controller
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
             'characterOptions' => CharacterLineageBlacklist::getAncestorOptions(),
             'rarities' => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'titles' => ['0' => 'Select Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('sort', 'DESC')->pluck('title', 'id')->toArray(),
             'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'dropSpecies' => Species::whereIn('id', CharacterDropData::pluck('species_id')->toArray())->pluck('id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
-            'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
+            'features' => Feature::getFeaturesByCategory(),
+            'parameters' => ['0' => 'Pick a Species First'],
             'isMyo' => false,
             'stats' => Stat::orderBy('name')->get(),
         ]);
@@ -86,7 +88,8 @@ class CharacterController extends Controller
             'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'dropSpecies' => Species::whereIn('id', CharacterDropData::pluck('species_id')->toArray())->pluck('id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
-            'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
+            'features' => Feature::getFeaturesByCategory(),
+            'parameters' => ['0' => 'Pick a Species First'],
             'isMyo' => true,
             'stats' => Stat::orderBy('name')->get(),
         ]);
@@ -135,8 +138,8 @@ class CharacterController extends Controller
             'description', 'is_visible', 'is_giftable', 'is_tradeable', 'is_sellable',
             'sale_value', 'transferrable_at', 'use_cropper',
             'x0', 'x1', 'y0', 'y1',
-            'designer_alias', 'designer_url',
-            'artist_alias', 'artist_url',
+            'designer_id', 'designer_url',
+            'artist_id', 'artist_url',
 
             // hello darkness my old friend //
             'sire_id',           'sire_name',
@@ -155,8 +158,8 @@ class CharacterController extends Controller
             'dam_dam_dam_id',    'dam_dam_dam_name',
             'generate_ancestors',
 
-            'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data',
-            'image', 'thumbnail', 'image_description', 'stats'
+            'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data', 'title_id', 'title_data',
+            'image', 'thumbnail', 'image_description', 'parameters', 'stats'
         ]);
         if ($character = $service->createCharacter($data, Auth::user())) {
             flash('Character created successfully.')->success();
@@ -183,8 +186,8 @@ class CharacterController extends Controller
             'description', 'is_visible', 'is_giftable', 'is_tradeable', 'is_sellable',
             'sale_value', 'transferrable_at', 'use_cropper',
             'x0', 'x1', 'y0', 'y1',
-            'designer_alias', 'designer_url',
-            'artist_alias', 'artist_url',
+            'designer_id', 'designer_url',
+            'artist_id', 'artist_url',
 
             // i've come to speak with you again //
             'sire_id',           'sire_name',
@@ -204,7 +207,7 @@ class CharacterController extends Controller
             'generate_ancestors',
 
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data',
-            'image', 'thumbnail', 'parent_id'
+            'image', 'thumbnail', 'parameters', 'stats'
         ]);
         if ($character = $service->createCharacter($data, Auth::user(), true)) {
             flash('MYO slot created successfully.')->success();
@@ -564,7 +567,6 @@ class CharacterController extends Controller
 
         if($service->adminTransfer($request->only(['recipient_id', 'recipient_url', 'cooldown', 'reason']), $this->character, Auth::user())) {
             flash('Character transferred successfully.')->success();
-            if($child) flash("This character's attachments have been transferred with it.")->warning();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
@@ -587,50 +589,6 @@ class CharacterController extends Controller
 
         if($service->adminTransfer($request->only(['recipient_id', 'recipient_url', 'cooldown', 'reason']), $this->character, Auth::user())) {
             flash('Character transferred successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->back();
-    }
-
-    /**
-     * Binds a character.
-     *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  string                         $slug
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postBind(Request $request, CharacterManager $service, $slug)
-    {
-        $this->character = Character::where('slug', $slug)->first();
-        if(!$this->character) abort(404);
-        
-        if($service->boundTransfer($request->only(['parent_id']), $this->character, Auth::user())) {
-            flash('Character binding updated.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->back();
-    }
-    
-    /**
-     * Binds an MYO slot.
-     *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  int                            $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postMyoBind(Request $request, CharacterManager $service, $id)
-    {
-        $this->character = Character::where('is_myo_slot', 1)->where('id', $id)->first();
-        if(!$this->character) abort(404);
-        
-        if($service->boundTransfer($request->only(['parent_id']), $this->character, Auth::user())) {
-            flash('Character binding updated.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

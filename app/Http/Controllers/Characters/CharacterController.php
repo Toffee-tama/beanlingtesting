@@ -13,6 +13,8 @@ use App\Models\Character\Character;
 use App\Models\Character\CharacterRelation;
 use App\Models\Species\Species;
 use App\Models\Rarity;
+use App\Models\WorldExpansion\Location;
+use App\Models\WorldExpansion\Faction;
 use App\Models\Feature\Feature;
 
 use App\Models\Currency\Currency;
@@ -29,7 +31,6 @@ use App\Models\Item\ItemLog;
 use App\Models\Character\CharacterDrop;
 
 use App\Models\Character\CharacterTransfer;
-use App\Models\Character\CharacterLink;
 
 use App\Services\CurrencyManager;
 use App\Services\InventoryManager;
@@ -78,8 +79,6 @@ class CharacterController extends Controller
     {
         return view('character.character', [
             'character' => $this->character,
-            'parent' => CharacterLink::where('child_id', $this->character->id)->orderBy('parent_id', 'ASC')->first(),
-            'children' => CharacterLink::where('parent_id', $this->character->id)->orderBy('child_id', 'ASC')->get()
         ]);
     }
 
@@ -112,6 +111,12 @@ class CharacterController extends Controller
 
         return view('character.edit_profile', [
             'character' => $this->character,
+            'locations' => Location::all()->where('is_character_home')->pluck('style','id')->toArray(),
+            'factions' => Faction::all()->where('is_character_faction')->pluck('style','id')->toArray(),
+            'user_enabled' => Settings::get('WE_user_locations'),
+            'user_faction_enabled' => Settings::get('WE_user_factions'),
+            'char_enabled' => Settings::get('WE_character_locations'),
+            'char_faction_enabled' => Settings::get('WE_character_factions')
         ]);
     }
 
@@ -130,8 +135,8 @@ class CharacterController extends Controller
         $isMod = Auth::user()->hasPower('manage_characters');
         $isOwner = ($this->character->user_id == Auth::user()->id);
         if(!$isMod && !$isOwner) abort(404);
-        
-        if($service->updateCharacterProfile($request->only(['name', 'link', 'text', 'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'is_links_open', 'alert_user']), $this->character, Auth::user(), !$isOwner)) {
+
+        if($service->updateCharacterProfile($request->only(['name', 'link', 'text', 'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'is_links_open', 'alert_user','location', 'faction']), $this->character, Auth::user(), !$isOwner)) {
             flash('Profile edited successfully.')->success();
         }
         else {
@@ -616,17 +621,12 @@ public function getCharacterLinks($slug)
         $isOwner = ($this->character->user_id == Auth::user()->id);
         if(!$isMod && !$isOwner) abort(404);
 
-        $parent = CharacterLink::where('child_id', $this->character->id)->orderBy('parent_id', 'DESC')->first();
-        if($parent) $parent = $parent->parent->id;
-
         return view('character.transfer', [
             'character' => $this->character,
             'transfer' => CharacterTransfer::active()->where('character_id', $this->character->id)->first(),
             'cooldown' => Settings::get('transfer_cooldown'),
             'transfersQueue' => Settings::get('open_transfers_queue'),
             'userOptions' => User::visible()->orderBy('name')->pluck('name', 'id')->toArray(),
-            'parent' => $parent,
-            'characterOptions' => [null => 'Unbound'] + Character::visible()->myo(0)->orderBy('slug','ASC')->get()->pluck('fullName','id')->toArray()
         ]);
     }
 

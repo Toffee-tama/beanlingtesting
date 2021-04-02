@@ -45,7 +45,7 @@
 <br>
 <h3>Rewards</h3>
 <p>Rewards are awarded when the user levels up</p>
-@include('widgets._loot_select', ['loots' => $level->rewards, 'showLootTables' => true, 'showRaffles' => true])
+@include('widgets._loot_select', ['loots' => $level->rewards, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 
 <div class="text-right">
     {!! Form::submit($level->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
@@ -53,13 +53,13 @@
 
 {!! Form::close() !!}
 
-@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'raffles' => $raffles, 'showLootTables' => true, 'showRaffles' => true])
+@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'raffles' => $raffles, 'recipe' => $recipes, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 @include('widgets._level_limit_row', ['items' => $items, 'currencies' => $currencies])
 @endsection
 
 @section('scripts')
 @parent
-@include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
+@include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 @include('js._level_limit_js')
 <script>
 $( document ).ready(function() {    

@@ -315,19 +315,20 @@ class AddSiteSettings extends Command
             ]);
             $this->info("Added:   coupon_settings / Default: 0");
         }
-        else $this->line("Skipped: coupon_settings");
-        if(!DB::table('site_settings')->where('key', 'adopts_user')->exists()) {
+        else $this->line("Skipped: limited_stock_coupon_settings");
+
+        if(!DB::table('site_settings')->where('key', 'limited_stock_coupon_settings')->exists()) {
             DB::table('site_settings')->insert([
                 [
-                    'key' => 'adopts_user',
-                    'value' => 1,
-                    'description' => 'ID of the site\'s adoption center user.'
+                    'key' => 'limited_stock_coupon_settings',
+                    'value' => 0,
+                    'description' => '0: Does not allow coupons to be used on limited stock items, 1: Allows coupons to be used on limited stock items'
                 ]
 
             ]);
-            $this->info("Added:   adopts_user / Default: 1");
+            $this->info("Added:   limited_stock_coupon_settings / Default: 0");
         }
-        else $this->line("Skipped: adopts_user");
+        else $this->line("Skipped: limited_stock_coupon_settings");
 
         if(!DB::table('site_settings')->where('key', 'event_currency')->exists()) {
             DB::table('site_settings')->insert([
@@ -367,20 +368,44 @@ class AddSiteSettings extends Command
             $this->info("Added:   global_event_goal / Default: 0");
         }
         else $this->line("Skipped: global_event_goal");
-        
 
-        if(!DB::table('site_settings')->where('key', 'limited_stock_coupon_settings')->exists()) {
+        if(!DB::table('site_settings')->where('key', 'character_title_display')->exists()) {
             DB::table('site_settings')->insert([
                 [
-                    'key' => 'limited_stock_coupon_settings',
+                    'key' => 'character_title_display',
                     'value' => 0,
-                    'description' => '0: Does not allow coupons to be used on limited stock items, 1: Allows coupons to be used on limited stock items'
+                    'description' => '0: Characters\' titles only display in their image info. 1: Characters\'s titles display alongside their category, species, rarity.'
                 ]
 
             ]);
-            $this->info("Added:   limited_stock_coupon_settings / Default: 0");
+            $this->info("Added:   character_title_display / Default: 0");
         }
-        else $this->line("Skipped: limited_stock_coupon_settings");
+        else $this->line("Skipped: character_title_display");
+
+        if(!DB::table('site_settings')->where('key', 'group_currency_alt')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'group_currency_alt',
+                    'value' => 1,
+                    'description' => 'ID of the alternate group currency to award from gallery submissions (if enabled).'
+                ]
+
+            ]);
+            $this->info("Added:   group_currency_alt / Default: 1");
+        }
+        else $this->line("Skipped: group_currency_alt");
+        if(!DB::table('site_settings')->where('key', 'adopts_user')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'adopts_user',
+                    'value' => 1,
+                    'description' => 'ID of the site\'s adoption center user.'
+                ]
+
+            ]);
+            $this->info("Added:   adopts_user / Default: 1");
+        }
+        else $this->line("Skipped: adopts_user");
 
         $this->line("\nSite settings up to date!");
 

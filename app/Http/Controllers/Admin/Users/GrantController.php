@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Admin\Users;
 
 use Auth;
+use Settings;
 use Config;
 use Illuminate\Http\Request;
 
 use App\Models\User\User;
 use App\Models\Item\Item;
-use App\Models\Award\Award;
 use App\Models\Recipe\Recipe;
+use App\Models\Pet\Pet;
 use App\Models\Currency\Currency;
 use App\Models\Research\Research;
 
@@ -18,14 +19,16 @@ use App\Models\Character\CharacterItem;
 use App\Models\Trade;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Submission\Submission;
+use App\Models\User\UserCurrency;
+use App\Models\SitePage;
 
 use App\Models\Character\Character;
 use App\Services\CurrencyManager;
 use App\Services\InventoryManager;
-use App\Services\Stats\ExperienceManager;
-use App\Services\AwardCaseManager;
 use App\Services\RecipeService;
 use App\Services\ResearchService;
+use App\Services\Stats\ExperienceManager;
+use App\Services\PetManager;
 
 use App\Http\Controllers\Controller;
 
@@ -129,6 +132,38 @@ class GrantController extends Controller
 
 
     /**
+     * Show the research grant page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getResearch()
+    {
+        return view('admin.grants.research', [
+            'users' => User::orderBy('id')->pluck('name', 'id'),
+            'research' => Research::orderBy('name')->pluck('name', 'id')
+        ]);
+    }
+
+    /**
+     * Grants or removes research from multiple users.
+     *
+     * @param  \Illuminate\Http\Request        $request
+     * @param  App\Services\InventoryManager  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postResearch(Request $request, ResearchService $service)
+    {
+        $data = $request->only(['users', 'research_ids', 'message']);
+        if($service->grantResearch($data, Auth::user())) {
+            flash('Items granted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
      * Show the item search page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -166,37 +201,52 @@ class GrantController extends Controller
     }
 
     /**
-     * Show the award grant page.
+     * Show the event currency info page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getAwards()
+    public function getEventCurrency()
     {
-        return view('admin.grants.awards', [
-            'users' => User::orderBy('id')->pluck('name', 'id'),
-            'awards' => Award::orderBy('name')->pluck('name', 'id')
+        $total = UserCurrency::where('user_id', Settings::get('admin_user'))->where('currency_id', Settings::get('event_currency'))->first();
+
+        return view('admin.grants.event_currency', [
+            'currency' => Currency::find(Settings::get('event_currency')),
+            'total' => $total,
+            'progress' => $total ? ($total->quantity <= Settings::get('global_event_goal') ? ($total->quantity/Settings::get('global_event_goal'))*100 : 100) : 0,
+            'inverseProgress' => $total ? ($total->quantity <= Settings::get('global_event_goal') ? 100-(($total->quantity/Settings::get('global_event_goal'))*100) : 0) : 100,
+            'page' => SitePage::where('key', 'event-tracker')->first()
         ]);
     }
 
     /**
-     * Grants or removes awards from multiple users.
+     * Show the clear event currency modal.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getClearEventCurrency()
+    {
+        return view('admin.grants._clear_event_currency', [
+            'currency' => Currency::find(Settings::get('event_currency'))
+        ]);
+    }
+
+    /**
+     * Zeros event points for all users.
      *
      * @param  \Illuminate\Http\Request        $request
-     * @param  App\Services\AwardCaseManager  $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postAwards(Request $request, AwardCaseManager $service)
+    public function postClearEventCurrency(Request $request)
     {
-        $data = $request->only(['names', 'award_ids', 'quantities', 'data', 'disallow_transfer', 'notes']);
-        if($service->grantAwards($data, Auth::user())) {
-            flash('Awards granted successfully.')->success();
+        if(UserCurrency::where('currency_id', Settings::get('event_currency'))->update(['quantity' => 0])) {
+            flash('Event currency cleared successfully.')->success();
         }
         else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+            flash('Failed to clear event currency.')->error();
         }
         return redirect()->back();
     }
- 
+
     /**
      * Grants or removes exp (show)
      */
@@ -204,6 +254,16 @@ class GrantController extends Controller
     {
         return view('admin.grants.exp', [
             'users' => User::orderBy('id')->pluck('name', 'id'),
+            ]);
+        }
+     /*       * Show the pet grant page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPets()
+    {
+        return view('admin.grants.pets', [
+            'pets' => Pet::orderBy('name')->pluck('name', 'id')
         ]);
     }
 
@@ -216,33 +276,19 @@ class GrantController extends Controller
         if($service->grantExp($data, Auth::user())) {
             flash('EXP granted successfully.')->success();
         }
-        }
-    
-    /**
-     * Show the item grant page.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getResearch()
-    {
-        return view('admin.grants.research', [
-            'users' => User::orderBy('id')->pluck('name', 'id'),
-            'research' => Research::orderBy('name')->pluck('name', 'id')
-        ]);
     }
-
-    /**
-     * Grants or removes items from multiple users.
+    
+    /*        * Grants or removes pets from multiple users.
      *
      * @param  \Illuminate\Http\Request        $request
-     * @param  App\Services\InventoryManager  $service
+     * @param  App\Services\InvenntoryManager  $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postResearch(Request $request, ResearchService $service)
+    public function postPets(Request $request, PetManager $service)
     {
-        $data = $request->only(['users', 'research_ids', 'message']);
-        if($service->grantResearch($data, Auth::user())) {
-            flash('Items granted successfully.')->success();
+        $data = $request->only(['names', 'pet_id', 'quantity', 'data', 'disallow_transfer', 'notes']);
+        if($service->grantPets($data, Auth::user())) {
+            flash('Pets granted successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

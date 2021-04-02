@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use Route;
+use Settings;
+
 use App\Models\User\User;
 
 use App\Models\User\UserCurrency;
@@ -20,6 +22,7 @@ use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
 use App\Models\Gallery\GalleryFavorite;
 use App\Models\Gallery\GalleryCharacter;
+use App\Models\Item\ItemLog;
 
 use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterImage;
@@ -30,12 +33,6 @@ use App\Models\User\UserPet;
 use App\Models\Pet\Pet;
 use App\Models\Pet\PetCategory;
 use App\Models\Pet\PetLog;
-use App\Models\Item\ItemLog;
-
-use App\Models\User\UserAward;
-use App\Models\Award\Award;
-use App\Models\Award\AwardCategory;
-use App\Models\Award\AwardLog;
 
 
 use App\Http\Controllers\Controller;
@@ -76,14 +73,15 @@ class UserController extends Controller
     {
         $characters = $this->user->characters();
         if(!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) $characters->visible();
-        
+
         return view('user.profile', [
             'user' => $this->user,
             'items' => $this->user->items()->where('count', '>', 0)->orderBy('user_items.updated_at', 'DESC')->take(4)->get(),
-            'pets' => $this->user->pets()->orderBy('user_pets.updated_at', 'DESC')->take(5)->get(),
             'sublists' => Sublist::orderBy('sort', 'DESC')->get(),
             'characters' => $characters,
-            'awards' => $this->user->awards()->orderBy('user_awards.updated_at', 'DESC')->take(4)->get()
+            'user_enabled' => Settings::get('WE_user_locations'),
+            'pets' => $this->user->pets()->orderBy('user_pets.updated_at', 'DESC')->take(5)->get(),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
         ]);
     }
 
@@ -221,39 +219,6 @@ class UserController extends Controller
             'userOptions' => User::where('id', '!=', $this->user->id)->orderBy('name')->pluck('name', 'id')->toArray(),
             'user' => $this->user,
             'logs' => $this->user->getPetLogs()
-        ]);
-    }
-    
-    /**
-     * Shows a user's inventory.
-     *
-     * @param  string  $name
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getUserAwardCase($name)
-    {
-        $categories = AwardCategory::orderBy('sort', 'DESC')->get();
-        $awards = count($categories) ? 
-            $this->user->awards()
-                ->where('count', '>', 0)
-                ->orderByRaw('FIELD(award_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
-                ->orderBy('name')
-                ->orderBy('updated_at')
-                ->get()
-                ->groupBy(['award_category_id', 'id']) :
-            $this->user->awards()
-                ->where('count', '>', 0)
-                ->orderBy('name')
-                ->orderBy('updated_at')
-                ->get()
-                ->groupBy(['award_category_id', 'id']);
-        return view('user.awardcase', [
-            'user' => $this->user,
-            'categories' => $categories->keyBy('id'),
-            'awards' => $awards,
-            'userOptions' => User::where('id', '!=', $this->user->id)->orderBy('name')->pluck('name', 'id')->toArray(),
-            'user' => $this->user,
-            'logs' => $this->user->getAwardLogs()
         ]);
     }
 
@@ -400,21 +365,6 @@ class UserController extends Controller
             'user' => $this->user,
             'logs' => $this->user->getStatLogs(0),
             'sublists' => Sublist::orderBy('sort', 'DESC')->get()
-        ]);
-    }
-    
-    /**
-     * Shows a user's award logs.
-     *
-     * @param  string  $name
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getUserAwardLogs($name)
-    {
-        $user = $this->user;
-        return view('user.award_logs', [
-            'user' => $this->user,
-            'logs' => $this->user->getAwardLogs(0)
         ]);
     }
 

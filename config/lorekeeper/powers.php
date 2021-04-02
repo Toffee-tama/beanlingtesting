@@ -10,7 +10,6 @@ return [
     | The list of staff powers that can be attached to a user rank.
     |
     */
-
     'edit_site_settings' => [
         'name' => 'Edit Site Settings',
         'description' => 'Allow rank to modify site settings and upload new images to replace the site layout images.'
@@ -47,10 +46,24 @@ return [
         'name' => 'Manage Submissions',
         'description' => 'Allow rank to view the submissions queue, edit rewards attached to a submission and approve/reject them.'
     ],
+    'manage_research' => [
+        'name' => 'Manage Research',
+        'description' => 'Allow rank to create, edit, and delete Research and Research Trees.'
+    ],
+    'manage_world' => [
+        'name' => 'Manage World',
+        'description' => 'Allow rank to edit world information related to the World Expansion extension.'
+    ],
     'manage_reports' => [
         'name' => 'Manage Reports',
         'description' => 'Allow rank to view the reports queue.'
     ],
+
+    'staff' => [
+      'name' => 'Staff Member',
+      'description' => 'This is any staff member.'
+    ],
+
     'edit_stats' => [
         'name' => 'Edit Stats',
         'description' => 'Allow rank to edit stats.'
@@ -58,10 +71,6 @@ return [
     'edit_levels' => [
         'name' => 'Edit Levels',
         'description' => 'Allow rank to edit levels.'
-    ],
-    'manage_research' => [
-        'name' => 'Manage Research',
-        'description' => 'Allow rank to create, edit, and delete Research and Research Trees.'
     ]
 
 ];

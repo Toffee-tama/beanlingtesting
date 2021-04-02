@@ -49,7 +49,7 @@ DEVIANTART_CLIENT_SECRET=(client secret as supplied by deviantART)
 DEVIANTART_CALLBACK_URL=/
 ```
 
-## Setting up
+## Setting up 
 
 Composer install:
 ```
@@ -80,7 +80,8 @@ You will need to send yourself the verification email and then link your dA acco
 
 
 If you have any questions, please feel free to contact me through email: corowne@gmail.com
-=======
+
+
 **Design Update Voting:**
 - The number of votes needed for consensus on a design update | Default: 3 | Configured in: Site settings admin panel
 

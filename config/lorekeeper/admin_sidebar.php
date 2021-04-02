@@ -20,7 +20,7 @@ return [
             [
                 'name' => 'User Ranks',
                 'url' => 'admin/users/ranks'
-            ]
+            ],
         ]
     ],
     'Reports' => [
@@ -36,12 +36,20 @@ return [
         'power' => 'edit_pages',
         'links' => [
             [
-                'name' => 'News',
+                'name' => 'News & Bulletins',
                 'url' => 'admin/news'
             ],
             [
                 'name' => 'Sales',
                 'url' => 'admin/sales'
+            ],
+            [
+                'name' => 'Page Sections',
+                'url' => 'admin/page-sections'
+            ],
+            [
+                'name' => 'Page Categories',
+                'url' => 'admin/page-categories'
             ],
             [
                 'name' => 'Pages',
@@ -99,24 +107,20 @@ return [
                 'url' => 'admin/grants/items'
             ],
             [
-                'name' => 'Pet Grants',
-                'url' => 'admin/grants/pets'
-            ],
-            [
-                'name' => 'EXP Grants',
-                'url' => 'admin/grants/exp'
+                'name' => 'Recipe Grants',
+                'url' => 'admin/grants/recipes'
             ],
             [
                 'name' => 'Event Currency',
                 'url' => 'admin/grants/event-currency'
             ],
             [
-                'name' => 'Award Grants',
-                'url' => 'admin/grants/awards'
+                'name' => 'EXP Grants',
+                'url' => 'admin/grants/exp'
             ],
             [
-                'name' => 'Recipe Grants',
-                'url' => 'admin/grants/recipes'
+                'name' => 'Pet Grants',
+                'url' => 'admin/grants/pets'
             ],
         ]
     ],
@@ -149,7 +153,6 @@ return [
             ],
         ]
     ],
-	
     'Stats' => [
         'power' => 'edit_stats',
         'links' => [
@@ -159,7 +162,6 @@ return [
             ],
         ]
     ],
-	
     'Levels' => [
         'power' => 'edit_levels',
         'links' => [
@@ -174,56 +176,12 @@ return [
         ]
     ],
     
-    'Data' => [
+     'Data' => [
         'power' => 'edit_data',
         'links' => [
             [
-                'name' => 'Galleries',
-                'url' => 'admin/data/galleries'
-            ],
-            [
-                'name' => 'Character Categories',
-                'url' => 'admin/data/character-categories'
-            ],
-            [
-                'name' => 'Sub Masterlists',
-                'url' => 'admin/data/sublists'
-            ],
-            [
-                'name' => 'Rarities',
-                'url' => 'admin/data/rarities'
-            ],
-            [
-                'name' => 'Species',
-                'url' => 'admin/data/species'
-            ],
-            [
-                'name' => 'Subtypes',
-                'url' => 'admin/data/subtypes'
-            ],
-            [
-                'name' => 'Traits',
-                'url' => 'admin/data/traits'
-            ],
-            [
-                'name' => 'Shops',
-                'url' => 'admin/data/shops'
-            ],
-            [
-                'name' => 'Character Drops',
-                'url' => 'admin/data/character-drops'
-            ],
-            [
-                'name' => 'Award Categories',
-                'url' => 'admin/data/award-categories'
-            ],
-            [
-                'name' => 'Awards',
-                'url' => 'admin/data/awards'
-            ],
-            [
-                'name' => 'Prompt Categories',
-                'url' => 'admin/data/prompt-categories'
+                'name' => 'Advent Calendars',
+                'url' => 'admin/data/advent-calendars'
             ],
             [
                 'name' => 'Adoption Center',
@@ -234,44 +192,76 @@ return [
                 'url' => 'admin/data/stock'
             ],
             [
-                'name' => 'Prompt Categories',
-                'url' => 'admin/data/prompt-categories'
+                'name' => 'Character Categories',
+                'url' => 'admin/data/character-categories'
+            ],
+            [
+                'name' => 'Character Drops',
+                'url' => 'admin/data/character-drops'
+            ],
+            [
+                'name' => 'Character Titles',
+                'url' => 'admin/data/character-titles'
             ],
             [
                 'name' => 'Currencies',
                 'url' => 'admin/data/currencies'
             ],
             [
-                'name' => 'Prompts',
-                'url' => 'admin/data/prompts'
-            ],
-            [
-                'name' => 'Loot Tables',
-                'url' => 'admin/data/loot-tables'
+                'name' => 'Galleries',
+                'url' => 'admin/data/galleries'
             ],
             [
                 'name' => 'Items',
                 'url' => 'admin/data/items'
             ],
             [
-                'name' => 'Scavenger Hunts',
-                'url' => 'admin/data/hunts'
+                'name' => 'Loot Tables',
+                'url' => 'admin/data/loot-tables'
             ],
             [
-                'name' => 'Advent Calendars',
-                'url' => 'admin/data/advent-calendars'
+                'name' => 'Prompt Categories',
+                'url' => 'admin/data/prompt-categories'
             ],
             [
-                'name' => 'Pets',
-                'url' => 'admin/data/pets'
+                'name' => 'Prompts',
+                'url' => 'admin/data/prompts'
+            ],
+            [
+                'name' => 'Rarities',
+                'url' => 'admin/data/rarities'
             ],
             [
                 'name' => 'Recipes',
                 'url' => 'admin/data/recipes'
             ],
+            [
+                'name' => 'Sub Masterlists',
+                'url' => 'admin/data/sublists'
+            ],
+            [
+                'name' => 'Species',
+                'url' => 'admin/data/species'
+            ],
+            [
+                'name' => 'Subtypes',
+                'url' => 'admin/data/subtypes'
+            ],
+            [
+                'name' => 'Shops',
+                'url' => 'admin/data/shops'
+            ],
+            [
+                'name' => 'Scavenger Hunts',
+                'url' => 'admin/data/hunts'
+            ],
+            [
+                'name' => 'Traits',
+                'url' => 'admin/data/traits'
+            ],
         ]
     ],
-    
+
     'Research' => [
         'power' => 'manage_research',
         'links' => [
@@ -293,7 +283,43 @@ return [
             ],
         ]
     ],
-
+    'World.Expanded' => [
+        'power' => 'manage_world',
+        'links' => [
+            [
+                'name' => 'Locations',
+                'url' => 'admin/world/locations'
+            ],
+            [
+                'name' => 'Fauna',
+                'url' => 'admin/world/faunas'
+            ],
+            [
+                'name' => 'Flora',
+                'url' => 'admin/world/floras'
+            ],
+            [
+                'name' => ' Events',
+                'url' => 'admin/world/events'
+            ],
+            [
+                'name' => ' Figures',
+                'url' => 'admin/world/figures'
+            ],
+            [
+                'name' => 'Factions',
+                'url' => 'admin/world/factions'
+            ],
+            [
+                'name' => 'Concepts',
+                'url' => 'admin/world/concepts'
+            ],
+            [
+                'name' => 'Pets',
+                'url' => 'admin/data/pets'
+            ],
+        ]
+    ],
     'Raffles' => [
         'power' => 'manage_raffles',
         'links' => [
@@ -320,4 +346,13 @@ return [
             ],
         ]
     ],
+    'Misc' => [
+        'power' => 'staff',
+        'links' => [
+          [
+              'name'  =>  'Bulletins',
+              'url' =>  'admin/bulletins'
+          ],
+        ]
+    ]
 ];

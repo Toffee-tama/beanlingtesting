@@ -2,6 +2,8 @@
 
 namespace App\Models\User;
 
+use Settings;
+
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,14 +15,14 @@ use App\Models\Rank\RankPower;
 use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
 use App\Models\Item\ItemLog;
-use App\Models\Pet\PetLog;
 use App\Models\Stats\ExpLog;
 use App\Models\Stats\StatTransferLog;
 use App\Models\Stats\LevelLog;
+use App\Models\Pet\PetLog;
 use App\Models\Shop\ShopLog;
-use App\Models\Adoption\AdoptionLog;
-use App\Models\Award\AwardLog;
+use App\Models\Research\Research;
 use App\Models\Research\ResearchLog;
+use App\Models\Adoption\AdoptionLog;
 use App\Models\User\UserCharacterLog;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
@@ -46,7 +48,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'alias', 'rank_id', 'email', 'password', 'is_news_unread', 'is_banned', 'has_alias', 'avatar', 'is_sales_unread'
+        'name', 'alias', 'rank_id', 'email', 'password', 'is_news_unread', 'is_banned', 'has_alias', 'avatar', 'is_sales_unread', 'disc', 'insta', 'house', 'arch', 'home_id', 'home_changed'
     ];
 
     /**
@@ -68,6 +70,13 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * Dates on the model to convert to Carbon instances.
+     *
+     * @var array
+     */
+    protected $dates = ['home_changed'];
+
+    /**
      * Accessors to append to the model.
      *
      * @var array
@@ -82,6 +91,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var string
      */
     public $timestamps = true;
+
 
     /**********************************************************************************************
 
@@ -170,6 +180,22 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the user's rank data.
+     */
+    public function home()
+    {
+        return $this->belongsTo('App\Models\WorldExpansion\Location', 'home_id');
+    }
+
+    /**
+     * Get the user's rank data.
+     */
+    public function faction()
+    {
+        return $this->belongsTo('App\Models\WorldExpansion\Faction', 'faction_id');
+    }
+
+    /**
      * Get the user's items.
      */
     public function items()
@@ -188,7 +214,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get all of the user's gallery submissions.
      */
-    public function gallerySubmissions() 
+    public function gallerySubmissions()
     {
         return $this->hasMany('App\Models\Gallery\GallerySubmission')->where('user_id', $this->id)->orWhereIn('id', GalleryCollaborator::where('user_id', $this->id)->where('type', 'Collab')->pluck('gallery_submission_id')->toArray())->visible($this)->accepted()->orderBy('created_at', 'DESC');
     }
@@ -196,23 +222,9 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get all of the user's favorited gallery submissions.
      */
-    public function galleryFavorites() 
+    public function galleryFavorites()
     {
         return $this->hasMany('App\Models\Gallery\GalleryFavorite')->where('user_id', $this->id);
-    }
-     /**
-      *  Get the user's pets.
-     */
-    public function pets()
-    {
-        return $this->belongsToMany('App\Models\Pet\Pet', 'user_pets')->withPivot('data', 'updated_at', 'id')->whereNull('user_pets.deleted_at');
-    }
-        /**
-     * Get the user's awards.
-     */
-    public function awards()
-    {
-        return $this->belongsToMany('App\Models\Award\Award', 'user_awards')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('user_awards.deleted_at');
     }
 
     /**
@@ -222,6 +234,15 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany('App\Models\Research\Research', 'user_research')->withPivot('updated_at', 'id')->whereNull('user_research.deleted_at');
     }
+
+    /**
+     * Get the user's pets.
+     */
+    public function pets()
+    {
+        return $this->belongsToMany('App\Models\Pet\Pet', 'user_pets')->withPivot('data', 'updated_at', 'id')->whereNull('user_pets.deleted_at');
+    }
+
 
     /**********************************************************************************************
 
@@ -377,6 +398,100 @@ class User extends Authenticatable implements MustVerifyEmail
         return 'User';
     }
 
+    /**
+     * Checks if the user can change location.
+     *
+     * @return string
+     */
+    public function getCanChangeLocationAttribute()
+    {
+        if(!isset($this->home_changed)) return true;
+        $limit = Settings::get('WE_change_timelimit');
+        switch($limit){
+            case 0:
+                return true;
+            case 1:
+                // Yearly
+                if(now()->year == $this->home_changed->year) return false;
+                else return true;
+
+            case 2:
+                // Quarterly
+                if(now()->year != $this->home_changed->year) return true;
+                if(now()->quarter != $this->home_changed->quarter) return true;
+                else return false;
+
+            case 3:
+                // Monthly
+                if(now()->year != $this->home_changed->year) return true;
+                if(now()->month != $this->home_changed->month) return true;
+                else return false;
+
+            case 4:
+                // Weekly
+                if(now()->year != $this->home_changed->year) return true;
+                if(now()->week != $this->home_changed->week) return true;
+                else return false;
+
+            case 5:
+                // Daily
+                if(now()->year != $this->home_changed->year) return true;
+                if(now()->month != $this->home_changed->month) return true;
+                if(now()->day != $this->home_changed->day) return true;
+                else return false;
+
+            default:
+                return true;
+        }
+    }
+
+    /**
+     * Checks if the user can change faction.
+     *
+     * @return string
+     */
+    public function getCanChangeFactionAttribute()
+    {
+        if(!isset($this->faction_changed)) return true;
+        $limit = Settings::get('WE_change_timelimit');
+        switch($limit){
+            case 0:
+                return true;
+            case 1:
+                // Yearly
+                if(now()->year == $this->faction_changed->year) return false;
+                else return true;
+
+            case 2:
+                // Quarterly
+                if(now()->year != $this->faction_changed->year) return true;
+                if(now()->quarter != $this->faction_changed->quarter) return true;
+                else return false;
+
+            case 3:
+                // Monthly
+                if(now()->year != $this->faction_changed->year) return true;
+                if(now()->month != $this->faction_changed->month) return true;
+                else return false;
+
+            case 4:
+                // Weekly
+                if(now()->year != $this->faction_changed->year) return true;
+                if(now()->week != $this->faction_changed->week) return true;
+                else return false;
+
+            case 5:
+                // Daily
+                if(now()->year != $this->faction_changed->year) return true;
+                if(now()->month != $this->faction_changed->month) return true;
+                if(now()->day != $this->faction_changed->day) return true;
+                else return false;
+
+            default:
+                return true;
+        }
+    }
+
     /**********************************************************************************************
 
         OTHER FUNCTIONS
@@ -453,72 +568,70 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the user's currency logs.
+     *
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getResearchLogs($limit = 10)
+    {
+        $user = $this;
+        $query = ResearchLog::where('recipient_id', $this->id)->with('tree')->with('research')->with('currency')->orderBy('id', 'DESC');
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
+    }
+
+        /**
      * Get the user's exp logs.
      *
      * @param  int  $limit
      * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getExpLogs($limit = 10)
-    {
-        $user = $this;
-        $query = ExpLog::where(function($query) use ($user) {
-            $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
-        })->orWhere(function($query) use ($user) {
-            $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
-        })->orderBy('id', 'DESC');
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
+public function getExpLogs($limit = 10)
+{
+    $user = $this;
+    $query = ExpLog::where(function($query) use ($user) {
+        $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
+    })->orWhere(function($query) use ($user) {
+        $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
+    })->orderBy('id', 'DESC');
+    if($limit) return $query->take($limit)->get();
+    else return $query->paginate(30);
+}
 
-    /**
-     * Get the user's stat logs.
-     *
-     * @param  int  $limit
-     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
-     */
+/**
+ * Get the user's stat logs.
+ *
+ * @param  int  $limit
+ * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+ */
+public function getStatLogs($limit = 10)
+{
+    $user = $this;
+    $query = StatTransferLog::where(function($query) use ($user) {
+        $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
+    })->orWhere(function($query) use ($user) {
+        $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
+    })->orderBy('id', 'DESC');
+    if($limit) return $query->take($limit)->get();
+    else return $query->paginate(30);
+}
 
-    public function getStatLogs($limit = 10)
-    {
-        $user = $this;
-        $query = StatTransferLog::where(function($query) use ($user) {
-            $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
-        })->orWhere(function($query) use ($user) {
-            $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
-        })->orderBy('id', 'DESC');
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
-
-    /**
-     * Get the user's level logs.
-     *
-     * @param  int  $limit
-     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function getLevelLogs($limit = 10)
-    {
-        $user = $this;
-        $query = LevelLog::where(function($query) use ($user) {
-            $query->with('recipient')->where('leveller_type', 'User')->where('recipient_id', $user->id);
-        })->orderBy('id', 'DESC');
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
-
-/** 
- * Get the user's currency logs.
-*
-* @param  int  $limit
-* @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
-*/
-    public function getResearchLogs($limit = 10)
-    {
-        $user = $this;
-        $query = ResearchLog::where('recipient_id', $this->id)->with('tree')->with('research')->with('currency')->orderBy('id', 'DESC');
-
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
+/**
+ * Get the user's level logs.
+ *
+ * @param  int  $limit
+ * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+ */
+public function getLevelLogs($limit = 10)
+{
+    $user = $this;
+    $query = LevelLog::where(function($query) use ($user) {
+        $query->with('recipient')->where('leveller_type', 'User')->where('recipient_id', $user->id);
+    })->orderBy('id', 'DESC');
+    if($limit) return $query->take($limit)->get();
+    else return $query->paginate(30);
+}
 
     /**
      * Get the user's item logs.
@@ -539,47 +652,12 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the user's pet logs.
-
+     * Get the user's recipe logs.
      *
      * @param  int  $limit
      * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getPetLogs($limit = 10)
-    {
-        $user = $this;
-        $query = PetLog::with('sender')->with('recipient')->with('pet')->where(function($query) use ($user) {
-            $query->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Staff Removal']);
-        })->orWhere(function($query) use ($user) {
-            $query->where('recipient_id', $user->id);
-        })->orderBy('id', 'DESC');
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
-    
-        /**
-     * Get the user's award logs.
-     *
-     * @param  int  $limit
-     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function getAwardLogs($limit = 10)
-    {
-        $user = $this;
-        $query = AwardLog::with('award')->where(function($query) use ($user) {
-            $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
-        })->orWhere(function($query) use ($user) {
-            $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
-        })->orderBy('id', 'DESC');
-        if($limit) return $query->take($limit)->get();
-        else return $query->paginate(30);
-    }
-     /**      * Get the user's recipe logs.  
-     *
-     * @param  int  $limit
-     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
-     */
-      public function getRecipeLogs($limit = 10)
+    public function getRecipeLogs($limit = 10)
     {
         $user = $this;
         $query = UserRecipeLog::with('recipe')->where(function($query) use ($user) {
@@ -590,6 +668,23 @@ class User extends Authenticatable implements MustVerifyEmail
         if($limit) return $query->take($limit)->get();
         else return $query->paginate(30);
     }
+        /**
+     * Get the user's pet logs.
+     *
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+     */
+public function getPetLogs($limit = 10)
+{
+    $user = $this;
+    $query = PetLog::with('sender')->with('recipient')->with('pet')->where(function($query) use ($user) {
+        $query->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Staff Removal']);
+    })->orWhere(function($query) use ($user) {
+        $query->where('recipient_id', $user->id);
+    })->orderBy('id', 'DESC');
+    if($limit) return $query->take($limit)->get();
+    else return $query->paginate(30);
+}
 
     /**
      * Get the user's shop purchase logs.
@@ -699,6 +794,28 @@ class User extends Authenticatable implements MustVerifyEmail
         return CharacterBookmark::where('user_id', $this->id)->where('character_id', $character->id)->first();
     }
 
+    /** 
+     * Checks if the user has the named recipe
+     * 
+     * @return bool
+     */
+    public function hasRecipe($recipe_id)
+    {
+        $recipe = Recipe::find($recipe_id);
+        $user_has = $this->recipes->contains($recipe);
+        $default = !$recipe->needs_unlocking;
+        return $default ? true : $user_has;
+    }
+    
+        /* *
+        * Checks if the user has a specific research unlocked and attached to its account.
+     * 
+     * @return bool
+     */
+    public function hasResearch($id)
+    {
+        return $this->researches->contains(Research::find($id));
+    }
 
 
     /**
@@ -718,16 +835,4 @@ class User extends Authenticatable implements MustVerifyEmail
        return $total;
      }
 
-    /** 
-     * Checks if the user has the named recipe
-     * 
-     * @return bool
-     */
-    public function hasRecipe($recipe_id)
-    {
-        $recipe = Recipe::find($recipe_id);
-        $user_has = $this->recipes->contains($recipe);
-        $default = !$recipe->needs_unlocking;
-        return $default ? true : $user_has;
-    }
 }
