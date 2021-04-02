@@ -176,48 +176,12 @@ return [
         ]
     ],
     
-    'Data' => [
+     'Data' => [
         'power' => 'edit_data',
         'links' => [
             [
-                'name' => 'Galleries',
-                'url' => 'admin/data/galleries'
-            ],
-            [
-                'name' => 'Character Categories',
-                'url' => 'admin/data/character-categories'
-            ],
-            [
-                'name' => 'Sub Masterlists',
-                'url' => 'admin/data/sublists'
-            ],
-            [
-                'name' => 'Rarities',
-                'url' => 'admin/data/rarities'
-            ],
-            [
-                'name' => 'Species',
-                'url' => 'admin/data/species'
-            ],
-            [
-                'name' => 'Subtypes',
-                'url' => 'admin/data/subtypes'
-            ],
-            [
-                'name' => 'Traits',
-                'url' => 'admin/data/traits'
-            ],
-            [
-                'name' => 'Character Titles',
-                'url' => 'admin/data/character-titles'
-            ],
-            [
-                'name' => 'Shops',
-                'url' => 'admin/data/shops'
-            ],
-            [
-                'name' => 'Character Drops',
-                'url' => 'admin/data/character-drops'
+                'name' => 'Advent Calendars',
+                'url' => 'admin/data/advent-calendars'
             ],
             [
                 'name' => 'Adoption Center',
@@ -228,36 +192,72 @@ return [
                 'url' => 'admin/data/stock'
             ],
             [
-                'name' => 'Prompt Categories',
-                'url' => 'admin/data/prompt-categories'
+                'name' => 'Character Categories',
+                'url' => 'admin/data/character-categories'
+            ],
+            [
+                'name' => 'Character Drops',
+                'url' => 'admin/data/character-drops'
+            ],
+            [
+                'name' => 'Character Titles',
+                'url' => 'admin/data/character-titles'
             ],
             [
                 'name' => 'Currencies',
                 'url' => 'admin/data/currencies'
             ],
             [
-                'name' => 'Prompts',
-                'url' => 'admin/data/prompts'
-            ],
-            [
-                'name' => 'Loot Tables',
-                'url' => 'admin/data/loot-tables'
+                'name' => 'Galleries',
+                'url' => 'admin/data/galleries'
             ],
             [
                 'name' => 'Items',
                 'url' => 'admin/data/items'
             ],
             [
-                'name' => 'Advent Calendars',
-                'url' => 'admin/data/advent-calendars'
+                'name' => 'Loot Tables',
+                'url' => 'admin/data/loot-tables'
+            ],
+            [
+                'name' => 'Prompt Categories',
+                'url' => 'admin/data/prompt-categories'
+            ],
+            [
+                'name' => 'Prompts',
+                'url' => 'admin/data/prompts'
+            ],
+            [
+                'name' => 'Rarities',
+                'url' => 'admin/data/rarities'
             ],
             [
                 'name' => 'Recipes',
                 'url' => 'admin/data/recipes'
             ],
             [
+                'name' => 'Sub Masterlists',
+                'url' => 'admin/data/sublists'
+            ],
+            [
+                'name' => 'Species',
+                'url' => 'admin/data/species'
+            ],
+            [
+                'name' => 'Subtypes',
+                'url' => 'admin/data/subtypes'
+            ],
+            [
+                'name' => 'Shops',
+                'url' => 'admin/data/shops'
+            ],
+            [
                 'name' => 'Scavenger Hunts',
                 'url' => 'admin/data/hunts'
+            ],
+            [
+                'name' => 'Traits',
+                'url' => 'admin/data/traits'
             ],
         ]
     ],
