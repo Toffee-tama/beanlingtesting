@@ -21,6 +21,7 @@ use App\Models\Item\ItemCategory;
 use App\Models\Currency\Currency;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
+use app\Models\Recipe\Recipe;
 
 class LevelController extends Controller
 {
