@@ -123,6 +123,7 @@ Route::group(['prefix' => 'world'], function() {
     Route::get('character-categories', 'WorldController@getCharacterCategories');
     Route::get('recipes', 'WorldController@getRecipes');
     Route::get('recipes/{id}', 'WorldController@getRecipe');
+    Route::get('character-titles', 'WorldController@getCharacterTitles');
 });
 
 Route::group(['prefix' => 'prompts'], function() {
