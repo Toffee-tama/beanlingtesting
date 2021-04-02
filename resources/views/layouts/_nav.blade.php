@@ -27,9 +27,8 @@
                 @if(Auth::check())
                     <li class="nav-item dropdown">
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Home
+                            My Account
                         </a>
-
                         <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
                             <a class="dropdown-item" href="{{ url('characters') }}">
                                 My Characters
@@ -119,6 +118,22 @@
                     </div>
                 </li>
                 <li class="nav-item dropdown">
+                        <a id="queueDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            Shops
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="browseDropdown">
+					    <a class="dropdown-item" href="{{ url('shops') }}">
+                            Shop Bazaar
+                        </a>
+                        <a class="dropdown-item" href="{{ url('https://teespring.com/stores/beanlingpatch') }}">
+                            Merchandise Store
+                            </a>
+                        <a class="dropdown-item" href="{{ url('https://beanlingpatch.my-online.store/') }}">
+                            Cash Purchase Store
+                        </a>
+                    </div>
+                    </li>
+                <li class="nav-item dropdown">
                     <a id="loreDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                         World
                     </a>
@@ -145,7 +160,6 @@
                         <a class="dropdown-item" href="{{ url('info/discord') }}">
                             Discord
                         </a>
-
                     </div>
                 </li>
             </ul>
