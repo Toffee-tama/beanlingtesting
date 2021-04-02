@@ -143,6 +143,8 @@ class Notification extends Model
     const CHARACTER_TRANSFER_ACCEPTABLE     = 38;
     const BOOKMARK_GIFT_WRITING             = 39;
     const RESEARCH_GRANT                    = 100; // URI - Research Tree
+    const LINK_REQUESTED                  = 200;
+    const LINK_ACCEPTED                   = 201;
     const REPORT_ASSIGNED                   = 220;
     const REPORT_CLOSED                     = 221;
     const COMMENT_MADE                      = 239;
