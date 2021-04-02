@@ -22,7 +22,7 @@
 
 <div class="form-group">
     {!! Form::label('Display Name') !!} {!! add_help('This is the name that will be shown to users. This is for display purposes and can be something more vague than the above.') !!}
-    {!! Form::text('display_name', $hunt->getOriginal('display_name'), ['class' => 'form-control']) !!}
+    {!! Form::text('display_name', $hunt->getRawOriginal('display_name'), ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group">
