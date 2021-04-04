@@ -20,7 +20,7 @@ return [
             [
                 'name' => 'User Ranks',
                 'url' => 'admin/users/ranks'
-            ]
+            ],
         ]
     ],
     'Reports' => [
@@ -36,7 +36,7 @@ return [
         'power' => 'edit_pages',
         'links' => [
             [
-                'name' => 'News',
+                'name' => 'News & Bulletins',
                 'url' => 'admin/news'
             ],
             [
@@ -115,12 +115,12 @@ return [
                 'url' => 'admin/grants/event-currency'
             ],
             [
-                'name' => 'Pet Grants',
-                'url' => 'admin/grants/pets'
-            ],
-            [
                 'name' => 'EXP Grants',
                 'url' => 'admin/grants/exp'
+            ],
+            [
+                'name' => 'Pet Grants',
+                'url' => 'admin/grants/pets'
             ],
         ]
     ],
@@ -176,44 +176,12 @@ return [
         ]
     ],
     
-    'Data' => [
+     'Data' => [
         'power' => 'edit_data',
         'links' => [
             [
-                'name' => 'Galleries',
-                'url' => 'admin/data/galleries'
-            ],
-            [
-                'name' => 'Character Categories',
-                'url' => 'admin/data/character-categories'
-            ],
-            [
-                'name' => 'Sub Masterlists',
-                'url' => 'admin/data/sublists'
-            ],
-            [
-                'name' => 'Rarities',
-                'url' => 'admin/data/rarities'
-            ],
-            [
-                'name' => 'Species',
-                'url' => 'admin/data/species'
-            ],
-            [
-                'name' => 'Subtypes',
-                'url' => 'admin/data/subtypes'
-            ],
-            [
-                'name' => 'Traits',
-                'url' => 'admin/data/traits'
-            ],
-            [
-                'name' => 'Character Titles',
-                'url' => 'admin/data/character-titles'
-            ],
-            [
-                'name' => 'Shops',
-                'url' => 'admin/data/shops'
+                'name' => 'Advent Calendars',
+                'url' => 'admin/data/advent-calendars'
             ],
             [
                 'name' => 'Adoption Center',
@@ -224,40 +192,90 @@ return [
                 'url' => 'admin/data/stock'
             ],
             [
-                'name' => 'Prompt Categories',
-                'url' => 'admin/data/prompt-categories'
+                'name' => 'Character Categories',
+                'url' => 'admin/data/character-categories'
+            ],
+            [
+                'name' => 'Character Titles',
+                'url' => 'admin/data/character-titles'
             ],
             [
                 'name' => 'Currencies',
                 'url' => 'admin/data/currencies'
             ],
             [
-                'name' => 'Prompts',
-                'url' => 'admin/data/prompts'
-            ],
-            [
-                'name' => 'Loot Tables',
-                'url' => 'admin/data/loot-tables'
+                'name' => 'Galleries',
+                'url' => 'admin/data/galleries'
             ],
             [
                 'name' => 'Items',
                 'url' => 'admin/data/items'
             ],
             [
+                'name' => 'Loot Tables',
+                'url' => 'admin/data/loot-tables'
+            ],
+            [
+                'name' => 'Prompt Categories',
+                'url' => 'admin/data/prompt-categories'
+            ],
+            [
+                'name' => 'Prompts',
+                'url' => 'admin/data/prompts'
+            ],
+            [
+                'name' => 'Rarities',
+                'url' => 'admin/data/rarities'
+            ],
+            [
                 'name' => 'Recipes',
                 'url' => 'admin/data/recipes'
+            ],
+            [
+                'name' => 'Sub Masterlists',
+                'url' => 'admin/data/sublists'
+            ],
+            [
+                'name' => 'Species',
+                'url' => 'admin/data/species'
+            ],
+            [
+                'name' => 'Subtypes',
+                'url' => 'admin/data/subtypes'
+            ],
+            [
+                'name' => 'Shops',
+                'url' => 'admin/data/shops'
             ],
             [
                 'name' => 'Scavenger Hunts',
                 'url' => 'admin/data/hunts'
             ],
             [
-                'name' => 'Advent Calendars',
-                'url' => 'admin/data/advent-calendars'
+                'name' => 'Traits',
+                'url' => 'admin/data/traits'
+            ],
+        ]
+    ],
+
+    'Research' => [
+        'power' => 'manage_research',
+        'links' => [
+            [
+                'name' => 'Research Trees',
+                'url' => 'admin/data/trees'
             ],
             [
-                'name' => 'Pets',
-                'url' => 'admin/data/pets'
+                'name' => 'Research Branches',
+                'url' => 'admin/data/research'
+            ],
+            [
+                'name' => 'Research Grants',
+                'url' => 'admin/grants/research'
+            ],
+            [
+                'name' => 'User Research Log',
+                'url' => 'admin/data/research/users'
             ],
         ]
     ],
@@ -292,31 +310,12 @@ return [
                 'name' => 'Concepts',
                 'url' => 'admin/world/concepts'
             ],
-        ]
-    ],
-
-    'Research' => [
-        'power' => 'manage_research',
-        'links' => [
             [
-                'name' => 'Research Trees',
-                'url' => 'admin/data/trees'
-            ],
-            [
-                'name' => 'Research Branches',
-                'url' => 'admin/data/research'
-            ],
-            [
-                'name' => 'Research Grants',
-                'url' => 'admin/grants/research'
-            ],
-            [
-                'name' => 'User Research Log',
-                'url' => 'admin/data/research/users'
+                'name' => 'Pets',
+                'url' => 'admin/data/pets'
             ],
         ]
     ],
-
     'Raffles' => [
         'power' => 'manage_raffles',
         'links' => [
@@ -343,4 +342,13 @@ return [
             ],
         ]
     ],
+    'Misc' => [
+        'power' => 'staff',
+        'links' => [
+          [
+              'name'  =>  'Bulletins',
+              'url' =>  'admin/bulletins'
+          ],
+        ]
+    ]
 ];
