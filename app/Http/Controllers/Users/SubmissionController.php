@@ -17,6 +17,7 @@ use App\Models\Item\ItemCategory;
 use App\Models\Currency\Currency;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
+use App\Models\Recipe\Recipe;
 use App\Models\Prompt\Prompt;
 
 use App\Services\SubmissionManager;
@@ -227,8 +228,9 @@ class SubmissionController extends Controller
             'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-            'page' => 'submission',
-            'expanded_rewards' => Config::get('lorekeeper.extensions.character_reward_expansion.expanded')
+            'expanded_rewards' => Config::get('lorekeeper.extensions.character_reward_expansion.expanded'),
+            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
+            'page' => 'submission'
         ]));
     }
 
