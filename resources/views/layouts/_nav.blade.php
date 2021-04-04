@@ -27,9 +27,8 @@
                 @if(Auth::check())
                     <li class="nav-item dropdown">
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Home
+                            My Account
                         </a>
-
                         <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
                             <a class="dropdown-item" href="{{ url('characters') }}">
                                 My Characters
@@ -37,50 +36,96 @@
                             <a class="dropdown-item" href="{{ url('characters/myos') }}">
                                 My MYO Slots
                             </a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url('inventory') }}">
                                 Inventory
                             </a>
                             <a class="dropdown-item" href="{{ url('bank') }}">
                                 Bank
                             </a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url('research/unlocked') }}">
                                 My Research
+                                </a>
+                            <a class="dropdown-item" href="{{ url('level') }}">
+                                Level Area
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ url('designs') }}">
+                                My Design Approvals
+                            </a>
+                            <a class="dropdown-item" href="{{ url('surrenders') }}">
+                                My Surrenders
+                                </a>
+                            <a class="dropdown-item" href="{{ url('characters/transfers/incoming') }}">
+                                My Character Transfers
                             </a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
                         <a id="queueDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Activity
+                            Activities
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="queueDropdown">
-                            <a class="dropdown-item" href="{{ url('submissions') }}">
-                                Prompt Submissions
+                        <div class="dropdown-menu" aria-labelledby="browseDropdown">
+					                        				<a class="dropdown-item" href="{{ url('info/growingyourbean') }}">
+                            Growing your Beanling
+                        </a>
+                                               <div class="dropdown-divider"></div> 
+                                               <a class="dropdown-item" href="{{ url('info/achievements') }}">
+                            Achievements
+                        </a>		
+                        <a class="dropdown-item" href="{{ url('crafting') }}">
+                            Crafting
                             </a>
-                            <a class="dropdown-item" href="{{ url('claims') }}">
-                                Claims
-                            </a>
-                            <a class="dropdown-item" href="{{ url('reports') }}">
-                                My Reports
-                            </a>
-                            <a class="dropdown-item" href="{{ url('designs') }}">
-                                Design Approvals
-                            </a>
-                            <a class="dropdown-item" href="{{ url('crafting') }}">
-                                Crafting
-                                </a>
-                            <a class="dropdown-item" href="{{ url('surrenders') }}">
-                                Surrenders
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ url('characters/transfers/incoming') }}">
-                                Character Transfers
-                            </a>
-                            <a class="dropdown-item" href="{{ url('trades/open') }}">
-                                Trades
-                            </a>
-                        </div>
+                                                    <a class="dropdown-item" href="{{ url('research-trees') }}">
+                            Research
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url('info/guilds') }}">
+                            Guilds
+                        </a>
+                        <a class="dropdown-item" href="{{ url('info/questing') }}">
+                            Questing
+                        </a>
+                        <a class="dropdown-item" href="{{ url('prompts/prompts') }}">
+                            Prompts
+                        </a>
+
+
+                    </div>
                     </li>
                 @endif
+                <li class="nav-item dropdown">
+                    <a id="loreDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        World
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="loreDropdown">
+                        <a class="dropdown-item" href="{{ url('info/newplayerguide') }}">
+                            New Player Guide
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url('world') }}">
+                            Encyclopedia
+                        </a>
+                        <a class="dropdown-item" href="{{ url('world/info') }}">
+                            World Expanded
+                        </a>
+                        						<a class="dropdown-item" href="{{ url('info/lore') }}">
+                            Lore Directory
+                        </a>
+						<a class="dropdown-item" href="{{ url('info/stats') }}">
+                            Stats
+                        </a>
+                        <a class="dropdown-item" href="{{ url('info/NPCs') }}">
+                            NPCs
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url('info/discord') }}">
+                            Discord
+                        </a>
+                    </div>
+                </li>
                 <li class="nav-item dropdown">
                     <a id="browseDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                         Browse
@@ -97,42 +142,39 @@
                             MYO Slot Masterlist
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ url('raffles') }}">
-                            Raffles
+                    <a class="dropdown-item" href="{{ url('gallery') }}">
+                    Art Gallery
+                    </a>  
+                                                                  <a class="dropdown-item" href="{{ url('adoptions') }}">
+                            Adoption Center
                         </a>
-                        <div class="dropdown-divider"></div>
+                    <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url('reports/bug-reports') }}">
                             Bug Reports
+                        </a>
+                        <a class="dropdown-item" href="{{ url('info/FAQ') }}">
+                            FAQ
                         </a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a id="loreDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        World
-                    </a>
-
-                    <div class="dropdown-menu" aria-labelledby="loreDropdown">
-                        <a class="dropdown-item" href="{{ url('world') }}">
-                            Encyclopedia
-                        </a>
-                        <a class="dropdown-item" href="{{ url('world/info') }}">
-                            World Expanded
-                        </a>
-                        <a class="dropdown-item" href="{{ url('prompts/prompts') }}">
-                            Prompts
-                        </a>
-                        <a class="dropdown-item" href="{{ url('shops') }}">
+                        <a id="queueDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             Shops
                         </a>
-                        <a class="dropdown-item" href="{{ url('adoptions') }}">
-                            Adoption Center
+                        <div class="dropdown-menu" aria-labelledby="browseDropdown">
+					    <a class="dropdown-item" href="{{ url('shops') }}">
+                            Shop Bazaar
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url('https://teespring.com/stores/beanlingpatch') }}">
+                            Merchandise Store
+                            </a>
+                        <a class="dropdown-item" href="{{ url('https://beanlingpatch.my-online.store/') }}">
+                            Cash Purchase Store
                         </a>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('gallery') }}">Gallery</a>
-                </li>
-            </ul>
+                    </li>
+                    </ul>
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
@@ -170,17 +212,17 @@
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="browseDropdown">
-                            <a class="dropdown-item" href="{{ url('submissions/new') }}">
+                            <a class="dropdown-item" href="{{ url('submissions') }}">
                                 Submit Prompt
                             </a>
-                            <a class="dropdown-item" href="{{ url('claims/new') }}">
+                            <a class="dropdown-item" href="{{ url('claims') }}">
                                 Submit Claim
                             </a>
-                            <a class="dropdown-item" href="{{ url('surrenders/new') }}">
-                                Submit Surrender
+                            <a class="dropdown-item" href="{{ url('reports') }}">
+                                Submit Bug Report
                             </a>
-                            <a class="dropdown-item" href="{{ url('reports/new') }}">
-                                Submit Report
+                            <a class="dropdown-item" href="{{ url('trades/open') }}">
+                                Submit Trades
                             </a>
                         </div>
                     </li>
