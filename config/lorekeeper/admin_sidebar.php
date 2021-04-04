@@ -114,6 +114,10 @@ return [
                 'name' => 'Event Currency',
                 'url' => 'admin/grants/event-currency'
             ],
+            [
+                'name' => 'Pet Grants',
+                'url' => 'admin/grants/pets'
+            ],
         ]
     ],
     'Masterlist' => [
@@ -224,6 +228,10 @@ return [
             [
                 'name' => 'Advent Calendars',
                 'url' => 'admin/data/advent-calendars'
+            ],
+            [
+                'name' => 'Pets',
+                'url' => 'admin/data/pets'
             ],
         ]
     ],

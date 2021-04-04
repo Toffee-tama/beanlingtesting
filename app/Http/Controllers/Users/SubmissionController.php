@@ -20,6 +20,7 @@ use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
 use App\Models\Recipe\Recipe;
 use App\Models\Prompt\Prompt;
+use App\Models\Pet\Pet;
 
 use App\Services\SubmissionManager;
 
@@ -104,6 +105,7 @@ class SubmissionController extends Controller
             'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
             'character_items' => Item::whereIn('item_category_id', ItemCategory::where('is_character_owned',1)->pluck('id')->toArray() )->orderBy('name')->released()->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'inventory' => $inventory,
             'page' => 'submission',
             'expanded_rewards' => Config::get('lorekeeper.extensions.character_reward_expansion.expanded')
@@ -242,6 +244,7 @@ class SubmissionController extends Controller
             'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
             'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'expanded_rewards' => Config::get('lorekeeper.extensions.character_reward_expansion.expanded'),
             'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),

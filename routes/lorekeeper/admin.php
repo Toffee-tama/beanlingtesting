@@ -168,6 +168,23 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('recipes/create', 'RecipeController@postCreateEditRecipe');
     Route::post('recipes/edit/{id?}', 'RecipeController@postCreateEditRecipe');
     Route::post('recipes/delete/{id}', 'RecipeController@postDeleteRecipe');
+    # PETS
+    Route::get('pet-categories', 'PetController@getIndex');
+    Route::get('pet-categories/create', 'PetController@getCreatePetCategory');
+    Route::get('pet-categories/edit/{id}', 'PetController@getEditPetCategory');
+    Route::get('pet-categories/delete/{id}', 'PetController@getDeletePetCategory');
+    Route::post('pet-categories/create', 'PetController@postCreateEditPetCategory');
+    Route::post('pet-categories/edit/{id?}', 'PetController@postCreateEditPetCategory');
+    Route::post('pet-categories/delete/{id}', 'PetController@postDeletePetCategory');
+    Route::post('pet-categories/sort', 'PetController@postSortPetCategory');
+
+    Route::get('pets', 'PetController@getPetIndex');
+    Route::get('pets/create', 'PetController@getCreatePet');
+    Route::get('pets/edit/{id}', 'PetController@getEditPet');
+    Route::get('pets/delete/{id}', 'PetController@getDeletePet');
+    Route::post('pets/create', 'PetController@postCreateEditPet');
+    Route::post('pets/edit/{id?}', 'PetController@postCreateEditPet');
+    Route::post('pets/delete/{id}', 'PetController@postDeletePet');
 
     # SHOPS
     Route::get('shops', 'ShopController@getIndex');
