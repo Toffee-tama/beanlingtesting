@@ -316,6 +316,12 @@ return [
         'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Links.</a>)',
         'url' => '',
     ],
+    // RESEARCH_GRANT
+    100 => [
+        'name' => 'Research Granted',
+        'message' => 'You have received a staff grant of <a href="{research_url}">{research_name}</a> (of <a href="{tree_url}">{tree_name}</a>) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">Unlocked Research</a>)',
+        'url' => 'research/unlocked'
+    ],
     // REPORT_ASSIGNED
     220 => [
         'name' => 'Report Assigned',

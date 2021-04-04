@@ -43,6 +43,9 @@
                             <a class="dropdown-item" href="{{ url('bank') }}">
                                 Bank
                             </a>
+                            <a class="dropdown-item" href="{{ url('research/unlocked') }}">
+                                My Research
+                            </a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

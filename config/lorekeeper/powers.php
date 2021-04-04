@@ -51,6 +51,10 @@ return [
         'name' => 'Manage World',
         'description' => 'Allow rank to edit world information related to the World Expansion extension.'
     ],
+    'manage_research' => [
+        'name' => 'Manage Research',
+        'description' => 'Allow rank to create, edit, and delete Research and Research Trees.'
+    ],
     'manage_reports' => [
         'name' => 'Manage Reports',
         'description' => 'Allow rank to view the reports queue.'
