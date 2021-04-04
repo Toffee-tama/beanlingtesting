@@ -125,6 +125,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('species/edit/{id?}', 'SpeciesController@postCreateEditSpecies');
     Route::post('species/delete/{id}', 'SpeciesController@postDeleteSpecies');
     Route::post('species/sort', 'SpeciesController@postSortSpecies');
+
     Route::get('subtypes', 'SpeciesController@getSubtypeIndex');
     Route::get('subtypes/create', 'SpeciesController@getCreateSubtype');
     Route::get('subtypes/edit/{id}', 'SpeciesController@getEditSubtype');
@@ -167,7 +168,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('recipes/create', 'RecipeController@postCreateEditRecipe');
     Route::post('recipes/edit/{id?}', 'RecipeController@postCreateEditRecipe');
     Route::post('recipes/delete/{id}', 'RecipeController@postDeleteRecipe');
-    
+
     # SHOPS
     Route::get('shops', 'ShopController@getIndex');
     Route::get('shops/create', 'ShopController@getCreateShop');
@@ -257,6 +258,31 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
 
+    Route::get('advent-calendars', 'AdventController@getAdventIndex');
+    Route::get('advent-calendars/create', 'AdventController@getCreateAdvent');
+    Route::get('advent-calendars/edit/{id}', 'AdventController@getEditAdvent');
+    Route::get('advent-calendars/delete/{id}', 'AdventController@getDeleteAdvent');
+    Route::post('advent-calendars/create', 'AdventController@postCreateEditAdvent');
+    Route::post('advent-calendars/edit/{id?}', 'AdventController@postCreateEditAdvent');
+    Route::post('advent-calendars/delete/{id}', 'AdventController@postDeleteAdvent');
+    
+    # SCAVENGER HUNTS
+    Route::get('hunts', 'HuntController@getHuntIndex');
+    Route::get('hunts/create', 'HuntController@getCreateHunt');
+    Route::get('hunts/edit/{id}', 'HuntController@getEditHunt');
+    Route::get('hunts/delete/{id}', 'HuntController@getDeleteHunt');
+    Route::post('hunts/create', 'HuntController@postCreateEditHunt');
+    Route::post('hunts/edit/{id?}', 'HuntController@postCreateEditHunt');
+    Route::post('hunts/delete/{id}', 'HuntController@postDeleteHunt');
+
+    Route::get('hunts/targets/create/{id}', 'HuntController@getCreateHuntTarget');
+    Route::post('hunts/targets/create', 'HuntController@postCreateEditHuntTarget');
+    Route::get('hunts/targets/edit/{id}', 'HuntController@getEditHuntTarget');
+    Route::post('hunts/targets/edit/{id}', 'HuntController@postCreateEditHuntTarget');
+    Route::get('hunts/targets/delete/{id}', 'HuntController@getDeleteHuntTarget');
+    Route::post('hunts/targets/delete/{id}', 'HuntController@postDeleteHuntTarget');
+});
+
 # DATA
 Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:manage_research'], function() {
 
@@ -287,31 +313,6 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
 Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'power:manage_research'], function() {
     Route::get('research', 'GrantController@getResearch');
     Route::post('research', 'GrantController@postResearch');
-});
-
-    Route::get('advent-calendars', 'AdventController@getAdventIndex');
-    Route::get('advent-calendars/create', 'AdventController@getCreateAdvent');
-    Route::get('advent-calendars/edit/{id}', 'AdventController@getEditAdvent');
-    Route::get('advent-calendars/delete/{id}', 'AdventController@getDeleteAdvent');
-    Route::post('advent-calendars/create', 'AdventController@postCreateEditAdvent');
-    Route::post('advent-calendars/edit/{id?}', 'AdventController@postCreateEditAdvent');
-    Route::post('advent-calendars/delete/{id}', 'AdventController@postDeleteAdvent');
-
-    # SCAVENGER HUNTS
-    Route::get('hunts', 'HuntController@getHuntIndex');
-    Route::get('hunts/create', 'HuntController@getCreateHunt');
-    Route::get('hunts/edit/{id}', 'HuntController@getEditHunt');
-    Route::get('hunts/delete/{id}', 'HuntController@getDeleteHunt');
-    Route::post('hunts/create', 'HuntController@postCreateEditHunt');
-    Route::post('hunts/edit/{id?}', 'HuntController@postCreateEditHunt');
-    Route::post('hunts/delete/{id}', 'HuntController@postDeleteHunt');
-
-    Route::get('hunts/targets/create/{id}', 'HuntController@getCreateHuntTarget');
-    Route::post('hunts/targets/create', 'HuntController@postCreateEditHuntTarget');
-    Route::get('hunts/targets/edit/{id}', 'HuntController@getEditHuntTarget');
-    Route::post('hunts/targets/edit/{id}', 'HuntController@postCreateEditHuntTarget');
-    Route::get('hunts/targets/delete/{id}', 'HuntController@getDeleteHuntTarget');
-    Route::post('hunts/targets/delete/{id}', 'HuntController@postDeleteHuntTarget');
 });
 
 # PAGES
@@ -375,6 +376,21 @@ Route::group(['prefix' => 'sales', 'middleware' => 'power:edit_pages'], function
     Route::post('edit/{id?}', 'SalesController@postCreateEditSales');
     Route::post('delete/{id}', 'SalesController@postDeleteSales');
 });
+# BULLETINS
+Route::group(['prefix' => 'bulletins', 'middleware' => 'power:edit_pages'], function() {
+    Route::get('create', 'BulletinsController@getCreateBulletins');
+    Route::get('edit/{id}', 'BulletinsController@getEditBulletins');
+    Route::get('delete/{id}', 'BulletinsController@getDeleteBulletins');
+    Route::post('create', 'BulletinsController@postCreateEditBulletins');
+    Route::post('edit/{id?}', 'BulletinsController@postCreateEditBulletins');
+    Route::post('delete/{id}', 'NewsController@postDeleteNews');
+});
+Route::group(['prefix' => 'bulletins'], function() {
+    Route::get('/', 'BulletinsController@getIndex');
+    Route::get('all', 'BulletinsController@getAllIndex');
+    Route::get('{id}.{slug?}', 'BulletinsController@getBulletins');
+    Route::get('{id}.', 'BulletinsController@getBulletins');
+});
 
 # SITE SETTINGS
 Route::group(['prefix' => 'settings', 'middleware' => 'power:edit_site_settings'], function() {
@@ -394,9 +410,16 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
 
     Route::get('recipes', 'GrantController@getRecipes');
     Route::post('recipes', 'GrantController@postRecipes');
+    
     Route::get('event-currency', 'GrantController@getEventCurrency');
     Route::get('event-currency/clear', 'GrantController@getClearEventCurrency');
     Route::post('event-currency/clear', 'GrantController@postClearEventCurrency');
+
+    Route::get('exp', 'GrantController@getExp');
+    Route::post('exp', 'GrantController@postExp');
+
+    Route::get('pets', 'GrantController@getPets');
+    Route::post('pets', 'GrantController@postPets');
 });
 
 
@@ -421,6 +444,7 @@ Route::group(['prefix' => 'masterlist', 'namespace' => 'Characters', 'middleware
     Route::post('create-myo', 'CharacterController@postCreateMyo');
 
     Route::get('check-subtype', 'CharacterController@getCreateCharacterMyoSubtype');
+    Route::get('check-group', 'CharacterController@getCreateCharacterMyoGroup');
 });
 Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:edit_inventories'], function() {
     Route::post('{slug}/grant', 'GrantController@postCharacterCurrency');
