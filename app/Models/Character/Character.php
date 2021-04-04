@@ -17,6 +17,7 @@ use App\Models\Character\CharacterTransfer;
 use App\Models\Character\CharacterBookmark;
 use App\Models\Character\CharacterLineage;
 use App\Models\Character\CharacterLineageBlacklist;
+use App\Models\Character\CharacterRelation;
 
 use App\Models\Character\CharacterCurrency;
 use App\Models\Currency\Currency;
@@ -45,7 +46,7 @@ class Character extends Model
         'is_sellable', 'is_tradeable', 'is_giftable',
         'sale_value', 'transferrable_at', 'is_visible',
         'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'sort',
-        'is_myo_slot', 'name', 'trade_id', 'owner_url'
+        'is_myo_slot', 'name', 'trade_id', 'is_links_open', 'owner_url'
     ];
 
     /**
@@ -216,6 +217,13 @@ class Character extends Model
     public function lineage()
     {
         return $this->hasOne('App\Models\Character\CharacterLineage', 'character_id');
+    }
+    /*
+    * Get the links for this character
+    */
+    public function links()
+    {
+       return $this->hasMany('App\Models\Character\CharacterRelation', 'chara_1')->where('status', 'Approved');
     }
 
     /**********************************************************************************************

@@ -20,33 +20,33 @@ return [
     */
 
     // Navbar News Notif - Juni
-    'navbar_news_notif' => 0,
+    'navbar_news_notif' => 1,
 
     // Species Trait Index - Mercury
-    'species_trait_index' => 0,
+    'species_trait_index' => 1,
 
     // Character Status Badges - Juni
-    'character_status_badges' => 0,
-
+    'character_status_badges' => 1,
+    
     // Character TH Profile Link - Juni
-    'character_TH_profile_link' => 0,
+    'character_TH_profile_link' => 1,
 
     // Design Update Voting - Mercury
-    'design_update_voting' => 0,
+    'design_update_voting' => 1,
 
     // Item Entry Expansion - Mercury
     'item_entry_expansion' => [
-        'extra_fields' => 0,
-        'resale_function' => 0,
+        'extra_fields' => 1,
+        'resale_function' => 1,
     ],
 
     // Group Traits By Category - Uri
-    'traits_by_category' => 0,
+    'traits_by_category' => 1,
 
     // Character Reward Expansion - Uri
     'character_reward_expansion' => [
         'expanded' => 1,
-        'default_recipient' => 0, // 0 to default to the character's owner (if a user), 1 to default to the submission user.
+        'default_recipient' => 1, // 0 to default to the character's owner (if a user), 1 to default to the submission user.
     ],
 
 ];
