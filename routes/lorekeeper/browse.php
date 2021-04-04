@@ -138,6 +138,7 @@ Route::group(['prefix' => 'adoptions'], function() {
     Route::get('/', 'AdoptionController@getAdoption');
     Route::get('{id}/{stockId}', 'AdoptionController@getAdoptionStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
 });
+Route::get('event-tracking', 'PromptsController@getEventTracking');
 
 /**************************************************************************************************
     Site Pages
