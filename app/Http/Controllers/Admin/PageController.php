@@ -36,9 +36,9 @@ class PageController extends Controller
             'categories' => [null => 'No category'] + SitePageCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
         ]);
     }
-    
+
     /**
-     * Shows the create page page. 
+     * Shows the create page page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -49,7 +49,7 @@ class PageController extends Controller
             'categories' => [null => 'No category'] + SitePageCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
         ]);
     }
-    
+
     /**
      * Shows the edit page page.
      *
@@ -78,7 +78,7 @@ class PageController extends Controller
     {
         $id ? $request->validate(SitePage::$updateRules) : $request->validate(SitePage::$createRules);
         $data = $request->only([
-            'key', 'title', 'text', 'is_visible', 'can_comment', 'page_category_id'
+            'key', 'title', 'text', 'is_visible', 'can_comment', 'page_category_id', 'admin_only'
         ]);
         if($id && $service->updatePage(SitePage::find($id), $data, Auth::user())) {
             flash('Page updated successfully.')->success();
@@ -92,7 +92,7 @@ class PageController extends Controller
         }
         return redirect()->back();
     }
-    
+
     /**
      * Gets the page deletion modal.
      *
