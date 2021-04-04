@@ -26,6 +26,7 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
     Route::post('password', 'AccountController@postPassword');
     Route::post('email', 'AccountController@postEmail');
     Route::post('avatar', 'AccountController@postAvatar');
+    Route::post('socials', 'AccountController@postLinks');
 
     Route::get('bookmarks', 'BookmarkController@getBookmarks');
     Route::get('bookmarks/create', 'BookmarkController@getCreateBookmark');
@@ -91,6 +92,8 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/inventory/edit', 'CharacterController@postInventoryEdit');
 
     Route::post('{slug}/bank/transfer', 'CharacterController@postCurrencyTransfer');
+    Route::post('{slug}/bank/transfer', 'CharacterController@postCurrencyTransfer');
+
     Route::get('{slug}/transfer', 'CharacterController@getTransfer');
     Route::post('{slug}/transfer', 'CharacterController@postTransfer');
     Route::post('{slug}/transfer/{id}/cancel', 'CharacterController@postCancelTransfer');
