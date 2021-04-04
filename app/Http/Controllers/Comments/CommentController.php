@@ -20,6 +20,7 @@ use App\Models\News;
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Report\Report;
 use App\Models\SitePage;
+use App\Models\TradeListing;
 
 use Notifications;
 
@@ -128,7 +129,13 @@ class CommentController extends Controller implements CommentControllerInterface
                 $post = (($type != 'User-User') ? 'your gallery submission\'s staff comments' : 'your gallery submission');
                 $link = (($type != 'User-User') ? $submission->queueUrl . '/#comment-' . $comment->getKey() : $submission->url . '/#comment-' . $comment->getKey());
                 break;
-            }
+            case 'App\Models\TradeListing':
+                $listing = TradeListing::find($comment->commentable_id);
+                $recipient = $listing->user;
+                $post = 'your trade listing';
+                $link = $listing->url . '/#comment-' . $comment->getKey();
+                break;  
+            } 
 
 
         if($recipient != $sender) {
