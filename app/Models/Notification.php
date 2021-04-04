@@ -32,21 +32,21 @@ class Notification extends Model
 
 
     /**********************************************************************************************
-    
+
         RELATIONS
 
     **********************************************************************************************/
-    
+
     /**
      * Get the user who owns notification.
      */
-    public function user() 
+    public function user()
     {
         return $this->belongsTo('App\Models\User\User');
     }
 
     /**********************************************************************************************
-    
+
         ACCESSORS
 
     **********************************************************************************************/
@@ -72,10 +72,10 @@ class Notification extends Model
 
         $message = $notification['message'];
 
-        // Replace the URL... 
+        // Replace the URL...
         $message = str_replace('{url}', url($notification['url']), $message);
 
-        // Replace any variables in data... 
+        // Replace any variables in data...
         $data = $this->data;
         if($data && count($data)) {
             foreach($data as $key => $value) {
@@ -97,7 +97,7 @@ class Notification extends Model
     }
 
     /**********************************************************************************************
-    
+
         CONSTANTS
 
     **********************************************************************************************/
@@ -164,4 +164,5 @@ class Notification extends Model
     const RECIPE_GRANT                      = 600; // Draginraptor - Crafting
     const SURRENDER_APPROVED              = 218;
     const SURRENDER_REJECTED              = 219;
+    const GALLERY_SUBMISSION_VALUED_MULT    = 516;
 }
