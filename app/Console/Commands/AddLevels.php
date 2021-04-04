@@ -76,19 +76,5 @@ class Addlevels extends Command
         }
         $this->line("Migrated characters\n");
         $this->line("Successfully added levels!");
-        
-        $this->line("Migrating prompts...");
-        $prompts = Prompt::all();
-        foreach ($prompts as $prompt)
-        {
-            if (!$prompt->expreward)
-            {
-                $prompt->expreward()->create([
-                    'prompt_id' =>  $prompt->id
-                ]);
-            }
-        }
-        $this->line("Migrated prompts!");
-        $this->line("Successfully added prompt exp rewards!");
     }
 }
