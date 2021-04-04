@@ -27,8 +27,8 @@ use App\Services\CurrencyManager;
 use App\Services\InventoryManager;
 use App\Services\RecipeService;
 use App\Services\ResearchService;
-use App\Services\Stats\ExperienceManager;
 use App\Services\PetManager;
+use App\Services\Stats\ExperienceManager;
 
 use App\Http\Controllers\Controller;
 

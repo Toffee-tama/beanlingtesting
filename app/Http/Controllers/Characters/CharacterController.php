@@ -135,7 +135,7 @@ class CharacterController extends Controller
         $isMod = Auth::user()->hasPower('manage_characters');
         $isOwner = ($this->character->user_id == Auth::user()->id);
         if(!$isMod && !$isOwner) abort(404);
-
+        
         if($service->updateCharacterProfile($request->only(['name', 'link', 'text', 'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'is_links_open', 'alert_user','location', 'faction']), $this->character, Auth::user(), !$isOwner)) {
             flash('Profile edited successfully.')->success();
         }
@@ -196,7 +196,6 @@ public function getCharacterLinks($slug)
             'Significant Others',
             'Student',
             'Teacher',
-
         ];
 
         return view('character.links', [

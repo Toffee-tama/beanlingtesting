@@ -49,8 +49,8 @@ class LevelController extends Controller
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
+            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
         ]);
     }
     
@@ -67,8 +67,8 @@ class LevelController extends Controller
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
+            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
         ]);
     }
 
@@ -153,8 +153,8 @@ class LevelController extends Controller
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
+            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
         ]);
     }
     
@@ -175,8 +175,8 @@ class LevelController extends Controller
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
+            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
         ]);
     }
 
@@ -206,7 +206,7 @@ class LevelController extends Controller
      * Gets the level deletion modal.
      *
      */
-    public function getDeleteCharaLevel($id)
+    public function getCharaDeleteLevel($id)
     {
         $level = CharacterLevel::find($id);
         return view('admin.stats.character._delete_level', [
@@ -218,7 +218,7 @@ class LevelController extends Controller
      * Creates or edits an level.
      *
      */
-    public function postDeleteCharaLevel(Request $request, LevelService $service, $id)
+    public function postCharaDeleteLevel(Request $request, LevelService $service, $id)
     {
         if($id && $service->deleteCharaLevel(CharacterLevel::find($id))) {
             flash('Level deleted successfully.')->success();

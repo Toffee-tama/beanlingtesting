@@ -88,7 +88,6 @@ class AccountController extends Controller
 
     /**
      * Edits the user's avatar.
-     * Edits the user's links.  
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
@@ -103,59 +102,50 @@ class AccountController extends Controller
         }
         return redirect()->back();
     }
-
-        /**
+    
+       /**
      * Edits the user's links.  
-
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postLinks(Request $request)
-    {
-        Auth::user()->profile->update([
-            'disc' => $request->get('disc'),
-            'insta' => $request->get('insta'),
-            'house' => $request->get('house'),
-            'arch' => $request->get('arch'),
-        ]);
-        flash('Profile updated successfully.')->success();
-        return redirect()->back();
-    }
-
-    /**
+public function postLinks(Request $request)
+{
+    Auth::user()->profile->update([
+        'disc' => $request->get('disc'),
+        'insta' => $request->get('insta'),
+        'house' => $request->get('house'),
+        'arch' => $request->get('arch'),
+    ]);
+    flash('Profile updated successfully.')->success();
+    return redirect()->back();
+}
+       /**
      * Edits the user's location from a list of locations that users can make their home.
+
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postLocation(Request $request, UserService $service)
-    {
-        if($service->updateLocation($request->input('location'), Auth::user())) {
-            flash('Location updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->back();
-    }
 
-    /**
-     * Edits the user's faction from a list of factions that users can make their home.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postFaction(Request $request, UserService $service)
-    {
-        if($service->updateFaction($request->input('faction'), Auth::user())) {
-            flash('Faction updated successfully.')->success();
+    
+        /**
+         * Edits the user's faction from a list of factions that users can make their home.
+         *
+         * @param  \Illuminate\Http\Request  $request
+         * @return \Illuminate\Http\RedirectResponse
+         */
+        public function postFaction(Request $request, UserService $service)
+        {
+            if($service->updateFaction($request->input('faction'), Auth::user())) {
+                flash('Faction updated successfully.')->success();
+            }
+            else {
+                foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+            }
+            return redirect()->back();
         }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->back();
-    }
-
+    
 
     /**
      * Changes the user's password.

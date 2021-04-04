@@ -176,7 +176,6 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('recipes/create', 'RecipeController@postCreateEditRecipe');
     Route::post('recipes/edit/{id?}', 'RecipeController@postCreateEditRecipe');
     Route::post('recipes/delete/{id}', 'RecipeController@postDeleteRecipe');
-    
     # PETS
     Route::get('pet-categories', 'PetController@getIndex');
     Route::get('pet-categories/create', 'PetController@getCreatePetCategory');
@@ -446,6 +445,9 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
 
     Route::get('pets', 'GrantController@getPets');
     Route::post('pets', 'GrantController@postPets');
+
+    Route::get('exp', 'GrantController@getExp');
+    Route::post('exp', 'GrantController@postExp');
 });
 
 

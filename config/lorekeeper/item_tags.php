@@ -25,15 +25,14 @@ return [
         'background_color' => '#1fd1a7'
     ],
 
-    'raritybox' => [
-        'name' => 'Rarity Box',
-        'text_color' => '#ffffff',
-        'background_color' => '#58507D'
-    ],
-    
     'coupon' => [
         'name' => 'Coupon',
         'text_color' => '#ffffff',
         'background_color' => '#ff5ca8'
+    ],
+    'raritybox' => [
+        'name' => 'Rarity Box',
+        'text_color' => '#ffffff',
+        'background_color' => '#58507D'
     ],
 ];

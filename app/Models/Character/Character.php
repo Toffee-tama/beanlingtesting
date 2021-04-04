@@ -262,21 +262,6 @@ class Character extends Model
     {
         return $this->hasOne('App\Models\Character\CharacterLineage', 'character_id');
     }
-    /* * Get the character's character drop data.
-     */
-    public function drops()
-    {
-        if(!CharacterDrop::where('character_id', $this->id)->first()) {
-            $drop = new CharacterDrop;
-            $drop->createDrop($this->id);
-        }
-        elseif(!CharacterDrop::where('character_id', $this->id)->where('drop_id', $this->image->species->dropData->id)->first()) {
-            CharacterDrop::where('character_id', $this->id)->delete;
-            $drop = new CharacterDrop;
-            $drop->createDrop($this->id);
-        }
-        return $this->hasOne('App\Models\Character\CharacterDrop', 'character_id');
-    }
     /*
     * Get the links for this character
     */
