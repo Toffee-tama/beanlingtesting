@@ -36,7 +36,6 @@ class BoxService extends Service
             'items' => Item::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
-            'awards' => Award::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
@@ -99,8 +98,6 @@ class BoxService extends Service
                         break;
                     case 'Pet':
                         $type = 'App\Models\Pet\Pet';
-                    case 'Award':
-                        $type = 'App\Models\Award\Award';
                         break;
                     case 'LootTable':
                         $type = 'App\Models\Loot\LootTable';
