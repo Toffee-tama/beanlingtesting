@@ -242,6 +242,23 @@ class UserController extends Controller
     }
 
     /**
+     * Shows a user's profile.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserLevel($name)
+    {
+        return view('user.level', [
+            'user' => $this->user,
+            'exps' => $this->user->getExpLogs(),
+            'levels' => $this->user->getLevelLogs(),
+            'stats' => $this->user->getStatLogs(),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
      * Shows a user's currency logs.
      *
      * @param  string  $name
@@ -300,6 +317,54 @@ class UserController extends Controller
         return view('user.pet_logs', [
             'user' => $this->user,
             'logs' => $this->user->getPetLogs(0)
+        ]);
+    }
+
+    /**
+     * Shows a user's item logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserExpLogs($name)
+    {
+        $user = $this->user;
+        return view('user.exp_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getExpLogs(0),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Shows a user's item logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserlevelLogs($name)
+    {
+        $user = $this->user;
+        return view('user.level_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getLevelLogs(0),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Shows a user's item logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserStatLogs($name)
+    {
+        $user = $this->user;
+        return view('user.stat_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getStatLogs(0),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
         ]);
     }
 

@@ -15,11 +15,14 @@ use App\Models\Rank\RankPower;
 use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
 use App\Models\Item\ItemLog;
+use App\Models\Stats\ExpLog;
+use App\Models\Stats\StatTransferLog;
+use App\Models\Stats\LevelLog;
 use App\Models\Pet\PetLog;
 use App\Models\Shop\ShopLog;
-use App\Models\Adoption\AdoptionLog;
 use App\Models\Research\Research;
 use App\Models\Research\ResearchLog;
+use App\Models\Adoption\AdoptionLog;
 use App\Models\User\UserCharacterLog;
 use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
@@ -113,6 +116,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get user settings.
+     */
+    public function level() 
+    {
+        return $this->hasOne('App\Models\Stats\User\UserLevel');
+    }
+
+    /*
      * Get the user's aliases.
      */
     public function aliases()
@@ -570,6 +581,58 @@ class User extends Authenticatable implements MustVerifyEmail
         else return $query->paginate(30);
     }
 
+        /**
+     * Get the user's exp logs.
+     *
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+     */
+public function getExpLogs($limit = 10)
+{
+    $user = $this;
+    $query = ExpLog::where(function($query) use ($user) {
+        $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
+    })->orWhere(function($query) use ($user) {
+        $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
+    })->orderBy('id', 'DESC');
+    if($limit) return $query->take($limit)->get();
+    else return $query->paginate(30);
+}
+
+/**
+ * Get the user's stat logs.
+ *
+ * @param  int  $limit
+ * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+ */
+public function getStatLogs($limit = 10)
+{
+    $user = $this;
+    $query = StatTransferLog::where(function($query) use ($user) {
+        $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
+    })->orWhere(function($query) use ($user) {
+        $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
+    })->orderBy('id', 'DESC');
+    if($limit) return $query->take($limit)->get();
+    else return $query->paginate(30);
+}
+
+/**
+ * Get the user's level logs.
+ *
+ * @param  int  $limit
+ * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+ */
+public function getLevelLogs($limit = 10)
+{
+    $user = $this;
+    $query = LevelLog::where(function($query) use ($user) {
+        $query->with('recipient')->where('leveller_type', 'User')->where('recipient_id', $user->id);
+    })->orderBy('id', 'DESC');
+    if($limit) return $query->take($limit)->get();
+    else return $query->paginate(30);
+}
+
     /**
      * Get the user's item logs.
      *
@@ -605,7 +668,6 @@ class User extends Authenticatable implements MustVerifyEmail
         if($limit) return $query->take($limit)->get();
         else return $query->paginate(30);
     }
-
         /**
      * Get the user's pet logs.
      *
@@ -623,6 +685,7 @@ public function getPetLogs($limit = 10)
     if($limit) return $query->take($limit)->get();
     else return $query->paginate(30);
 }
+
     /**
      * Get the user's shop purchase logs.
      *
@@ -743,6 +806,16 @@ public function getPetLogs($limit = 10)
         $default = !$recipe->needs_unlocking;
         return $default ? true : $user_has;
     }
+    
+        /* *
+        * Checks if the user has a specific research unlocked and attached to its account.
+     * 
+     * @return bool
+     */
+    public function hasResearch($id)
+    {
+        return $this->researches->contains(Research::find($id));
+    }
 
 
     /**
@@ -761,14 +834,5 @@ public function getPetLogs($limit = 10)
        $total = $submissionCount + $claimCount + $designCount + $myoCount + $transferCount + $tradeCount;
        return $total;
      }
-     /** 
-           * Checks if the user has a specific research unlocked and attached to its account.
-           * 
-           * @return bool
-           */
-          public function hasResearch($id)
-          {
-              return $this->researches->contains(Research::find($id));
-          }
 
 }

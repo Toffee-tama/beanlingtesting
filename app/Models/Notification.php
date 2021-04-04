@@ -170,4 +170,5 @@ class Notification extends Model
     const PET_TRANSFER                    = 242;
     const FORCED_PET_TRANSFER             = 243;
     const PET_GRANT                       = 244;
+    const EXP_GRANT                       = 245;
 }
