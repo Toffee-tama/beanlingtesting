@@ -78,7 +78,7 @@
     <h3>Rewards</h3>
     <p>These rewards will be claimable after purchase. This allows for rewards to be claimed by users who purchased this research in the past.</p>
 </div>
-@include('widgets._loot_select', ['loots' => $research->rewards, 'showLootTables' => true, 'showRaffles' => true])
+@include('widgets._loot_select', ['loots' => $research->rewards, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 
 
 
@@ -93,7 +93,7 @@
 
 {!! Form::close() !!}
 
-@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'raffles' => $raffles, 'showLootTables' => true, 'showRaffles' => true])
+@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'raffles' => $raffles, 'recipe' => $recipes, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 
 
 @endif
@@ -102,7 +102,7 @@
 
 @section('scripts')
 @parent
-@include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
+@include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 <script>
 $( document ).ready(function() {
     $('.delete-research-button').on('click', function(e) {
