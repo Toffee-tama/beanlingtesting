@@ -59,7 +59,7 @@
 
 @section('scripts')
 @parent
-@include('js._loot_js', ['showLootTables' => false, 'showRaffles' => false])
+@include('js._loot_js', ['showLootTables' => false, 'showRaffles' => false, 'showRecipes' => false])
 @include('js._level_limit_js')
 @endsection
 
