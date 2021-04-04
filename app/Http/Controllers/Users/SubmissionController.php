@@ -79,7 +79,15 @@ class SubmissionController extends Controller
             'user' => $submission->user,
             'categories' => ItemCategory::orderBy('sort', 'DESC')->get(),
             'inventory' => $inventory,
-            'itemsrow' => Item::all()->keyBy('id')
+            'itemsrow' => Item::all()->keyBy('id'),
+            'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
+            'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
+            'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'expanded_rewards' => Config::get('lorekeeper.extensions.character_reward_expansion.expanded'),
+            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
+            'page' => 'submission'
         ]);
     }
 
@@ -219,7 +227,15 @@ class SubmissionController extends Controller
             'user' => $submission->user,
             'categories' => ItemCategory::orderBy('sort', 'DESC')->get(),
             'itemsrow' => Item::all()->keyBy('id'),
-            'inventory' => $inventory
+            'inventory' => $inventory,
+            'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
+            'items' => Item::orderBy('name')->released()->pluck('name', 'id'),
+            'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'expanded_rewards' => Config::get('lorekeeper.extensions.character_reward_expansion.expanded'),
+            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
+            'page' => 'submission'
         ]);
     }
 
