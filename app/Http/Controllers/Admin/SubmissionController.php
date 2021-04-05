@@ -97,7 +97,7 @@ class SubmissionController extends Controller
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
-            'count' => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
+            'count' => $count,
             'prompt' => $prompt,
             'limit' => $limit
         ] : []));
