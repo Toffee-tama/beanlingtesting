@@ -209,6 +209,16 @@ class Submission extends Model
     }
 
     /**
+     * Get the viewing URL of the submission/claim.
+     *
+     * @return string
+     */
+    public function getViewUrlAttribute()
+    {
+        return url(($this->prompt_id ? 'submissions' : 'claims') . '/view/'.$this->id);
+    }
+
+    /**
      * Get the admin URL (for processing purposes) of the submission/claim.
      *
      * @return string
