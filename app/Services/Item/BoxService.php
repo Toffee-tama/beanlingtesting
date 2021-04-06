@@ -8,7 +8,6 @@ use App\Services\InventoryManager;
 
 use App\Models\Item\Item;
 use App\Models\Currency\Currency;
-use App\Models\Award\Award;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Pet\Pet;
