@@ -11,6 +11,7 @@ use App\Models\Currency\Currency;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Pet\Pet;
+use App\Models\Recipe\Recipe;
 
 
 class BoxService extends Service
@@ -38,6 +39,7 @@ class BoxService extends Service
             'pets' => Pet::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
         ];
     }
 
@@ -104,6 +106,9 @@ class BoxService extends Service
                     case 'Raffle':
                         $type = 'App\Models\Raffle\Raffle';
                         break;
+                        case 'Recipe':
+                            $type = 'App\Models\Recipe\Recipe';
+                            break;
                 }
                 $asset = $type::find($data['rewardable_id'][$key]);
                 addAsset($assets, $asset, $data['quantity'][$key]);
