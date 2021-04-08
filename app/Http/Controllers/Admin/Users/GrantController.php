@@ -248,15 +248,7 @@ class GrantController extends Controller
     }
 
     /**
-     * Grants or removes exp (show)
-     */
-    public function getExp()
-    {
-        return view('admin.grants.exp', [
-            'users' => User::orderBy('id')->pluck('name', 'id'),
-            ]);
-        }
-     /*       * Show the pet grant page.
+     * Show the pet grant page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -268,17 +260,7 @@ class GrantController extends Controller
     }
 
     /**
-     * Grants or removes exp
-     */
-    public function postExp(Request $request, ExperienceManager $service)
-    {
-        $data = $request->only(['names', 'quantity', 'data']);
-        if($service->grantExp($data, Auth::user())) {
-            flash('EXP granted successfully.')->success();
-        }
-    }
-    
-    /*        * Grants or removes pets from multiple users.
+     * Grants or removes pets from multiple users.
      *
      * @param  \Illuminate\Http\Request        $request
      * @param  App\Services\InvenntoryManager  $service
@@ -289,6 +271,31 @@ class GrantController extends Controller
         $data = $request->only(['names', 'pet_id', 'quantity', 'data', 'disallow_transfer', 'notes']);
         if($service->grantPets($data, Auth::user())) {
             flash('Pets granted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Grants or removes exp (show)
+     */
+    public function getExp()
+    {
+        return view('admin.grants.exp', [
+            'users' => User::orderBy('id')->pluck('name', 'id'),
+        ]);
+    }
+
+    /**
+     * Grants or removes exp
+     */
+    public function postExp(Request $request, ExperienceManager $service)
+    {
+        $data = $request->only(['names', 'quantity', 'data']);
+        if($service->grantExp($data, Auth::user())) {
+            flash('EXP granted successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

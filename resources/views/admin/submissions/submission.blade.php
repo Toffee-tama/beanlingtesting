@@ -80,14 +80,14 @@
         </div>
         <div class="col-6">
             <h3>Stat & Level Rewards</h3>
-            @if($submission->prompt->expreward && (!$submission->focus_chara_id && $submission->prompt->expreward->chara_exp || !$submission->focus_chara_id && $submission->prompt->expreward->chara_points))
+            @if(!$submission->focus_chara_id && $submission->prompt->expreward->chara_exp || !$submission->focus_chara_id && $submission->prompt->expreward->chara_points)
             <div class="alert alert-danger">This prompt has character rewards but the user has not added a focus character. If this is a mistake, please decline.</div>
             @endif
             <div class="card m-1">
                 <div class="row m-2">
                     <div class="col">
                         <h5>User Rewards</h5>
-                        @if(!$submission->prompt->expreward || (!$submission->prompt->expreward->user_exp && !$submission->prompt->expreward->user_points))
+                        @if(!$submission->prompt->expreward->user_exp && !$submission->prompt->expreward->user_points)
                         No user rewards.
                         @else
                         {{ $submission->prompt->expreward->user_exp ? $submission->prompt->expreward->user_exp : 0  }} user EXP
@@ -97,7 +97,7 @@
                     </div>
                     <div class="col">
                         <h5>Character Rewards</h5>
-                        @if(!$submission->prompt->expreward || (!$submission->prompt->expreward->chara_exp && !$submission->prompt->expreward->chara_points))
+                        @if(!$submission->prompt->expreward->chara_exp && !$submission->prompt->expreward->chara_points)
                         No character rewards.
                         @else
                         {{ $submission->prompt->expreward->chara_exp ? $submission->prompt->expreward->chara_exp : 0  }} character EXP
@@ -158,7 +158,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{{ $submission->prompt->expreward && $submission->prompt->expreward->chara_exp ? $submission->prompt->chara_exp : 0 }} EXP
+                                    <td>{{ $submission->prompt->chara_exp ? $submission->prompt->chara_exp : 0 }} EXP
                                     <br>
                                     {{ $submission->prompt->chara_points ? $submission->prompt->chara_points : 0  }} Stat Point
                                     <p class="text-muted mt-1">(This is pre-defined by the prompt, you may add bonuses below)</p>

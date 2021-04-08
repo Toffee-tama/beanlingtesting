@@ -20,7 +20,6 @@ use App\Models\Feature\Feature;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Trade;
 use App\Models\User\UserItem;
-use App\Models\Character\CharacterDropData;
 use App\Models\Stats\Character\Stat;
 
 use App\Services\CharacterManager;
@@ -66,7 +65,6 @@ class CharacterController extends Controller
             'rarities' => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'titles' => ['0' => 'Select Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('sort', 'DESC')->pluck('title', 'id')->toArray(),
             'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'dropSpecies' => Species::whereIn('id', CharacterDropData::pluck('species_id')->toArray())->pluck('id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
             'features' => Feature::getFeaturesByCategory(),
             'isMyo' => false,
@@ -86,7 +84,6 @@ class CharacterController extends Controller
             'characterOptions' => CharacterLineageBlacklist::getAncestorOptions(),
             'rarities' => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'dropSpecies' => Species::whereIn('id', CharacterDropData::pluck('species_id')->toArray())->pluck('id')->toArray(),
             'subtypes' => ['0' => 'Pick a Species First'],
             'features' => Feature::getFeaturesByCategory(),
             'isMyo' => true,
@@ -106,20 +103,6 @@ class CharacterController extends Controller
           'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
           'isMyo' => $request->input('myo')
       ]);
-    }
-
-    /**
-     * Shows the edit group portion of the form.
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getCreateCharacterMyoGroup(Request $request) {
-        $species = $request->input('species');
-        return view('admin.masterlist._create_character_group', [
-            'parameters' => ['0' => 'Select Group'] + CharacterDropData::where('species_id', $species)->first()->parameterArray,
-            'isMyo' => $request->input('myo')
-        ]);
     }
 
     /**
@@ -442,31 +425,6 @@ class CharacterController extends Controller
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->back()->withInput();
-    }
-
-    /**
-     * Edits character drops.
-     *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  string                         $slug
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postEditCharacterDrop(Request $request, $slug)
-    {
-        if(!Auth::check()) abort(404);
-        $this->character = Character::where('slug', $slug)->first();
-        if(!$this->character) abort(404);
-        $drops = $this->character->drops;
-        if(!$request['drops_available']) $request['drops_available'] = 0;
-
-        if ($drops->update(['parameters' => $request['parameters'], 'drops_available' => $request['drops_available']])) {
-            flash('Character drops updated successfully.')->success();
-            return redirect()->to($this->character->url.'/drops');
-        }
-        else {
-            flash('Failed to update character drops.')->error();
         }
         return redirect()->back()->withInput();
     }

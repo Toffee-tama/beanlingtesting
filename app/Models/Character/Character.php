@@ -27,7 +27,6 @@ use App\Models\Currency\CurrencyLog;
 use App\Models\Character\CharacterItem;
 use App\Models\Item\Item;
 use App\Models\Item\ItemLog;
-use App\Models\Character\CharacterDrop;
 
 use App\Models\Stats\ExpLog;
 use App\Models\Stats\StatTransferLog;

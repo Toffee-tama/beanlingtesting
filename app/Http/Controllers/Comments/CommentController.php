@@ -115,7 +115,7 @@ class CommentController extends Controller implements CommentControllerInterface
                 $link = 'reports/view/' . $report->id . '/#comment-' . $comment->getKey();
                 if($recipients == $sender) $recipient = (isset($report->staff_id) ? $report->staff : User::find(Settings::get('admin_user')));
                 else  $recipient = $recipients;
-                break; 
+                break;
             case 'App\Models\SitePage':
                 $page = SitePage::find($comment->commentable_id);
                 $recipient = User::find(Settings::get('admin_user'));

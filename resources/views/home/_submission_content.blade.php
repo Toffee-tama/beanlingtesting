@@ -1,4 +1,4 @@
-h1>
+<h1>
     {{ $submission->prompt_id ? 'Submission' : 'Claim' }} (#{{ $submission->id }})
     <span class="float-right badge badge-{{ $submission->status == 'Pending' ? 'secondary' : ($submission->status == 'Approved' ? 'success' : 'danger') }}">{{ $submission->status }}</span>
 </h1>
@@ -68,7 +68,7 @@ h1>
         <div class="row m-2">
             <div class="col">
                 <h5>User Rewards</h5>
-                @if(!$submission->prompt->expreward || (!$submission->prompt->expreward->user_exp && !$submission->prompt->expreward->user_points))
+                @if(!$submission->prompt->expreward->user_exp && !$submission->prompt->expreward->user_points)
                 No user rewards.
                 @else
                 {{ $submission->prompt->expreward->user_exp ? $submission->prompt->expreward->user_exp : 0  }} user EXP
@@ -78,7 +78,7 @@ h1>
             </div>
             <div class="col">
                 <h5>Character Rewards</h5>
-                @if(!$submission->prompt->expreward || (!$submission->prompt->expreward->chara_exp && !$submission->prompt->expreward->chara_points))
+                @if(!$submission->prompt->expreward->chara_exp && !$submission->prompt->expreward->chara_points)
                 No character rewards.
                 @else
                 {{ $submission->prompt->expreward->chara_exp ? $submission->prompt->expreward->chara_exp : 0  }} character EXP

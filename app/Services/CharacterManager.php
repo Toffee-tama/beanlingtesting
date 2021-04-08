@@ -24,7 +24,6 @@ use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterFeature;
 use App\Models\Character\CharacterImage;
 use App\Models\Character\CharacterTransfer;
-use App\Models\Character\CharacterDrop;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterBookmark;
 use App\Models\Character\CharacterLineage;
@@ -140,12 +139,6 @@ class CharacterManager extends Service
             // Update the character's image ID
             $character->character_image_id = $image->id;
             $character->save();
-
-            // Create drop information for the character, if relevant
-            if($character->image->species && $character->image->species->dropData) {
-                $drop = new CharacterDrop;
-                if($drop->createDrop($character->id, isset($data['parameters']) && $data['parameters'] ? $data['parameters'] : null)) throw new \Exception('Failed to create character drop.');
-            }
 
             // Create character stats
             $character->level()->create([
