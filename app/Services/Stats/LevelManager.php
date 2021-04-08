@@ -21,6 +21,8 @@ use App\Models\Item\Item;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Prompt\Prompt;
+use App\Models\Recipe\Recipe;
+use App\Models\Pet\Pet;
 
 use App\Models\User\UserItem;
 use App\Models\User\UserCurrency;

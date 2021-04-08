@@ -329,10 +329,6 @@ class AddSiteSettings extends Command
             $this->info("Added:   limited_stock_coupon_settings / Default: 0");
         }
         else $this->line("Skipped: limited_stock_coupon_settings");
-<<<<<<< HEAD
-=======
-        
->>>>>>> f14b7bd9c447814a50ee521490274b2b7c7021fd
         if(!DB::table('site_settings')->where('key', 'adopts_user')->exists()) {
             DB::table('site_settings')->insert([
                 [

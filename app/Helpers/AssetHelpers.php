@@ -79,6 +79,14 @@ function getAssetKeys($isCharacter = false)
  * @param  bool    $namespaced
  * @return string
  */
+/**
+ * Gets the model name for an asset type.
+ * The asset type has to correspond to one of the asset keys above.
+ *
+ * @param  string  $type
+ * @param  bool    $namespaced
+ * @return string
+ */
 function getAssetModelString($type, $namespaced = true)
 {
     switch($type)
@@ -93,11 +101,6 @@ function getAssetModelString($type, $namespaced = true)
             else return 'Currency';
             break;
 
-        case 'pets':
-            if($namespaced) return '\App\Models\Pet\Pet';
-            else return 'Pet';
-            break;
-            
         case 'raffle_tickets':
             if($namespaced) return '\App\Models\Raffle\Raffle';
             else return 'Raffle';
@@ -121,11 +124,6 @@ function getAssetModelString($type, $namespaced = true)
         case 'character_items':
             if($namespaced) return '\App\Models\Character\CharacterItem';
             else return 'CharacterItem';
-            break;
-            
-        case 'recipes':
-            if($namespaced) return '\App\Models\Recipe\Recipe';
-            else return 'Recipe';
             break;
     }
     return null;
