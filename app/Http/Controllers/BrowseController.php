@@ -528,7 +528,10 @@ class BrowseController extends Controller
             'subtypes' => [0 => 'Any Subtype'] + Subtype::orderBy('subtypes.sort', 'DESC')->pluck('name', 'id')->toArray(),
             'rarities' => [0 => 'Any Rarity'] + Rarity::orderBy('rarities.sort', 'DESC')->pluck('name', 'id')->toArray(),
             'titles' => [0 => 'Any Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('character_titles.sort', 'DESC')->pluck('title', 'id')->toArray(),
+<<<<<<< HEAD
             'features' => Feature::orderBy('features.name')->pluck('name', 'id')->toArray(),
+=======
+>>>>>>> f14b7bd9c447814a50ee521490274b2b7c7021fd
             'sublists' => Sublist::orderBy('sort', 'DESC')->get(),
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
             'features' => Feature::getFeaturesByCategory()

@@ -304,12 +304,6 @@ return [
         'message' => 'A character you have bookmarked (<a href="{character_url}">{character_name}</a>) has had its Gift Writing Allowed status changed. (<a href="{url}">View Bookmarks</a>)',
         'url' => 'account/bookmarks'
     ],
-    // RESEARCH_GRANT
-    100 => [
-        'name' => 'Research Granted',
-        'message' => 'You have received a staff grant of <a href="{research_url}">{research_name}</a> (of <a href="{tree_url}">{tree_name}</a>) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">Unlocked Research</a>)',
-        'url' => 'research/unlocked'
-    ],
     // LINK_REQUESTED
     200 => [
         'name' => 'Link Requested',
@@ -321,6 +315,12 @@ return [
         'name' => 'Link Accepted',
         'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Links.</a>)',
         'url' => '',
+    ],
+    // RESEARCH_GRANT
+    100 => [
+        'name' => 'Research Granted',
+        'message' => 'You have received a staff grant of <a href="{research_url}">{research_name}</a> (of <a href="{tree_url}">{tree_name}</a>) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">Unlocked Research</a>)',
+        'url' => 'research/unlocked'
     ],
     // REPORT_ASSIGNED
     220 => [
@@ -351,14 +351,6 @@ return [
         'message' => '<a href="{sender_url}">{sender}</a> has made a reply to your comment. <a href="comment/{comment_url}">See Reply.</a>',
         'url' => ''
     ],
-
-    // EXP GRANT
-    245 => [
-        'name' => 'EXP Grant',
-        'message' => 'You have received a staff grant of {quantity} EXP from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Level Area</a>)',
-        'url' => 'level'
-    ],
-
         // PET_REMOVAL
     241 => [
         'name' => 'Pet Removal',
@@ -386,7 +378,12 @@ return [
         'message' => 'You have received a staff grant of {pet_name} (×{pet_quantity}) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Inventory</a>)',
         'url' => 'pets'
     ],
-
+    // EXP GRANT
+    245 => [
+        'name' => 'EXP Grant',
+        'message' => 'You have received a staff grant of {quantity} EXP from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Level Area</a>)',
+        'url' => 'level'
+    ],
     // CHARACTER_ITEM_GRANT
     501 => [
         'name' => 'Character Item Grant',
@@ -484,11 +481,10 @@ return [
         'message' => 'You have received a staff grant of the crafting recipe {recipe_name} from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Unlocked Recipes</a>)',
         'url' => 'crafting'
     ],
-    
     // GALLERY_SUBMISSION_VALUED_MULT
     516 => [
         'name' => 'Gallery Submission Valued',
         'message' => 'You have been awarded {currency_quantity} {currency_name} and {currency_quantity_alt} {currency_name_alt} for the gallery submission <strong>{submission_title}</strong> (#{submission_id}). (<a href="{url}">View Submission</a>)',
         'url' => 'gallery/queue/{submission_id}'
-    ]
+    ],
 ];

@@ -67,7 +67,6 @@ class SubmissionController extends Controller
     public function getSubmission($id)
     {
         $submission = Submission::whereNotNull('prompt_id')->where('id', $id)->first();
-        $inventory = isset($submission->data['user']) ? parseAssetData($submission->data['user']) : null;
         $prompt = Prompt::where('id', $submission->prompt_id)->first();
         if(!$submission) abort(404);
 
@@ -83,7 +82,10 @@ class SubmissionController extends Controller
         } else {
             $limit = $prompt->limit;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> f14b7bd9c447814a50ee521490274b2b7c7021fd
         return view('admin.submissions.submission', [
             'submission' => $submission,
             'inventory' => $inventory,
@@ -99,6 +101,10 @@ class SubmissionController extends Controller
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
+<<<<<<< HEAD
+=======
+            'pets' => Pet::orderBy('name')->pluck('name', 'id'),
+>>>>>>> f14b7bd9c447814a50ee521490274b2b7c7021fd
             'count' => $count,
             'prompt' => $prompt,
             'limit' => $limit

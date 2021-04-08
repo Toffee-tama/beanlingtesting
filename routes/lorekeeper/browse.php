@@ -97,7 +97,6 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::get('{slug}/submissions', 'CharacterController@getCharacterSubmissions');
 
     Route::get('{slug}/gallery', 'CharacterController@getCharacterGallery');
-    
     # lineage
     Route::get('{slug}/lineage', 'CharacterLineageController@getCharacterLineage');
     Route::get('{slug}/children', 'CharacterLineageController@getCharacterChildren');
@@ -155,7 +154,6 @@ Route::group(['prefix' => 'shops'], function() {
     Route::get('{id}/{stockId}', 'ShopController@getShopStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
 });
 
-
 Route::group(['prefix' => 'research-trees', 'namespace' => 'Research'], function() {
     Route::get('/', 'TreeController@getIndex');
     Route::get('/{id}', 'TreeController@getTree')->where(['id' => '[0-9]+']);
@@ -164,11 +162,11 @@ Route::group(['prefix' => 'research', 'namespace' => 'Research'], function() {
     Route::get('/', 'ResearchController@getIndex');
     Route::get('/{id}', 'ResearchController@getResearch')->where(['id' => '[0-9]+']);
 });
-Route::get('event-tracking', 'PromptsController@getEventTracking');
 Route::group(['prefix' => 'adoptions'], function() {
     Route::get('/', 'AdoptionController@getAdoption');
     Route::get('{id}/{stockId}', 'AdoptionController@getAdoptionStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
 });
+Route::get('event-tracking', 'PromptsController@getEventTracking');
 
 /**************************************************************************************************
     Site Pages

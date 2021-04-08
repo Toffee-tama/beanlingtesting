@@ -196,10 +196,6 @@ return [
                 'url' => 'admin/data/character-categories'
             ],
             [
-                'name' => 'Character Drops',
-                'url' => 'admin/data/character-drops'
-            ],
-            [
                 'name' => 'Character Titles',
                 'url' => 'admin/data/character-titles'
             ],

@@ -124,6 +124,7 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function() 
     Route::post('{slug}/inventory/edit', 'CharacterController@postInventoryEdit');
 
     Route::post('{slug}/bank/transfer', 'CharacterController@postCurrencyTransfer');
+
     Route::get('{slug}/transfer', 'CharacterController@getTransfer');
     Route::post('{slug}/transfer', 'CharacterController@postTransfer');
     Route::post('{slug}/transfer/{id}/cancel', 'CharacterController@postCancelTransfer');
@@ -237,6 +238,22 @@ Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function() {
 });
 
 /**************************************************************************************************
+    Adoptions
+**************************************************************************************************/
+
+Route::group(['prefix' => 'adoptions'], function() {
+    Route::post('buy', 'AdoptionController@postBuy');
+    Route::get('history', 'AdoptionController@getPurchaseHistory');
+});
+
+Route::group(['prefix' => 'surrenders'], function() {
+Route::get('new', 'SurrenderController@getSurrender');
+Route::get('/', 'SurrenderController@getIndex')->where('status', 'pending|approved|rejected');
+Route::post('new/post', 'SurrenderController@postSurrender');
+});
+
+
+/**************************************************************************************************
     Shops
 **************************************************************************************************/
 
@@ -271,23 +288,6 @@ Route::group(['prefix' => 'hunts'], function() {
 });
 
 /**************************************************************************************************
-/**************************************************************************************************
-    Adoptions
-**************************************************************************************************/
-
-Route::group(['prefix' => 'adoptions'], function() {
-    Route::post('buy', 'AdoptionController@postBuy');
-    Route::get('history', 'AdoptionController@getPurchaseHistory');
-});
-
-Route::group(['prefix' => 'surrenders'], function() {
-Route::get('new', 'SurrenderController@getSurrender');
-Route::get('/', 'SurrenderController@getIndex')->where('status', 'pending|approved|rejected');
-Route::post('new/post', 'SurrenderController@postSurrender');
-});
-
-
-/**************************************************************************************************	
     Comments
 **************************************************************************************************/
 Route::group(['prefix' => 'comments', 'namespace' => 'Comments'], function() {

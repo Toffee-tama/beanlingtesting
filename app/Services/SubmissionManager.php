@@ -51,7 +51,6 @@ class SubmissionManager extends Service
         DB::beginTransaction();
 
         try {
-
             // 1. check that the prompt can be submitted at this time
             // 2. check that the characters selected exist (are visible too)
             // 3. check that the currencies selected can be attached to characters

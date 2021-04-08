@@ -85,3 +85,4 @@ If you have any questions, please feel free to contact me through email: corowne
 **Design Update Voting:**
 - The number of votes needed for consensus on a design update | Default: 3 | Configured in: Site settings admin panel
 
+
