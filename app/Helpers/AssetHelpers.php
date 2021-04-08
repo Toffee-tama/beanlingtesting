@@ -87,11 +87,7 @@ function getAssetModelString($type, $namespaced = true)
             if($namespaced) return '\App\Models\Item\Item';
             else return 'Item';
             break;
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> f14b7bd9c447814a50ee521490274b2b7c7021fd
         case 'currencies':
             if($namespaced) return '\App\Models\Currency\Currency';
             else return 'Currency';
