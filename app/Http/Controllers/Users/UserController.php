@@ -81,7 +81,7 @@ class UserController extends Controller
             'characters' => $characters,
             'user_enabled' => Settings::get('WE_user_locations'),
             'pets' => $this->user->pets()->orderBy('user_pets.updated_at', 'DESC')->take(5)->get(),
-            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+
         ]);
     }
 

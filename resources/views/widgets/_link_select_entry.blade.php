@@ -1,4 +1,4 @@
-  <div class="submission-character mb-3 card">
+<div class="submission-character mb-3 card">
     <div class="card-body">
         <div class="text-right"><a href="#" class="remove-character text-muted"><i class="fas fa-times"></i></a></div>
         <div class="row">

@@ -9,10 +9,7 @@
 
 <p>You can create new news posts here. Creating a news post alerts every user that there is a new post, unless the post is marked as not viewable (see the post creation page for details).</p>
 
-<div class="text-right mb-3">
-  <a class="btn btn-primary" href="{{ url('admin/news/create') }}"><i class="fas fa-plus"></i> Create New Post</a>
-  <a class="btn btn-primary" href="{{ url('admin/bulletins/create') }}"><i class="fas fa-plus"></i> Create New Staff Bulletin</a>
-</div>
+<div class="text-right mb-3"><a class="btn btn-primary" href="{{ url('admin/news/create') }}"><i class="fas fa-plus"></i> Create New Post</a></div>
 @if(!count($newses))
     <p>No news found.</p>
 @else
@@ -41,8 +38,6 @@
         </div>
         @endforeach
       </div>
-    <table class="table table-sm page-table">
-    </table>
     {!! $newses->render() !!}
 
     <div class="text-center mt-4 small text-muted">{{ $newses->total() }} result{{ $newses->total() == 1 ? '' : 's' }} found.</div>

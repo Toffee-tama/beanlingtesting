@@ -494,63 +494,6 @@ class WorldController extends Controller
             'description' => $recipe->parsed_description,
         ]);
     }
-    /**
-     * 
-     *  LEVELS
-     * 
-     */
-    public function getLevels()
-    {
-        return view('world.level_index');
-    }
-
-    public function getLevelTypes($type)
-    {
-        if($type == 'user')
-        {
-            $levels = Level::all();
-        }
-        elseif($type == 'character')
-        {
-            $levels = CharacterLevel::all();
-        }
-        else abort(404);
-
-        return view('world.level_type_index', [
-            'levels' => $levels->paginate(20),
-            'type' => $type
-        ]);
-    }
-
-    public function getSingleLevel($type, $level)
-    {
-        if($type == 'user')
-        {
-            $levels = Level::where('level', $level)->first();
-        }
-        elseif($type == 'character')
-        {
-            $levels = CharacterLevel::where('level', $level)->first();
-        }
-        else abort(404);
-
-        return view('world.level_single', [
-            'level' => $levels,
-            'type' => $type
-        ]);
-    }
-
-    /**
-     * STATS
-     */
-    public function getStats()
-    {
-        $stats = Stat::all();
-
-        return view('world.stats', [
-            'stats' => $stats,
-        ]);
-    }
 
     /**
      * Shows the pet categories page.
@@ -608,6 +551,63 @@ class WorldController extends Controller
         return view('world.pets', [
             'pets' => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + PetCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
+        ]);
+    }
+    /**
+     * 
+     *  LEVELS
+     * 
+     */
+    public function getLevels()
+    {
+        return view('world.level_index');
+    }
+
+    public function getLevelTypes($type)
+    {
+        if($type == 'user')
+        {
+            $levels = Level::all();
+        }
+        elseif($type == 'character')
+        {
+            $levels = CharacterLevel::all();
+        }
+        else abort(404);
+
+        return view('world.level_type_index', [
+            'levels' => $levels->paginate(20),
+            'type' => $type
+        ]);
+    }
+
+    public function getSingleLevel($type, $level)
+    {
+        if($type == 'user')
+        {
+            $levels = Level::where('level', $level)->first();
+        }
+        elseif($type == 'character')
+        {
+            $levels = CharacterLevel::where('level', $level)->first();
+        }
+        else abort(404);
+
+        return view('world.level_single', [
+            'level' => $levels,
+            'type' => $type
+        ]);
+    }
+
+    /**
+     * STATS
+     */
+    public function getStats()
+    {
+        $stats = Stat::all();
+
+        return view('world.stats', [
+            'stats' => $stats,
         ]);
     }
 }

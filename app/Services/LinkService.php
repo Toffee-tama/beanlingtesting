@@ -140,16 +140,6 @@ class LinkService extends Service
             'Rival',
             'Roomate',
             'Significant Others',
-            'Parent',
-            'Child',
-            'Master',
-            'Servant',
-            'Foster Parent',
-            'Kin',
-            'Student',
-            'Teacher',
-            'In a Relationship',
-            'Platonic',
         ];
 
         // info

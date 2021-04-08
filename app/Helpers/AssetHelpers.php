@@ -68,7 +68,7 @@ function calculateGroupCurrency($data)
 function getAssetKeys($isCharacter = false)
 {
     if(!$isCharacter) return ['items', 'currencies', 'pets', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'recipes'];
-    else return ['currencies'];
+    else return ['currencies', 'items', 'character_items', 'loot_tables'];
 }
 
 /**
@@ -87,14 +87,17 @@ function getAssetModelString($type, $namespaced = true)
             if($namespaced) return '\App\Models\Item\Item';
             else return 'Item';
             break;
+
         case 'currencies':
             if($namespaced) return '\App\Models\Currency\Currency';
             else return 'Currency';
             break;
+
         case 'pets':
             if($namespaced) return '\App\Models\Pet\Pet';
             else return 'Pet';
             break;
+            
         case 'raffle_tickets':
             if($namespaced) return '\App\Models\Raffle\Raffle';
             else return 'Raffle';
@@ -109,6 +112,7 @@ function getAssetModelString($type, $namespaced = true)
             if($namespaced) return '\App\Models\User\UserItem';
             else return 'UserItem';
             break;
+
         case 'characters':
             if($namespaced) return '\App\Models\Character\Character';
             else return 'Character';
@@ -154,8 +158,6 @@ function mergeAssetsArrays($first, $second)
     foreach($keys as $key)
         foreach($second[$key] as $item)
             addAsset($first, $item['asset'], $item['quantity']);
-        foreach($second[$key] as $award)
-            addAsset($first, $award['asset'], $award['quantity']);
     return $first;
 }
 
@@ -257,12 +259,6 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             foreach($contents as $asset)
                 if(!$service->creditItem($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) return false;
         }
-        elseif($key == 'awards' && count($contents))
-        {
-            $service = new \App\Services\AwardCaseManager;
-            foreach($contents as $asset)
-                if(!$service->creditAward($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) return false;
-        }
         elseif($key == 'currencies' && count($contents))
         {
             $service = new \App\Services\CurrencyManager;
@@ -285,13 +281,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
         {
             $service = new \App\Services\InventoryManager;
             foreach($contents as $asset)
-                if(!$service->moveStack($sender, $recipient, $logType, $data, $asset['asset'])) return false;
-        }
-        elseif($key == 'user_awards' && count($contents))
-        {
-            $service = new \App\Services\awardcaseManager;
-            foreach($contents as $asset)
-                if(!$service->moveStack($sender, $recipient, $logType, $data, $asset['asset'])) return false;
+                if(!$service->moveStack($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) return false;
         }
         elseif($key == 'characters' && count($contents))
         {

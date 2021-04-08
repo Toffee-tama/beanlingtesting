@@ -24,7 +24,6 @@ use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterFeature;
 use App\Models\Character\CharacterImage;
 use App\Models\Character\CharacterTransfer;
-use App\Models\Character\CharacterDrop;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterBookmark;
 use App\Models\Character\CharacterLineage;
@@ -140,12 +139,6 @@ class CharacterManager extends Service
             // Update the character's image ID
             $character->character_image_id = $image->id;
             $character->save();
-
-            // Create drop information for the character, if relevant
-            if($character->image->species && $character->image->species->dropData) {
-                $drop = new CharacterDrop;
-                if($drop->createDrop($character->id, isset($data['parameters']) && $data['parameters'] ? $data['parameters'] : null)) throw new \Exception('Failed to create character drop.');
-            }
 
             // Create character stats
             $character->level()->create([
@@ -1484,7 +1477,7 @@ class CharacterManager extends Service
         return $this->rollbackReturn(false);
     }
 
-    /**
+        /**
      * Updates a character's lineage.
      *
      * @param  array                            $data
@@ -1627,73 +1620,71 @@ class CharacterManager extends Service
         }
         return $this->rollbackReturn(false);
     }
-    /**
-          * Updates a character's profile.
 
-          *
-          * @param  array                            $data
-          * @param  \App\Models\Character\Character  $character
-          * @param  \App\Models\User\User            $user
-          * @param  bool                             $isAdmin
-          * @return  bool
-          */
+        /**
+     * Updates a character's links.
+     *
+     * @param  array                            $data
+     * @param  \App\Models\Character\Character  $character
+     * @param  \App\Models\User\User            $user
+     * @param  bool                             $isAdmin
+     * @return  bool
+     */
+public function updateCharacterLinks($data, $character, $user, $isAdmin)
+{
+    DB::beginTransaction();
 
-         public function updateCharacterLinks($data, $character, $user, $isAdmin)
-         {
-             DB::beginTransaction();
-     
-             try {
-     
-                 $service = new LinkService;
-     
-                 $isOwner = ($character->user_id == Auth::user()->id);
-     
-                 if($character->is_links_open == 0) throw new \Exception("One or more character's links are closed to requests.");
-     
-                 if($isAdmin !== true && !$isOwner)
-                 {
-                     throw new \Exception("You cannot edit this character.");
-                 }
-     
-                 foreach($data['slug'] as $slug) {
-                     $link = Character::where('slug', $slug)->first();
-                     $requested = User::find($link->user_id);
-     
-                     $chara1 = $character->id;
-                     $chara2 = $link->id;
-     
-                     if($link->is_links_open == 0) throw new \Exception("One or more character's links are closed to requests.");
-     
-                     if($user->id == $requested->id ) {
-                         // Create a relation with the character 
-                         if($service->createLink($chara1, $chara2, true)) {
-                             flash('Link created succesfully!')->success();
-                         }
-                         else {
-                             throw new \Exception("An error occured creating the link.");
-                         }
-                     }
-                     else {
-                         // send a notification of the request to the other user. They can accept or deny.
-                         // If denied the row is deleted, if accepted it updates the ids
-                         // create 'unapproved' link
-                             if($service->createLink($chara1, $chara2, false)) {
-                                 flash('Link request created succesfully!')->success();
-                             }
-                             else {
-                                 throw new \Exception("An error occured requesting the link.");
-                             }
-                     }
-     
-                 }
-     
-                 return $this->commitReturn(true);
-             } catch(\Exception $e) { 
-                 $this->setError('error', $e->getMessage());
-             }
-             return $this->rollbackReturn(false);
-         }
-     
+    try {
+
+        $service = new LinkService;
+
+        $isOwner = ($character->user_id == Auth::user()->id);
+
+        if($character->is_links_open == 0) throw new \Exception("One or more character's links are closed to requests.");
+
+        if($isAdmin !== true && !$isOwner)
+        {
+            throw new \Exception("You cannot edit this character.");
+        }
+
+        foreach($data['slug'] as $slug) {
+            $link = Character::where('slug', $slug)->first();
+            $requested = User::find($link->user_id);
+
+            $chara1 = $character->id;
+            $chara2 = $link->id;
+
+            if($link->is_links_open == 0) throw new \Exception("One or more character's links are closed to requests.");
+
+            if($user->id == $requested->id ) {
+                // Create a relation with the character 
+                if($service->createLink($chara1, $chara2, true)) {
+                    flash('Link created succesfully!')->success();
+                }
+                else {
+                    throw new \Exception("An error occured creating the link.");
+                }
+            }
+            else {
+                // send a notification of the request to the other user. They can accept or deny.
+                // If denied the row is deleted, if accepted it updates the ids
+                // create 'unapproved' link
+                    if($service->createLink($chara1, $chara2, false)) {
+                        flash('Link request created succesfully!')->success();
+                    }
+                    else {
+                        throw new \Exception("An error occured requesting the link.");
+                    }
+            }
+
+        }
+
+        return $this->commitReturn(true);
+    } catch(\Exception $e) { 
+        $this->setError('error', $e->getMessage());
+    }
+    return $this->rollbackReturn(false);
+}
     /**
      * Deletes a character.
      *
@@ -1773,7 +1764,7 @@ class CharacterManager extends Service
             $queueOpen = Settings::get('open_transfers_queue');
 
             CharacterTransfer::create([
-                'user_reason' => $data['user_reason'],  # pulls from this characters user_reason column
+                'user_reason' => $data['user_reason'],  # pulls from this characters user_reason collum
                 'character_id' => $character->id,
                 'sender_id' => $user->id,
                 'recipient_id' => $recipient->id,
@@ -2117,7 +2108,7 @@ class CharacterManager extends Service
 
         // Add a log for the ownership change
         $this->createLog(
-            is_object($sender) ? $sender->id : null,
+is_object($sender) ? $sender->id : null,
             is_object($sender) ? null : $sender,
             $recipient && is_object($recipient) ? $recipient->id : null,
             $recipient && is_object($recipient) ? $recipient->url : ($recipient ? : null),

@@ -14,7 +14,6 @@ use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Trade;
 use App\Models\Report\Report;
-use App\Models\News;
 
 use App\Http\Controllers\Controller;
 
@@ -30,9 +29,6 @@ class HomeController extends Controller
         $openTransfersQueue = Settings::get('open_transfers_queue');
         $galleryRequireApproval = Settings::get('gallery_submissions_require_approval');
         $galleryCurrencyAwards = Settings::get('gallery_submissions_reward_currency');
-
-        $news = News::staffbulletin()->visible()->orderBy('id', 'DESC')->first();
-
         return view('admin.index', [
             'surrenderCount' => Surrender::where('status', 'Pending')->count(),
             'submissionCount' => Submission::where('status', 'Pending')->whereNotNull('prompt_id')->count(),
@@ -47,9 +43,7 @@ class HomeController extends Controller
             'galleryRequireApproval' => $galleryRequireApproval,
             'galleryCurrencyAwards' => $galleryCurrencyAwards,
             'gallerySubmissionCount' => GallerySubmission::collaboratorApproved()->where('status', 'Pending')->count(),
-            'galleryAwardCount' => GallerySubmission::requiresAward()->where('is_valued', 0)->count(),
-            'news' => $news
-
+            'galleryAwardCount' => GallerySubmission::requiresAward()->where('is_valued', 0)->count()
         ]);
     }
 }

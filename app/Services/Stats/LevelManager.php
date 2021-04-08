@@ -21,7 +21,6 @@ use App\Models\Item\Item;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Prompt\Prompt;
-use App\Models\Recipe\Recipe;
 
 use App\Models\User\UserItem;
 use App\Models\User\UserCurrency;
@@ -88,14 +87,23 @@ class LevelManager extends Service
                 switch($rewardType)
                 {
                     case 'Item':
-                        $check = UserItem::where('item_id', $limit->reward->id)->where('user_id', auth::user()->id)->where('count', '>=', $limit->quantity)->first();
+                        return $this->belongsTo('App\Models\Item\Item', 'rewardable_id');
                         break;
                     case 'Currency':
-                        $check = UserCurrency::where('currency_id', $limit->reward->id)->where('user_id', auth::user()->id)->where('quantity', '>=', $limit->quantity)->first();
+                        return $this->belongsTo('App\Models\Currency\Currency', 'rewardable_id');
                         break;
-                    //case 'Recipe':
-                    //    $check = UserRecipe::where('recipe_id', $limit->reward->id)->where('user_id', auth::user()->id)->first();
-                    //    break;
+                    case 'LootTable':
+                        return $this->belongsTo('App\Models\Loot\LootTable', 'rewardable_id');
+                        break;
+                    case 'Pet':
+                        return $this->belongsTo('App\Models\Pet\Pet', 'rewardable_id');
+                    break;
+                    case 'Raffle':
+                        return $this->belongsTo('App\Models\Raffle\Raffle', 'rewardable_id');
+                        break;
+                    case 'Recipe':
+                        return $this->belongsTo('App\Models\Recipe\Recipe', 'rewardable_id');
+                        break;
                 }
 
                 if(!$check) throw new \Exception('You require ' . $limit->reward->name . ' x ' . $limit->quantity . ' to level up.');
@@ -175,14 +183,23 @@ class LevelManager extends Service
                 switch($rewardType)
                 {
                     case 'Item':
-                        $check = CharacterItem::where('item_id', $limit->reward->id)->where('character_id', $character->id)->where('count', '>', 0)->first();
+                        return $this->belongsTo('App\Models\Item\Item', 'rewardable_id');
                         break;
                     case 'Currency':
-                        $check = CharacterCurrency::where('currency_id', $limit->reward->id)->where('character_id', $character->id)->where('count', '>', 0)->first();
+                        return $this->belongsTo('App\Models\Currency\Currency', 'rewardable_id');
                         break;
-                    //case 'Recipe':
-                    //    $check = UserRecipe::where('recipe_id', $limit->reward->id)->where('user_id', auth::user()->id)->first();
-                    //    break;
+                    case 'LootTable':
+                        return $this->belongsTo('App\Models\Loot\LootTable', 'rewardable_id');
+                        break;
+                    case 'Pet':
+                        return $this->belongsTo('App\Models\Pet\Pet', 'rewardable_id');
+                    break;
+                    case 'Raffle':
+                        return $this->belongsTo('App\Models\Raffle\Raffle', 'rewardable_id');
+                        break;
+                    case 'Recipe':
+                        return $this->belongsTo('App\Models\Recipe\Recipe', 'rewardable_id');
+                        break;
                 }
 
                 if(!$check) throw new \Exception('You require ' . $limit->reward->name . ' to level up.');
@@ -255,19 +272,22 @@ class LevelManager extends Service
                 switch($type)
                 {
                     case 'Item':
-                        $reward = Item::find($data['rewardable_id'][$key]);
+                        return $this->belongsTo('App\Models\Item\Item', 'rewardable_id');
                         break;
                     case 'Currency':
-                        $reward = Currency::find($data['rewardable_id'][$key]);
-                        if(!$reward->is_user_owned) throw new \Exception("Invalid currency selected.");
+                        return $this->belongsTo('App\Models\Currency\Currency', 'rewardable_id');
                         break;
                     case 'LootTable':
-                        if (!$isStaff) break;
-                        $reward = LootTable::find($data['rewardable_id'][$key]);
+                        return $this->belongsTo('App\Models\Loot\LootTable', 'rewardable_id');
                         break;
+                    case 'Pet':
+                        return $this->belongsTo('App\Models\Pet\Pet', 'rewardable_id');
+                    break;
                     case 'Raffle':
-                        if (!$isStaff) break;
-                        $reward = Raffle::find($data['rewardable_id'][$key]);
+                        return $this->belongsTo('App\Models\Raffle\Raffle', 'rewardable_id');
+                        break;
+                    case 'Recipe':
+                        return $this->belongsTo('App\Models\Recipe\Recipe', 'rewardable_id');
                         break;
                 }
                 if(!$reward) continue;

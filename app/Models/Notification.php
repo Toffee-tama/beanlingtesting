@@ -142,9 +142,9 @@ class Notification extends Model
     const BOOKMARK_IMAGE                    = 37;
     const CHARACTER_TRANSFER_ACCEPTABLE     = 38;
     const BOOKMARK_GIFT_WRITING             = 39;
-    const RESEARCH_GRANT                    = 100; // URI - Research Tree
     const LINK_REQUESTED                  = 200;
     const LINK_ACCEPTED                   = 201;
+    const RESEARCH_GRANT                    = 100; // URI - Research Tree
     const REPORT_ASSIGNED                   = 220;
     const REPORT_CLOSED                     = 221;
     const COMMENT_MADE                      = 239;
@@ -163,12 +163,12 @@ class Notification extends Model
     const GALLERY_SUBMISSION_EDITED         = 514;
     const GALLERY_SUBMISSION_PARTICIPANT    = 515;
     const RECIPE_GRANT                      = 600; // Draginraptor - Crafting
-    const GALLERY_SUBMISSION_VALUED_MULT    = 516;
     const SURRENDER_APPROVED              = 218;
     const SURRENDER_REJECTED              = 219;
-    const EXP_GRANT                       = 245;
+    const GALLERY_SUBMISSION_VALUED_MULT    = 516;
     const PET_REMOVAL                     = 241;
     const PET_TRANSFER                    = 242;
     const FORCED_PET_TRANSFER             = 243;
     const PET_GRANT                       = 244;
+    const EXP_GRANT                       = 245;
 }

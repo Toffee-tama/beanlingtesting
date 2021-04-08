@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 
 use Auth;
-use Str;
 
 use App\Models\News;
 use App\Services\NewsService;
@@ -25,20 +24,19 @@ class NewsController extends Controller
             'newses' => News::orderBy('updated_at', 'DESC')->paginate(20)
         ]);
     }
-
+    
     /**
-     * Shows the create news page.
+     * Shows the create news page. 
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateNews()
     {
-
         return view('admin.news.create_edit_news', [
             'news' => new News
         ]);
     }
-
+    
     /**
      * Shows the edit news page.
      *
@@ -66,7 +64,7 @@ class NewsController extends Controller
     {
         $id ? $request->validate(News::$updateRules) : $request->validate(News::$createRules);
         $data = $request->only([
-            'title', 'text', 'post_at', 'is_visible', 'bump', 'admin_bulletin'
+            'title', 'text', 'post_at', 'is_visible', 'bump'
         ]);
         if($id && $service->updateNews(News::find($id), $data, Auth::user())) {
             flash('News updated successfully.')->success();
@@ -80,7 +78,7 @@ class NewsController extends Controller
         }
         return redirect()->back();
     }
-
+    
     /**
      * Gets the news deletion modal.
      *
@@ -113,6 +111,5 @@ class NewsController extends Controller
         }
         return redirect()->to('admin/news');
     }
-
 
 }

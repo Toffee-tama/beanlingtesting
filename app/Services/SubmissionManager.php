@@ -22,10 +22,10 @@ use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Prompt\Prompt;
 use App\Models\Recipe\Recipe;
+use App\Models\Pet\Pet;
 
 use App\Services\Stats\ExperienceManager;
 use App\Services\Stats\StatManager;
-use App\Models\Pet\Pet;
 
 class SubmissionManager extends Service
 {

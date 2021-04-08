@@ -27,8 +27,25 @@
                 <div class="col-md-10 col-8">{!! $submission->prompt->displayName !!}</div>
             </div>
             <div class="row">
-                <div class="col-md-2 col-4"><h5>Previous Submissions</h5></div>
-                <div class="col-md-10 col-8">{{ $count }} {!! add_help('This is the number of times the user has submitted this prompt before and had their submission approved.') !!}</div>
+                <div class="col-md-2 col-4"><h5>Previous Submissions{!! add_help('This is the number of times the user has submitted this prompt before, pending or approved.') !!}</h5></div>
+                <div class="col-md-10 col-8">
+                    <div class="row text-center">
+                        <div class="col"><strong>All Time</strong></div>
+                        <div class="col"><strong>Past Hour</strong></div>
+                        <div class="col"><strong>Past Day</strong></div>
+                        <div class="col"><strong>Past Week</strong></div>
+                        <div class="col"><strong>Past Month</strong></div>
+                        <div class="col"><strong>Past Year</strong></div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col">{{ $count['all'] }}</div>
+                        <div class="col">{{ $count['Hour'] }}</div>
+                        <div class="col">{{ $count['Day'] }}</div>
+                        <div class="col">{{ $count['Week'] }}</div>
+                        <div class="col">{{ $count['Month'] }}</div>
+                        <div class="col">{{ $count['Year'] }}</div>
+                    </div>
+                </div>
             </div>
         @endif
         <div class="row">
@@ -63,14 +80,14 @@
         </div>
         <div class="col-6">
             <h3>Stat & Level Rewards</h3>
-            @if($submission->prompt->expreward && (!$submission->focus_chara_id && $submission->prompt->expreward->chara_exp || !$submission->focus_chara_id && $submission->prompt->expreward->chara_points))
+            @if(!$submission->focus_chara_id && $submission->prompt->expreward->chara_exp || !$submission->focus_chara_id && $submission->prompt->expreward->chara_points)
             <div class="alert alert-danger">This prompt has character rewards but the user has not added a focus character. If this is a mistake, please decline.</div>
             @endif
             <div class="card m-1">
                 <div class="row m-2">
                     <div class="col">
                         <h5>User Rewards</h5>
-                        @if(!$submission->prompt->expreward || (!$submission->prompt->expreward->user_exp && !$submission->prompt->expreward->user_points))
+                        @if(!$submission->prompt->expreward->user_exp && !$submission->prompt->expreward->user_points)
                         No user rewards.
                         @else
                         {{ $submission->prompt->expreward->user_exp ? $submission->prompt->expreward->user_exp : 0  }} user EXP
@@ -80,7 +97,7 @@
                     </div>
                     <div class="col">
                         <h5>Character Rewards</h5>
-                        @if(!$submission->prompt->expreward || (!$submission->prompt->expreward->chara_exp && !$submission->prompt->expreward->chara_points))
+                        @if(!$submission->prompt->expreward->chara_exp && !$submission->prompt->expreward->chara_points)
                         No character rewards.
                         @else
                         {{ $submission->prompt->expreward->chara_exp ? $submission->prompt->expreward->chara_exp : 0  }} character EXP
@@ -141,7 +158,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{{ $submission->prompt->expreward && $submission->prompt->expreward->chara_exp ? $submission->prompt->chara_exp : 0 }} EXP
+                                    <td>{{ $submission->prompt->chara_exp ? $submission->prompt->chara_exp : 0 }} EXP
                                     <br>
                                     {{ $submission->prompt->chara_points ? $submission->prompt->chara_points : 0  }} Stat Point
                                     <p class="text-muted mt-1">(This is pre-defined by the prompt, you may add bonuses below)</p>
@@ -307,7 +324,7 @@
             </tr>
         </table>
     </div>
-    @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+    @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'pets' => $pets, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">

@@ -33,7 +33,7 @@ class Submission extends Model
      * @var string
      */
     public $timestamps = true;
-    
+
     /**
      * Validation rules for submission creation.
      *
@@ -42,7 +42,7 @@ class Submission extends Model
     public static $createRules = [
         'url' => 'nullable|url',
     ];
-    
+
     /**
      * Validation rules for submission updating.
      *
@@ -53,34 +53,35 @@ class Submission extends Model
     ];
 
     /**********************************************************************************************
-    
+
         RELATIONS
+
     **********************************************************************************************/
-    
+
     /**
      * Get the prompt this submission is for.
      */
-    public function prompt() 
+    public function prompt()
     {
         return $this->belongsTo('App\Models\Prompt\Prompt', 'prompt_id');
     }
-    
+
     /**
      * Get the user who made the submission.
      */
-    public function user() 
+    public function user()
     {
         return $this->belongsTo('App\Models\User\User', 'user_id');
     }
-    
+
     /**
      * Get the staff who processed the submission.
      */
-    public function staff() 
+    public function staff()
     {
         return $this->belongsTo('App\Models\User\User', 'staff_id');
     }
-    
+
     /**
      * Get the characters attached to the submission.
      */
@@ -98,11 +99,12 @@ class Submission extends Model
     }
 
     /**********************************************************************************************
-    
+
         SCOPES
+
     **********************************************************************************************/
 
-        /**
+    /**
      * Scope a query to only include pending submissions.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
@@ -172,8 +174,9 @@ class Submission extends Model
 
 
     /**********************************************************************************************
-    
+
         ACCESSORS
+
     **********************************************************************************************/
 
     /**
@@ -206,6 +209,16 @@ class Submission extends Model
     public function getCurrencies($user)
     {
         return $this->data && isset($this->data['user']) && isset($this->data['user']['currencies']) ? $this->data['user']['currencies'] : [];
+    }
+
+    /**
+     * Get the viewing URL of the submission/claim.
+     *
+     * @return string
+     */
+    public function getViewUrlAttribute()
+    {
+        return url(($this->prompt_id ? 'submissions' : 'claims') . '/view/'.$this->id);
     }
 
     /**
