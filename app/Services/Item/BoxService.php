@@ -13,7 +13,6 @@ use App\Models\Raffle\Raffle;
 use App\Models\Pet\Pet;
 use App\Models\Recipe\Recipe;
 
-
 class BoxService extends Service
 {
     /*
