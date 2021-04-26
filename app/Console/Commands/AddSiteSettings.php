@@ -161,6 +161,7 @@ class AddSiteSettings extends Command
             $this->info("Added:   calculate_by_traits / Default: 0");
         }
         else $this->line("Skipped: calculate_by_traits");
+        $this->addSiteSetting('gallery_submissions_open', 1, '0: Gallery submissions closed, 1: Gallery submissions open.');
 
         if(!DB::table('site_settings')->where('key', 'is_design_updates_open')->exists()) {
             DB::table('site_settings')->insert([
@@ -406,6 +407,7 @@ class AddSiteSettings extends Command
             $this->info("Added:   group_currency_alt / Default: 1");
         }
         else $this->line("Skipped: group_currency_alt");
+        $this->addSiteSetting('group_currency', 1, 'ID of the group currency to award from gallery submissions (if enabled).');
 
         $this->line("\nSite settings up to date!");
 
