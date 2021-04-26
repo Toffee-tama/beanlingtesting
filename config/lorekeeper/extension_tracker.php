@@ -40,9 +40,9 @@ return [
              'Uri' => 'https://github.com/preimpression/',
              'Mercury' => 'https://github.com/itinerare/',
          ]),
-         'version' => '1.2.0',
+         'version' => '1.2.1',
     ],
-    
+
 
 
     'advent_calendars' => [
