@@ -66,7 +66,7 @@ class CommentController extends Controller implements CommentControllerInterface
         ]))->validate();
 
         $model = $request->commentable_type::findOrFail($request->commentable_id);
-        dd("test");
+
         $commentClass = Config::get('comments.model');
         $comment = new $commentClass;
 
