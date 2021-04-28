@@ -44,7 +44,7 @@ class CommentController extends Controller implements CommentControllerInterface
      */
     public function store(Request $request)
     {
-
+        dd("test");
         // If guest commenting is turned off, authorize this action.
         if (Config::get('comments.guest_commenting') == false) {
             Gate::authorize('create-comment', Comment::class);
