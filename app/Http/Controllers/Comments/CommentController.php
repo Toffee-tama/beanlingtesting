@@ -23,7 +23,7 @@ use App\Models\SitePage;
 use App\Models\TradeListing;
 
 use Notifications;
-dd("test");
+
 class CommentController extends Controller implements CommentControllerInterface
 {
     public function __construct()
@@ -66,7 +66,7 @@ class CommentController extends Controller implements CommentControllerInterface
         ]))->validate();
 
         $model = $request->commentable_type::findOrFail($request->commentable_id);
-
+        dd("test");
         $commentClass = Config::get('comments.model');
         $comment = new $commentClass;
 
