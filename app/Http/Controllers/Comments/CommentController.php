@@ -23,7 +23,7 @@ use App\Models\SitePage;
 use App\Models\TradeListing;
 
 use Notifications;
-
+dd("test");
 class CommentController extends Controller implements CommentControllerInterface
 {
     public function __construct()
