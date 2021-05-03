@@ -48,11 +48,16 @@ class UserService extends Service
         // If the rank is not given, create a user with the lowest existing rank.
         if(!isset($data['rank_id'])) $data['rank_id'] = Rank::orderBy('sort')->first()->id;
 
+        // Make birthday into format we can store
+        $date = $data['dob']['day']."-".$data['dob']['month']."-".$data['dob']['year'];
+        $formatDate = carbon::parse($date);
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'rank_id' => $data['rank_id'],
             'password' => Hash::make($data['password']),
+            'birthday' => $formatDate,
         ]);
         $user->settings()->create([
             'user_id' => $user->id,
@@ -188,7 +193,29 @@ class UserService extends Service
     }
 
     /**
-     * Updates the user's avatar.
+     * Updates user's birthday
+     */
+    public function updateBirthday($data, $user)
+    {
+        $user->birthday = $data;
+        $user->save();
+
+        return true;
+    }
+
+    /**
+     * Updates user's birthday setting
+     */
+    public function updateDOB($data, $user)
+    {
+        $user->settings->birthday_setting = $data;
+        $user->settings->save();
+
+        return true;
+    }
+
+    /**
+     * Updates the user's avatar. 
      *
      * @param  array                  $data
      * @param  \App\Models\User\User  $user

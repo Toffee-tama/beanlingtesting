@@ -59,17 +59,29 @@
     @endif
 </h1>
 <div class="mb-1">
-    <div class="row">
-        <div class="col-md-2 col-4"><h5>Alias</h5></div>
-        <div class="col-md-10 col-8">{!! $user->displayAlias !!}</div>
-    </div>
-    <div class="row">
-        <div class="col-md-2 col-4"><h5>Rank</h5></div>
-        <div class="col-md-10 col-8">{!! $user->rank->displayName !!} {!! add_help($user->rank->parsed_description) !!}</div>
-    </div>
-    <div class="row">
-        <div class="col-md-2 col-4"><h5>Joined</h5></div>
-        <div class="col-md-10 col-8">{!! format_date($user->created_at, false) !!} ({{ $user->created_at->diffForHumans() }})</div>
+    <div class="row col-10">
+        <div class="col-5">
+            <div class="row">
+                <div class="col-md-2 col-4"><h5>Alias</h5></div>
+                <div class="col-md-10 col-8">{!! $user->displayAlias !!}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-4"><h5>Rank</h5></div>
+                <div class="col-md-10 col-8">{!! $user->rank->displayName !!} {!! add_help($user->rank->parsed_description) !!}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-4"><h5>Joined</h5></div>
+                <div class="col-md-10 col-8">{!! format_date($user->created_at, false) !!} ({{ $user->created_at->diffForHumans() }})</div>
+            </div>
+        </div>
+        @if($user->birthdayDisplay)
+        <div class="col-5">
+            <div class="row">
+                <div class="col-md-2 col-4"><h5>Birthday</h5></div>
+                <div class="col-md-10 col-8">{!! $user->birthdayDisplay !!}</div>
+            </div>
+        </div>
+        @endif
     </div>
 
     @if($user_enabled && isset($user->home_id))

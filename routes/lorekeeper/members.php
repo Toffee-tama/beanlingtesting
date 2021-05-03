@@ -29,6 +29,7 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
     Route::post('faction', 'AccountController@postFaction');
     Route::post('avatar', 'AccountController@postAvatar');
     Route::post('socials', 'AccountController@postLinks');
+    Route::post('dob', 'AccountController@postBirthday');
 
     Route::get('bookmarks', 'BookmarkController@getBookmarks');
     Route::get('bookmarks/create', 'BookmarkController@getCreateBookmark');
